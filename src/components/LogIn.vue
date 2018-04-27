@@ -51,7 +51,7 @@
 				username: "",
 				password: "",
 				email: "",
-				isRegister: true,
+				isRegister: false,
 				confirmMatch: true,
 			};
 		},
@@ -60,11 +60,26 @@
 				let username = "bojoluis";
 				let password = "1234";
 
-				if(this.username == username && this.password == password){
-					alert("Valid");
-				}else{
-					alert("Wrong");
-				}
+				let oReq = new XMLHttpRequest();
+				let isValid = {};
+
+				oReq.onreadystatechange = function() {
+			        if (this.readyState == 4 && this.status == 200) {
+			            isValid = JSON.parse(this.responseText);
+			    
+			            if(isValid.isValid){
+							alert("Valid");
+						}else{
+							alert("Wrong");
+						}
+			       }
+			    };
+
+				oReq.open("GET", "http://localhost:8000/login/test/?name=bojoluis&password=1234");
+				oReq.send();
+				console.log(oReq);
+
+				
 			}
 		},
 		calculated: {

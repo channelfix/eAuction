@@ -7,13 +7,23 @@ from django.views.generic import TemplateView
 
 
 def index(request):
-	name = request.POST.get('name')
-	context = {
-		'name': name
-	}
-	# return HttpResponse(json.dumps(context))
-	return render(request, 'auction/index.html', context)
+	return render(request, 'index.html')
 
+# def test(request):
+# 	name = request.GET.get('name')
+# 	password = request.GET.get('password')
+	
+# 	isValid = False	
+
+# 	if(name == "bojoluis" and password == "1234"):
+# 		isValid = True
+
+# 	context = {
+# 		'isValid': isValid,
+# 	}
+
+# 	return HttpResponse(json.dumps(context))
+	
 
 class LoginView(TemplateView):
 	template_name='index.html'
