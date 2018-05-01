@@ -13,7 +13,3 @@ export default {
 <style>
 @import "./stylesheet/main.css";
 </style>
-
-<style lang="scss">
-@import "./stylesheet/main.scss";
-</style>

@@ -1,8 +1,0 @@
-@import "~vue-material/dist/theme/engine"; // Import the theme engine
-
-@include md-register-theme("default", (
-  primary: md-get-palette-color(brown, A200), // The primary color of your brand
-  accent: md-get-palette-color(grey, 500) // The secondary color of your brand
-));
-
-@import "~vue-material/dist/theme/all"; 
