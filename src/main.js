@@ -5,8 +5,15 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
- 
-Vue.use(Vuetify)
+import colors from 'vuetify/es5/util/colors'
+
+Vue.use(Vuetify, {
+  theme: {
+    primary: colors.amber.lighten5, // #E53935
+    secondary: colors.amber.lighten1, // #FFCDD2
+    accent: colors.amber.accent1 // #3F51B5
+  }
+});
 
 Vue.config.productionTip = false
 
