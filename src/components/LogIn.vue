@@ -60,8 +60,8 @@
 </template>
 
 <script>
-	import loginForm from './login/loginForm';
-	import registerForm from './login/registerForm';
+	import VLoginForm from './VLoginForm';
+	import VRegisterForm from './VRegisterForm';
 
 	export default {
 		data(){
@@ -72,14 +72,14 @@
 			};
 		},
 		components: {
-			loginForm, registerForm
+			VLoginForm, VRegisterForm
 		},
 		computed: {
 			form: function(){
 				if(this.isRegister){
-					return registerForm;
+					return VRegisterForm;
 				}else{
-					return loginForm;
+					return VLoginForm;
 				}
 			}
 		},
