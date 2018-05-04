@@ -4,26 +4,12 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from django.views.generic import TemplateView
+from django.views.decorators.csrf import ensure_csrf_cookie
 
-
+@ensure_csrf_cookie
 def index(request):
 	return render(request, 'index.html')
 
-def test(request):
-	name = request.POST.get('name')
-	password = request.POST.get('password')
-	
-	isValid = False	
-
-	if(name == "bojoluis" and password == "1234"):
-		isValid = True
-
-	context = {
-		'correct': isValid,
-	}
-
-	return HttpResponse(json.dumps(context))
-	
 
 class LoginView(TemplateView):
 	template_name='index.html'
