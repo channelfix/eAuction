@@ -9,20 +9,20 @@ from django.views.generic import TemplateView
 def index(request):
 	return render(request, 'index.html')
 
-# def test(request):
-# 	name = request.GET.get('name')
-# 	password = request.GET.get('password')
+def test(request):
+	name = request.POST.get('name')
+	password = request.POST.get('password')
 	
-# 	isValid = False	
+	isValid = False	
 
-# 	if(name == "bojoluis" and password == "1234"):
-# 		isValid = True
+	if(name == "bojoluis" and password == "1234"):
+		isValid = True
 
-# 	context = {
-# 		'isValid': isValid,
-# 	}
+	context = {
+		'correct': isValid,
+	}
 
-# 	return HttpResponse(json.dumps(context))
+	return HttpResponse(json.dumps(context))
 	
 
 class LoginView(TemplateView):
