@@ -3,13 +3,11 @@
 		<v-text-field
 		  name="name"
 		  label="Username"
-		  id="id"
 		  v-model="name"
 		></v-text-field>
 		<v-text-field
 		  name="name"
 		  label="Password"
-		  id="id"
 		  v-model="password"
 		  :append-icon="visible ? 'visibility_off': 'visibility'"
           :append-icon-cb="() => (visible = !visible)"

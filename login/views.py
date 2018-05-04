@@ -6,10 +6,11 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import ensure_csrf_cookie
 
+
 @ensure_csrf_cookie
 def index(request):
-	return render(request, 'index.html')
+    return render(request, 'index.html')
 
 
 class LoginView(TemplateView):
-	template_name='index.html'
+    template_name = 'index.html'
