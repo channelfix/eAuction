@@ -1,8 +1,15 @@
 <template>
 	<v-container fluid>
-		<v-layout row wrap fill-height>
+		<v-layout 
+			row wrap 
+			fill-height
+		>
 		  	<v-flex lg7>
-				<v-layout align-center justify-center fill-height>
+				<v-layout 
+					align-center 
+					justify-center
+					 fill-height
+				 >
 					<div>
 						<p class="text-lg-left display-4">eAuction</p>
 						<p class="text-lg-left headline">eAuction eAuction eAuction eAuction eAuction</p>
@@ -12,9 +19,15 @@
 		  			</div>
 		  		</v-layout>
 		  	</v-flex>
-		  	<v-flex lg5 class="right amber darken-3">
-				<v-layout row wrap>
-					<v-flex lg6 >
+		  	<v-flex 
+		  		lg5 
+		  		class="right amber darken-3"
+	  		>
+				<v-layout 
+					row
+					wrap
+				>
+					<v-flex lg6>
 						<v-btn 
 							depressed
 							flat
