@@ -273,3 +273,5 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+*.hot_update.json
