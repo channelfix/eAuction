@@ -18,8 +18,8 @@
 </template>
 
 <script>
-	import axios from 'axios'
-	import Cookies from 'js-cookie'
+	import Request from '../assets/js/Request'
+
 	export default {
 		name: 'loginForm',
 		data() {
@@ -31,7 +31,12 @@
 		},
 		methods: {
 			login: function(){
-				
+				let user = {
+					username: this.name,
+					password: this.password,
+				}
+				let response = Request.post('http://localhost:8000/login/','accounts/',user);
+				console.log(response);
 			}
 		}
 	}
