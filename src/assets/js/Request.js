@@ -8,7 +8,8 @@ export default class Request {
 			method: method,
 			baseURL: baseurl,
 			headers: {
-				'X-CSRFToken': Cookies.get('csrftoken')
+				'X-CSRFToken': Cookies.get('csrftoken'),
+				'Access-Control-Allow-Origin': 'http://localhost:8000',
 			},
 			data: data,
 		})
