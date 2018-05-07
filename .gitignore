@@ -274,4 +274,6 @@ ENV/
 # mypy
 .mypy_cache/
 
-assets/
+# hotupdates
+*.hot-update.json
+*.hot-update.js
