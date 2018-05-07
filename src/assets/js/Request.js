@@ -17,10 +17,10 @@ export default class Request {
 	}
 
 	post(baseurl, url, data){
-		send('post',baseurl, url, data);
+		this.send('post',baseurl, url, data);
 	}
 
 	get(baseurl, url, data){
-		send('get',baseurl, url, data);
+		this.send('get',baseurl, url, data);
 	}
 }

@@ -35,7 +35,9 @@
 					username: this.name,
 					password: this.password,
 				}
-				let response = Request.post('http://localhost:8000/login/','accounts/',user);
+				let request = new Request();
+
+				let response = request.post('http://localhost:8000/login/','accounts/',user);
 				console.log(response);
 			}
 		}
