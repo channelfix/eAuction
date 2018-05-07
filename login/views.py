@@ -5,7 +5,8 @@ from django.template import loader
 from django.urls import reverse
 from django.views.generic import TemplateView, View
 from django.contrib.auth.views import LoginView
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
@@ -33,27 +34,28 @@ def IndexPost(request):
         password = request.POST.get('password')
         isValid = False
 
-        if User.objects.filter(username) is True and User.objects.filter(password) is True:
+        if User.objects.filter(username=username,
+                               password=password).exists() is True:
             isValid = True
             return HttpResponse(json.dumps({'isValid': isValid}))
         else:
             return HttpResponseBadRequest()
-    else:
-        return HttpResponseBadRequest()
+    # else:
+    #     return HttpResponseBadRequest()
 
-        """
-# class IndexViewPost(View):
-    # @ensure_csrf_cookie
-    # def post(self, request, *args, **kwargs):
-    #     user = authenticate(username=request.POST.get('username'),
-    #                         password=request.POST.get('password'))
-    #     if user is not None:
-    #         isValid = True
-    #         context = {
-    #             'isValid': isValid
-    #         }
-    #     else:
-    #         return HttpResponseBadRequest()
 
-    #     return HttpResponse(json.dumps(context))
-        """
+@method_decorator(csrf_exempt, name='dispatch')
+class IndexViewPost(View):
+    def post(self, request):
+        print(request.method)
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            isValid = False
+            print(password)
+            if User.objects.filter(username=username,
+                                   password=password).exists() is True:
+                isValid = True
+                return HttpResponse(json.dumps({'isValid': isValid}))
+            else:
+                return HttpResponse(json.dumps({'username': username}))
