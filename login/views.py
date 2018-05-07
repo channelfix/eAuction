@@ -20,42 +20,51 @@ from django.contrib.auth.models import User
 #     template_name = 'index.html'
 
 
-class IndexView(LoginView):
-    template_name = '../templates/index.html'
+# class IndexView(LoginView):
+#     template_name = '../templates/index.html'
 
-    def get(self, request, *args, **kwargs):
-        return render(request, 'index.html')
+#     def get(self, request, *args, **kwargs):
+#         return render(request, 'index.html')
+# @ensure_csrf_cookie
+def IndexView(request):
+    return render(request, 'index.html', {'isValid': True})
 
+# @ensure_csrf_cookie
+# def IndexPost(request):
+#     print(request.method)
+#     if request.method == 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         isValid = False
 
-def IndexPost(request):
-    print(request.method)
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        isValid = False
-
-        if User.objects.filter(username=username,
-                               password=password).exists() is True:
-            isValid = True
-            return HttpResponse(json.dumps({'isValid': isValid}))
-        else:
-            return HttpResponseBadRequest()
+#         if User.objects.filter(username=username,
+#                                password=password).exists() is True:
+#             isValid = True
+#             return HttpResponse(json.dumps({'isValid': isValid}))
+#         else:
+#             return HttpResponseBadRequest()
     # else:
     #     return HttpResponseBadRequest()
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class IndexViewPost(View):
+    # @ensure_csrf_cookie
     def post(self, request):
         print(request.method)
         if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            username = body['username']
+            password = body['password']
             isValid = False
-            print(password)
-            if User.objects.filter(username=username,
-                                   password=password).exists() is True:
+            print(username, password)
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
                 isValid = True
+                print("Success")
                 return HttpResponse(json.dumps({'isValid': isValid}))
             else:
-                return HttpResponse(json.dumps({'username': username}))
+                print("Access Denied")
+                return HttpResponseBadRequest()
