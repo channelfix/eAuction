@@ -20,5 +20,6 @@ from django.urls import path, include
 
 urlpatterns = [
 	path('login/', include('login.urls')),
+	path('livestream/', include('livestream.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
