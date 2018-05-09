@@ -1,35 +1,27 @@
 import axios from 'axios'
-import Cookies from 'js-cookie'
 
 export default class Request {
-	send(method, baseurl, url, data){
-
+	send(method = "get", baseurl = "", url, data = {}, callback){
 		axios({
 			url: url,
 			method: method,
 			baseURL: baseurl,
-			// NOTE: do no do it like this 
-			// headers: { 									
-			// 	'X-CSRFToken': Cookies.get('csrftoken'),
-			// 	'Access-Control-Allow-Origin': '*',
-			// },
 			headers: {
-				'X-Requested-With': 'XMLHttpRequest'
+				'X-Requested-With': 'XMLHttpRequest',
 			},
 			xsrfHeaderName: 'X-CSRFToken',
 			xsrfCookieName: 'csrftoken',
-			data: JSON.stringify(data), //must stringify			
+			data: data, 			
 		})
-		.then((response)=>{return response})
-		.catch((error)=>{return error})
+		.then((response)=>callback(response))
+		.catch((error)=>callback(error))
 	}
 
-	// must revise this part. POST and GET shouldn't expect same params
-	post(baseurl, url, data){
-		this.send('post',baseurl, url, data);
+	post(baseurl, url, data, callback){
+		this.send('post',baseurl, url, data, callback);
 	}
 
-	get(baseurl, url, data){
-		this.send('get',baseurl, url, data);
+	get(baseurl, url){
+		this.send('get',baseurl, url, callback);
 	}
 }

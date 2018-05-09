@@ -1,5 +1,5 @@
 <template>
-	<v-form class="login">
+	<v-form class="form">
 		<v-text-field
 		  name="name"
 		  label="Username"
@@ -34,15 +34,27 @@
 		methods: {
 			login: function(){
 				let request = new Request();
+				let formData = new FormData();
 
-				let response = request.post('http://localhost:8000/login/','accounts/',this.user);				
+				formData.set('username', this.user.name);
+				formData.set('password', this.user.password);
+				
+				request.post('http://localhost:8000/login/','accounts/', formData, 
+					function(response) {
+						if(response instanceof Error){
+							alert("Bad Request");
+						}else{
+							alert("Valid");
+						}
+					}
+				);	
 			}
 		}
 	}
 </script>
 
 <style scoped>
-	.login {
+	.form {
 		padding: 2em;
 	}
 </style>

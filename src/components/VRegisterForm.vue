@@ -1,5 +1,5 @@
 <template>
-	<v-form class="login">
+	<v-form class="form">
 		<v-layout row wrap justify-space-between>
 			<v-flex lg5>
 				<v-text-field
@@ -48,7 +48,7 @@
 </script>
 
 <style scoped>
-	.login {
+	.form {
 		padding: 2em;
 	}
 </style>
