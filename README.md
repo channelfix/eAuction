@@ -8,7 +8,7 @@ Follow these steps to get this project to run on you local machine for developme
 ### Prerequisites
 * [Django](https://www.djangoproject.com/) (2.0 or higher)
 * [Python](https://www.python.org/downloads/) (3.4 or higher)
-You can also check the `requirements.txt` to see the list of dependencies.
+   You can also check the `requirements.txt` to see the list of dependencies.
 
 ### Installation
 1. Clone the repository
@@ -69,7 +69,7 @@ Open your browser and copy this URL on the address bar or [click here](http://lo
 http://localhost:8000/login/
 ```
 
-##Contribution
+## Contribution
 After making the server run, you may have some suggestions, bug fixes, etc. To have it incorporated in the system, we follow a git flow that ensures proper documentation of appends/amends in the system.
 
 ### Git flow
