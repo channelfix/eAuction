@@ -28,36 +28,16 @@ if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
 		console.log('Successfully subscribe');
 		successMessage.textContent = 'Live';
 		errorMessage.textContent = '';
-
-
-		xhttprequest = new XMLHttpRequest();
-		xhttprequest.onreadystatechange = function() {
-			if(this.readyState == 4 && this.status == 200){
-				alert(this.responseText);
-			}
-		}
-
-		xhttprequest.open("GET", "/livestream/start_archive/", true); // Request for start recording the video.
-		xhttprequest.send();	
+		
 	});
 
 
 	session.on("streamDestroyed", function(event) {	
 
-		xhttprequest = new XMLHttpRequest();
-		xhttprequest.onreadystatechange = function() {
-			if(this.readyState == 4 && this.status == 200){
-				alert(this.responseText);
-			}
-		}
-
-		xhttprequest.open("GET", "/livestream/end_archive/", true); // Request for stop recording the video.
-		xhttprequest.send();
-
-
 		console.log('Failed to subscribe');
 		successMessage.textContent = '';
 		errorMessage.textContent = 'No Auction event is available';
+
 	});
 }
 else // Failed to launch the livestream.
