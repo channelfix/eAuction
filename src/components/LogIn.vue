@@ -33,10 +33,10 @@
 							flat
 							block
 							:ripple="false"
-							@click="isRegister = false"
-							:class="{'amber darken-3': !isRegister, 'yellow darken-3': isRegister}"
+							@click="activeForm = 'VRegisterForm'"
+							:class="registerButtonStyle"
 						>
-							Log In
+							Sign Up
 						</v-btn>
 					</v-flex>
 					<v-flex lg6 >
@@ -45,14 +45,14 @@
 							flat
 							block
 							:ripple="false"
-							@click="isRegister = true" 
-							:class="{'amber darken-3': isRegister, 'yellow darken-3': !isRegister}"
+							@click="activeForm = 'VLoginForm'" 
+							:class="loginButtonStyle"
 						>
-							Register
+							Sign In
 						</v-btn>
 					</v-flex>
 				</v-layout>
-				<component :is="form">
+				<component :is="activeForm">
 				</component>
 		  	</v-flex>
 		</v-layout>
@@ -66,28 +66,36 @@
 	export default {
 		data(){
 			return {
-				email: "",
-				isRegister: false,
-				confirmMatch: true,
-			};
+				activeForm: 'VRegisterForm',
+			}
 		},
 		components: {
 			VLoginForm, VRegisterForm
 		},
 		computed: {
-			form: function(){
-				if(this.isRegister){
-					return VRegisterForm;
-				}else{
-					return VLoginForm;
+			loginButtonStyle(){
+				let style = {
+					'amber darken-3' : false,
+					'yellow darken-3': true,
 				}
+				if(this.activeForm == 'VLoginForm'){
+					style['amber darken-3'] = true;
+					style['yellow darken-3'] = false;
+				}
+				return style;
+			},
+			registerButtonStyle(){
+				let style = {
+					'amber darken-3' : false,
+					'yellow darken-3': true,
+				}
+				if(this.activeForm == 'VRegisterForm'){
+					style['amber darken-3'] = true;
+					style['yellow darken-3'] = false;
+				}
+				return style;
 			}
-		},
-		watch: {
-			isRegister: function(){
-				console.log(this.isRegister);
-			}
-		},
+		}
 	}
 </script>
 

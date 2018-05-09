@@ -3,12 +3,12 @@
 		<v-text-field
 		  name="name"
 		  label="Username"
-		  v-model="name"
+		  v-model="user.name"
 		></v-text-field>
 		<v-text-field
 		  name="name"
 		  label="Password"
-		  v-model="password"
+		  v-model="user.password"
 		  :append-icon="visible ? 'visibility_off': 'visibility'"
           :append-icon-cb="() => (visible = !visible)"
           :type="visible ? 'text': 'password' "
@@ -24,20 +24,18 @@
 		name: 'loginForm',
 		data() {
 			return {
-				name: "",
-				password: "",
+				user: {
+					name: "",
+					password:"",
+				},
 				visible: false,
 			}
 		},
 		methods: {
 			login: function(){
-				let user = {
-					username: this.name,
-					password: this.password,
-				}
 				let request = new Request();
 
-				let response = request.post('http://localhost:8000/login/','accounts/',user);				
+				let response = request.post('http://localhost:8000/login/','accounts/',this.user);				
 			}
 		}
 	}
