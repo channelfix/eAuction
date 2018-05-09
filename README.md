@@ -28,23 +28,23 @@ npm run build:watch
 ```
 You should see something like this on your terminal: 
 ```
-	Your application is running here: http://localhost:8080
-	Hash: 131574fce3d22a9c1c11
-	Version: webpack 3.11.0
-	Time: 175ms
-	                               Asset       Size  Chunks                    Chunk Names
-	2b508b4101069ddb6c94.hot-update.json   44 bytes          [emitted]         
-	                              app.js    4.33 MB       0  [emitted]  [big]  app
-	0.8964bee5534b387a6d3a.hot-update.js    3.64 kB       0  [emitted]         app
-	8964bee5534b387a6d3a.hot-update.json   43 bytes          [emitted]         
-	             ../templates/index.html  331 bytes          [emitted]         
-	[./src/assets/js/Request.js] ./src/assets/js/Request.js 837 bytes {0} [built]
-	    + 63 hidden modules
-	Child html-webpack-plugin for "../templates/index.html":
-	                                   Asset      Size  Chunks             Chunk Names
-	    2b508b4101069ddb6c94.hot-update.json  44 bytes          [emitted]  
-	     + 1 hidden asset
-	       4 modules
+Your application is running here: http://localhost:8080
+Hash: 131574fce3d22a9c1c11
+Version: webpack 3.11.0
+Time: 175ms
+                               Asset       Size  Chunks                    Chunk Names
+2b508b4101069ddb6c94.hot-update.json   44 bytes          [emitted]         
+                              app.js    4.33 MB       0  [emitted]  [big]  app
+0.8964bee5534b387a6d3a.hot-update.js    3.64 kB       0  [emitted]         app
+8964bee5534b387a6d3a.hot-update.json   43 bytes          [emitted]         
+             ../templates/index.html  331 bytes          [emitted]         
+[./src/assets/js/Request.js] ./src/assets/js/Request.js 837 bytes {0} [built]
+    + 63 hidden modules
+Child html-webpack-plugin for "../templates/index.html":
+                                   Asset      Size  Chunks             Chunk Names
+    2b508b4101069ddb6c94.hot-update.json  44 bytes          [emitted]  
+     + 1 hidden asset
+       4 modules
 ```
 
 ### Run the server
@@ -56,11 +56,11 @@ python3 manage.py runserver
 
 You should see something like this on your terminal:
 ```
-	System check identified no issues (0 silenced).
-	May 09, 2018 - 03:40:34
-	Django version 2.0.4, using settings 'auction.settings'
-	Starting development server at http://127.0.0.1:8000/
-	Quit the server with CONTROL-C.
+System check identified no issues (0 silenced).
+May 09, 2018 - 03:40:34
+Django version 2.0.4, using settings 'auction.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
 ```
 
 ### Access the website
