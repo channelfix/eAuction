@@ -48,8 +48,8 @@ You should see something like this on your terminal:
 ```
 
 ### Run the server
-**In a virtual environment**, open a **NEW** terminal, move to the `/eAuction` directory where you can find the `manage.py` file.
-(Note: Yes a **new** terminal relative to the previously opened terminal for builging the JS Files. It is important to run this inside a virtual environment so that this project's dependencies and packages won't interfere with your machine's packages and vice versa.)
+**In a virtual environment**, open a **NEW** terminal and move to the `/eAuction` directory where you can find the `manage.py` file.
+(Note: Yes a **new** terminal, relative to the previously opened terminal for building the JS Files. It is important to run this inside a virtual environment so that this project's dependencies and packages won't interfere with the local machine's packages and vice versa.)
 ```
 python3 manage.py runserver
 ```
@@ -75,7 +75,7 @@ After making the server run, you may have some suggestions, bug fixes, etc. To h
 ### Git flow
 Assuming you've finished following the steps above, the git flow is as follows:
 1. **Create a branch** from the `development` branch.
-   - Branches are to be named as: <action-type>/<descriptive-task> on kebab-case (e.g. feature/authentication)
+   - Branches are to be named as: <action-type>/<descriptive-task> on kebab-case (e.g. feature/authentication-backend)
    - Action-types are as follows:
      - bugfix
      - fixture
