@@ -9,26 +9,21 @@ from django.contrib.auth import authenticate
 class IndexView(LoginView):
     template_name = '../templates/index.html'
 
-    def post(self, request, *args, **kwargs):
-        return render(request, 'index.html')
+    # def post(self, request, *args, **kwargs):
+    #     return render(request, 'index.html')
 
 
 class IndexViewPost(View):
-    # @ensure_csrf_cookie
     def post(self, request):
-        print(request.method)
         username = request.POST.get('username', '')
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        username = body['username']
-        password = body['password']
-        isValid = False
+        password = request.POST.get('password', '')
         user = authenticate(username=username, password=password)
 
+        print(request.POST)
+
         if user is not None:
-            isValid = True
             print("Success")
-            return HttpResponse(json.dumps({'isValid': isValid}))
+            return HttpResponse(json.dumps({'isValid': True}))
         else:
             print("Access Denied")
             return HttpResponseBadRequest()
