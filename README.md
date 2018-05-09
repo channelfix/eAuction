@@ -10,7 +10,9 @@ You can also check the `requirements.txt` to see the list of dependencies.
 
 ### Installation
 1. Clone the repository
-   - `git clone https://github.com/channelfix/eAuction`
+   ```
+   git clone https://github.com/channelfix/eAuction
+   ```
 2. Move to `/eAuction` directory and enter these on the terminal
    ```
    npm install
