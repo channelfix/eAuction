@@ -38,7 +38,6 @@
 
 				formData.set('username', this.user.name);
 				formData.set('password', this.user.password);
-				
 				request.post('http://localhost:8000/login/','accounts/', formData, 
 					function(response) {
 						// process response from server
