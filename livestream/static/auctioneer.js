@@ -5,6 +5,7 @@ console.log('Token: ' + token);
 
 var session, publisher;
 var hasPublish = false;
+var xhttp;
 
 if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
 	console.log('This browser supports WebRTC.');
@@ -40,6 +41,15 @@ function dispatchStartVideo(btnStart) {
 			session.publish(publisher);
 			alert('Starting to publish.');
 			hasPublish = true;
+
+			xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200)
+					console.log(this.responseText); // Display start recording in console.
+			}
+
+			xhttp.open("GET", "/livestream/start_archive/", true); // Request for start archive.
+			xhttp.send();
 		}
 		else
 			alert('On going streaming.');				
@@ -52,10 +62,20 @@ function dispatchEndVideo(btnStop) {
 	btnStop.addEventListener("click", function() {
 
 		if(hasPublish){
-			session.unpublish(publisher);
+
+			xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200)
+					console.log(this.responseText); // Display end recording in console.
+			}
+
+			xhttp.open("GET", "/livestream/end_archive/", true); // Request for end archive.
+			xhttp.send();
+
+			publisher.destroy();
 			alert('End the publish.');
 			hasPublish = false;
-			publisher = OT.initPublisher('publisher', {insertMode: "append"});
+			publisher = OT.initPublisher('publisher', {insertMode: "append"});		
 		}
 		else
 			alert('No publish has occured.');
