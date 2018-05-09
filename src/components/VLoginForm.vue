@@ -41,11 +41,7 @@
 				
 				request.post('http://localhost:8000/login/','accounts/', formData, 
 					function(response) {
-						if(response instanceof Error){
-							alert("Bad Request");
-						}else{
-							alert("Valid");
-						}
+						// process response from server
 					}
 				);	
 			}
