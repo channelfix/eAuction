@@ -39,15 +39,7 @@
 				formData.set('username', this.user.name);
 				formData.set('password', this.user.password);
 				
-				request.post('http://localhost:8000/login/','accounts/', formData, 
-					function(response) {
-						if(response instanceof Error){
-							alert("Bad Request");
-						}else{
-							alert("Valid");
-						}
-					}
-				);	
+				request.post('http://localhost:8000/login/','accounts/', formData);	
 			}
 		}
 	}
