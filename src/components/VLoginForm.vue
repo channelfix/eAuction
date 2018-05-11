@@ -43,7 +43,6 @@
 						if(response instanceof Error){
 							// do error stuff
 						}else {
-							console.log(response);
 							this.$router.push({path: '/home'});
 						}
 					}
