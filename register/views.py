@@ -2,6 +2,7 @@ import json
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic import View
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
@@ -21,7 +22,7 @@ class RegisterViewPost(View):
                                         is_staff=False,
                                         is_admin=False)
 
-        if user.username_validator() is True and User.objects.get(username=username).exists() is False:
+        if user.username_validator() is True:
             return HttpResponse(json.dumps({'success': True}))
         else:
             return HttpResponseBadRequest()
