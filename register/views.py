@@ -21,7 +21,7 @@ class RegisterViewPost(View):
                                         is_staff=False,
                                         is_admin=False)
 
-        if user.username_validator() is True:
+        if user.username_validator() is True and User.objects.get(username=username).exists() is False:
             return HttpResponse(json.dumps({'success': True}))
         else:
             return HttpResponseBadRequest()
