@@ -43,3 +43,6 @@ local_settings.py
 # hotupdates
 *.hot-update.json
 *.hot-update.js
+
+# assets
+assets/
