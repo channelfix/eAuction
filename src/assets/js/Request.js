@@ -8,6 +8,7 @@ export default class Request {
 			baseURL: baseurl,
 			headers: {
 				'X-Requested-With': 'XMLHttpRequest',
+				"Access-Control-Allow-Methods": 'POST',
 			},
 			xsrfHeaderName: 'X-CSRFToken',
 			xsrfCookieName: 'csrftoken',

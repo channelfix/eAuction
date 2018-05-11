@@ -4,11 +4,6 @@ from django.views.generic import View
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate
 
-
-class IndexView(LoginView):
-    template_name = '../templates/index.html'
-
-
 class IndexViewPost(View):
     def post(self, request):
         username = request.POST.get('username', '')
