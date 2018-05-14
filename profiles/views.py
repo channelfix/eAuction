@@ -1,38 +1,42 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from profiles.models import User
+from django.contrib import auth
 import json
+from django.core import serializers
 
 
 def view_profile(request):
-    """ View Profile """
 
-    # Check if starts username in query string.
-    if 'username' in request.GET:
-        # Go to Profile page
-        return render(request, 'index.html')
-    # Display when it does not start username in query string.
-    return HttpResponse('Invalid query string')
+    if 'username' in request.GET and 'password' in request.GET:
+        username = request.POST.get('username', request.GET['username'])
+        password = request.POST.get('password', request.GET['password'])
+
+        user = auth.authenticate(username=username, password=password)
+
+        if user and user.is_active:
+            auth.login(request, user)
+            return render(request, 'index.html')
+        else:
+            return HttpResponse('Failed to Login')
+
+    return HttpResponse('404 Not Found')
 
 
 def request_profile(request):
 
-    context = {'cars': ['Toyota', 'Lamborghini', 'Porche', 'Ford']}
+    user = request.user
+    if user and user.is_active:
+        user_profile = user.profile
+        user_tags = user_profile.tags_set.all()
 
-    # Get all the User objects
-    users = User.objects.all()
+        serializer = serializers.serialize('json', [user, user_profile, user_tags])
 
-    # Get the value in query string
-    name = request.GET['username']
-    print('Name: ', name)
+        # context = {
+        #     'user': user,
+        #     'user_profile': user_profile,
+        #     'user_tags': user_tags
+        # }
 
-    # Traverse all User objects
-    for user in users:
-        # Check if the username matches the
-        # existing username from User objects.
-        if user.username == name:
-            return HttpResponse(json.dumps(context))
-    # Display when this value does not exist in any User instance.
-    return HttpResponse('Not yet registered?')
+        return HttpResponse(json.dumps(serializer))
 
-# Create your views here.
+    return HttpResponse('Failed to login')
