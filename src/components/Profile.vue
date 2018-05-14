@@ -1,7 +1,7 @@
 <template>
  	<div id="profile_id"> 	
  		<button @click="requestProfile">request profile</button>
- 		<p v-text="simpleText"></p>
+ 		<p v-text="simpleText"></p> 		
  	</div>
 </template>
 
@@ -26,6 +26,5 @@
 			}
 		}
 	}
-
-	
+		
 </script>
