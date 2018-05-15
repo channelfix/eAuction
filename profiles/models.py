@@ -11,11 +11,13 @@ class Profile(models.Model):
     biography = models.CharField(max_length=100)
 
     # Profile picture
-    avatar = models.CharField(max_length=50)
+    avatar = models.ImageField(upload_to='Downloads/', default='Downloads/')
+
+    # Filename
+    file_name = models.CharField(max_length=50)
 
     def __str__(self):
-        """ Return Avatar """
+        return self.file_name
 
-        return self.avatar
 
 # Create your models here.
