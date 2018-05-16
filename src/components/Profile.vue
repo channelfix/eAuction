@@ -26,7 +26,8 @@
 					var html = ""
 
 					// [Current User]
-					html += "<h3>" + this.userProfile.avatar + "</h3>"
+					html += "<img src=../../../" + this.userProfile.avatar + "><br>"
+
 
 					// Display the full name
 					html += "<h4>Name: </h4><p>" + this.userProfile.last_name + ", " + this.userProfile.first_name + "</p>"
