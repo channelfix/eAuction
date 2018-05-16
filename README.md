@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Read me
 =======
 # eAuction
@@ -84,4 +83,3 @@ Assuming you've finished following the steps above, the git flow is as follows:
      - refactor
 2. After finishing a task, **push request** to `development` branch
 3. This will then be reviewed, and would be pushed to the `master` branch
->>>>>>> 9a497bd71f172eade686945ca699c2c49e1d73c8
