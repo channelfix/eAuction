@@ -11,7 +11,7 @@ class Profile(models.Model):
     biography = models.CharField(max_length=100)
 
     # Profile picture
-    avatar = models.ImageField(upload_to='Downloads/', default='Downloads/')
+    avatar = models.ImageField()
 
     # Filename
     file_name = models.CharField(max_length=50)
