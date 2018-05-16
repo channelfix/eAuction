@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <v-app dark>
     <router-view/>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -11,9 +11,5 @@ export default {
 </script>
 
 <style>
-@import "./stylesheet/main.css";
-</style>
-
-<style lang="scss">
-@import "./stylesheet/main.scss";
+@import "./assets/stylesheet/main.scss";
 </style>

@@ -3,12 +3,21 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import VueMaterial from 'vue-material'
-import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/default.css'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
+import colors from 'vuetify/es5/util/colors'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
-Vue.use(VueMaterial)
+Vue.use(VueAxios, axios)
 
+Vue.use(Vuetify, {
+  theme: {
+    primary: colors.amber.lighten5, // #E53935
+    secondary: colors.amber.lighten1, // #FFCDD2
+    accent: colors.amber.accent1 // #3F51B5
+  }
+});
 
 Vue.config.productionTip = false
 
