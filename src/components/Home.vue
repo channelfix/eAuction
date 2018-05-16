@@ -1,3 +1,43 @@
 <template>
-	<h1>Welcome to home</h1>
+	<v-layout 
+		wrap 
+		fill-height
+	>
+		<v-container 
+			fluid
+		>
+		  	<v-toolbar 
+	  			color="amber darken-3"
+			>
+			    <v-toolbar-side-icon 
+			    	@click="showNav = !showNav"
+		   		>
+		   		</v-toolbar-side-icon>
+			    <v-toolbar-title>Home</v-toolbar-title>
+			    <v-spacer></v-spacer>
+		 	</v-toolbar>
+		</v-container>
+		<v-navigation-drawer 
+			temporary 
+			absolute 
+			v-model="showNav">
+	    	<v-list>
+	    		<v-toolbar class="transparent">
+					<v-toolbar-title>Username Here</v-toolbar-title>
+	    		</v-toolbar>
+	    	</v-list>
+	  	</v-navigation-drawer>
+	</v-layout>
 </template>
+
+<script>
+export default {
+	name: 'Home',
+	data(){
+		return {
+			showNav: false,
+		}
+	}
+}
+</script>
+
