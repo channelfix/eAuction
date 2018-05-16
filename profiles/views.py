@@ -29,38 +29,21 @@ def request_profile(request):
     user = request.user
     if user and user.is_active:
         # get the name, email from given User model.
-        queryset = User.objects.filter(username=user.username)
-        user_dict = list(queryset.values('first_name', 'last_name', 'email'))
-
-        # Get the Profile model
+        user = User.objects.get(username=user.username)
         user_profile = user.profile
-
-        # Get the filename for avatar
-        pic_name = user_profile.file_name
-
-        # Get the Avatar model
-        avatar = user_profile.avatar
-
-        # Get the Biography from a given Profile object
-        bio = user_profile.biography
+        user_tags = list(user_profile.tags_set.all().values())
+        print(user_profile.avatar.url)
 
         context = {
-            'pic_name': pic_name,
-            'avatar': avatar,
-            'bio': bio
+            'username': user.username,
+            'email': user.email,
+            'last_name': user.last_name,
+            'first_name': user.first_name,
+            'filename': user_profile.file_name,
+            'biography': user_profile.biography,
+            'avatar': user_profile.avatar.url,
+            'tags': user_tags
         }
-
-        # get all the tags for this user instance.
-        # tags_dict = list(user.profile.tags_set.all().values())
-
-        # Concatenate all the fields given from
-        # User, Profile and Tag above.profile
-
-        # context.update(user_dict[0])
-        # context.update(profile_dict)
-        # context.update({'tags': tags_dict})
-
-        # print(context)
 
         return HttpResponse(json.dumps(context))
 
