@@ -1,6 +1,33 @@
 <template>
- 	<div id="profile_id"> 	
- 		<button @click="requestProfile">request profile</button>
+	<div id="profile_id">
+		<div id='profile' v-if="hasProfilePic"> 
+			<img :src="profilePic" width="500" height="500"/>
+		</div>
+
+		<input type="file" id="fileElem" v-on:change="updateImageDisplay"><br>
+
+		<!-- [Current User] -->
+
+		<!-- Full Name -->
+		<b>Name:</b>
+		<p v-text="name"></p>
+
+		<!-- Any Email -->
+		<b>Email:</b>
+		<p v-text="email"></p>
+
+		<!-- Biography -->
+		<b>Biography:</b>
+		<p v-text="biography"></p>
+
+		<!-- Tags -->
+		<b>Tags:</b>
+		<ul>
+			<!-- Display all tags for current User. -->
+			<li v-for="tag in tags">
+				{{tag.name}}
+			</li>
+		</ul>
  	</div>
 </template>
 
@@ -8,52 +35,92 @@
 	import axios from 'axios';
 
 	export default {
+	// User Details
 		data() {
 			return {
-				userProfile: null
+				userProfile: '',
+				name: '',
+				email: '',
+				biography: '',
+				profilePic: '',
+				tags: [],
+				input: ''
 			}
 		},
+
 		methods: {
-			requestProfile: function() {
+			// This function will check the image format then updates the profile picture.
+			updateImageDisplay: function() {
+				var imageFile = this.input.files
+
+				// Check if any file is selected from File Selector.
+				if(imageFile.length == 1){
+					// Check if the file format is JPEG or PNG file.			
+					if(this.isValidImageFormat(imageFile[0].type))
+						this.profilePic = window.URL.createObjectURL(imageFile[0]);
+					else
+						alert('Cannot import this file. use only this following format (jpg, jpeg, and png).');
+				}
+				else
+					alert('No file selected.');
+			},
+
+			// This function will return true if the file is JPEG or PNG.
+			isValidImageFormat: function(selectedFileType) {
+
+				if(selectedFileType === 'image/jpg' || selectedFileType === 'image/jpeg' || selectedFileType === 'image/png')
+					return true;
+			}
+		},
+
+		computed: {
+
+			// This function will return true if there exist a picture.
+			hasProfilePic() {
+				return this.profilePic.length > 0
+			}
+		},
+
+		mounted: function() {
+
+				// Request for the user details from the server.
 				axios.get("http://localhost:8000/profile/request_profile/")
 				.then((response) => {
-					
+
 					// Get all the field value from User, Profile and Tags 					
 					this.userProfile = response.data
 
-					var div = document.getElementById("profile_id")
+					//[Current User]
 
-					var html = ""
+					// Profile Picture					
+					this.profilePic = '../../../' + this.userProfile.avatar
 
-					// [Current User]
-					html += "<img src=../../../" + this.userProfile.avatar + "><br>"
+					// Full name
+					this.name = this.userProfile.last_name + ", " + this.userProfile.first_name;
 
+					// Email
+					this.email = this.userProfile.email;
 
-					// Display the full name
-					html += "<h4>Name: </h4><p>" + this.userProfile.last_name + ", " + this.userProfile.first_name + "</p>"
+					// Biography
+					this.biography = this.userProfile.biography;
 
-					// Display the email
-					html += "<h4>Email: </h4><p>" + this.userProfile.email + "</p>"
+					// Tags
+					this.tags = this.userProfile.tags;
 
-					// Display the biography
-					html += "<h4>Biography: </h4><p>" + this.userProfile.biography + "</p>"
-
-					// Get all the tags value given the 'tag' key
-					var tags = this.userProfile.tags
-					html += "<h4>Tags: </h4>"
-
-					for(var x in tags)
-						html += "<p>" + tags[x].name + "</p>"			
-
-
-					div.innerHTML = html
-
+					// Get a reference to File Selector
+					this.input = document.getElementById('fileElem');
 
 				}, (error) => {
-					alert('Failed to request')
-				})
-			}
+					document.getElementById('profile_id').style.visibility="hidden";
+
+					// Note:(Hard coded)
+					var badRequest = document.createElement('h1');
+					badRequest.textContent = 'Bad Request. Client Fault'
+			})
 		}
 	}
-		
+
 </script>
+
+<style scoped>
+</style>
