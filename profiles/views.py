@@ -7,14 +7,19 @@ import json
 
 def view_profile(request):
 
+    # Check if the username and password were filled.
     if 'username' in request.GET and 'password' in request.GET:
         username = request.POST.get('username', request.GET['username'])
         password = request.POST.get('password', request.GET['password'])
 
         user = auth.authenticate(username=username, password=password)
 
+        # Check if th user account is still active.
         if user and user.is_active:
+            # Store the username and password temporarily
+            # to be used by request_profile function.
             auth.login(request, user)
+            # Go to Profile page.
             return render(request, 'index.html')
         else:
             return HttpResponse('Failed to Login')
@@ -25,24 +30,26 @@ def view_profile(request):
 def request_profile(request):
 
     user = request.user
-    if user and user.is_active:
-        # get the name, email from given User model.
-        user = User.objects.get(username=user.username)
-        user_profile = user.profile
-        user_tags = list(user_profile.tags_set.all().values())
-        print(user_profile.avatar.url)
 
-        context = {
-            'username': user.username,
-            'email': user.email,
-            'last_name': user.last_name,
-            'first_name': user.first_name,
-            'filename': user_profile.file_name,
-            'biography': user_profile.biography,
-            'avatar': user_profile.avatar.url,
-            'tags': user_tags
-        }
+    # Get the User object
+    user = User.objects.get(username=user.username)
 
-        return HttpResponse(json.dumps(context))
+    # Get the Profile object
+    user_profile = user.profile
 
-    return HttpResponse('Failed to login')
+    # Get the list of tags
+    user_tags = list(user_profile.tags_set.all().values())
+
+    # Send all current User details to Client.
+    context = {
+        'username': user.username,
+        'email': user.email,
+        'last_name': user.last_name,
+        'first_name': user.first_name,
+        'filename': user_profile.file_name,
+        'biography': user_profile.biography,
+        'avatar': user_profile.avatar.url,
+        'tags': user_tags
+    }
+
+    return HttpResponse(json.dumps(context))
