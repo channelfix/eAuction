@@ -32,7 +32,7 @@
 </template>
 
 <script type="text/javascript">
-	import Request from '../assets/.js/Request';
+	import Request from '../assets/js/Request.js';
 
 	export default {
 	// User Details

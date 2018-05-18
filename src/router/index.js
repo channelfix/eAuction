@@ -17,16 +17,18 @@ export default new Router({
         component: LogIn
     },{
     	path: '/menu',
-    	name: 'PagesNavigation',
     	component: PagesNavigation,
+      props: true,
       children: [
         {
-          path: '',
+          path: 'home',
           name: 'Home',
+          props: true,
           component: Home,
         },{
           path: 'profile',
           name: 'Profile',
+          props: true,
           component: Profile
         }
       ],
