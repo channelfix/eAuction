@@ -23,12 +23,10 @@ export default new Router({
         {
           path: 'home',
           name: 'Home',
-          props: true,
           component: Home,
         },{
           path: 'profile',
           name: 'Profile',
-          props: true,
           component: Profile
         }
       ],
