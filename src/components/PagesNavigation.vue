@@ -97,7 +97,7 @@ export default {
 		}
 	},
 	mounted() {
-		if(typeof this.username != undefined){
+		if(this.username == undefined){
 			this.$router.push({
 				name: 'LogIn'
 			})
