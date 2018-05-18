@@ -123,4 +123,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build'),
     os.path.join(BASE_DIR, 'assets'),
+<<<<<<< HEAD
 ]
+=======
+]
+>>>>>>> origin/chore/add-gitignore-build
