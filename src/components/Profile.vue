@@ -32,7 +32,7 @@
 </template>
 
 <script type="text/javascript">
-	import axios from 'axios';
+	import Request from '../assets/.js/Request';
 
 	export default {
 	// User Details
@@ -82,43 +82,37 @@
 			}
 		},
 
-		mounted: function() {
+		beforeMount: function() {
+				/*let request = new Request();
+				let formdata = new FormData();
+
+				//add username to formdata
 
 				// Request for the user details from the server.
-				axios.get("http://localhost:8000/profile/request_profile/")
-				.then((response) => {
+				request.post("http://localhost:8000/profile/", "request_profile/", formdata, 
+					() => {
+						this.userProfile = response.data
 
-					// Get all the field value from User, Profile and Tags 					
-					this.userProfile = response.data
+						//[Current User]
 
-					//[Current User]
+						// Profile Picture					
+						this.profilePic = '../../../' + this.userProfile.avatar
 
-					// Profile Picture					
-					this.profilePic = '../../../' + this.userProfile.avatar
+						// Full name
+						this.name = this.userProfile.last_name + ", " + this.userProfile.first_name;
 
-					// Full name
-					this.name = this.userProfile.last_name + ", " + this.userProfile.first_name;
+						// Email
+						this.email = this.userProfile.email;
 
-					// Email
-					this.email = this.userProfile.email;
+						// Biography
+						this.biography = this.userProfile.biography;
 
-					// Biography
-					this.biography = this.userProfile.biography;
+						// Tags
+						this.tags = this.userProfile.tags;
 
-					// Tags
-					this.tags = this.userProfile.tags;
-
-					// Get a reference to File Selector
-					this.input = document.getElementById('fileElem');
-
-				}, (error) => {
-					/*document.getElementById('profile_id').style.visibility="hidden";
-
-					// Note:(Hard coded)
-					var badRequest = document.createElement('h1');
-					badRequest.textContent = 'Bad Request. Client Fault'
-					*/
-			})
+						// Get a reference to File Selector
+						this.input = document.getElementById('fileElem');
+				})*/
 		}
 	}
 
