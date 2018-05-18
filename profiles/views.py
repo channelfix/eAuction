@@ -29,7 +29,9 @@ def view_profile(request):
 
 def request_profile(request):
 
-    user = request.user
+    sent_username = request.POST.get('username', '')
+
+    user = User.objects.get(username=sent_username)
 
     # Get the Profile object
     user_profile = user.profile
