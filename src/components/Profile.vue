@@ -37,6 +37,9 @@
 	export default {
 	// User Details
 		name: "Profile",
+		props: {
+			username: String,
+		},
 		data() {
 			return {
 				userProfile: '',
@@ -81,7 +84,6 @@
 				return this.profilePic.length > 0
 			}
 		},
-
 		beforeMount: function() {
 				/*let request = new Request();
 				let formdata = new FormData();
