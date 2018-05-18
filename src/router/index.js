@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import LogIn from '@/components/LogIn'
 import Home from '@/components/Home'
 import ErrorPage from '@/components/ErrorPage'
+import PagesNavigation from '@/components/PagesNavigation'
 
 Vue.use(Router)
 
@@ -13,11 +14,17 @@ export default new Router({
 	    path: '',
         name: 'LogIn',
         component: LogIn
-    },
-    {
-    	path: '/home',
-    	name: 'Home',
-    	component: Home,
+    },{
+    	path: '/menu',
+    	name: 'PagesNavigation',
+    	component: PagesNavigation,
+      children: [
+        {
+          path: '',
+          name: 'Home',
+          component: Home,
+        },
+      ],
     },
     {
       path: '*',
