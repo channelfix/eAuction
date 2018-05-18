@@ -16,7 +16,6 @@
 			   		>
 			   		</v-toolbar-side-icon>
 				    <v-toolbar-title>Home</v-toolbar-title>
-				    <v-spacer></v-spacer>
 			 	</v-toolbar>
 		 	</v-container>
 		 	<router-view></router-view>
@@ -31,7 +30,7 @@
 				three-line
 	    	>
 	    		<v-toolbar class="transparent">
-					<v-toolbar-title>Username Here</v-toolbar-title>
+					<v-toolbar-title>{{username}}</v-toolbar-title>
 	    		</v-toolbar>
 	    		<v-list-tile
 					v-for="page in pages"
@@ -58,6 +57,9 @@ import Home from './Home'
 
 export default {
 	name: 'PagesNavigation',
+	props: {
+		username: String,
+	},
 	data(){
 		return {
 			showNav: false,
@@ -82,12 +84,24 @@ export default {
 	},
 	methods: {
 		route(path){
-			let currentRoute = this.$router.app._route.name
+			let currentRoute = this.$route.name
+			
+			path.params = {
+				username: this.username,
+			}
+
 			if(path.name == currentRoute)
 				this.showNav = false;
 			else
-			this.$router.push(path);
+				this.$router.push(path);
 		}
+	},
+	mounted() {
+		if(this.username == undefined){
+			this.$router.push({
+				name: 'LogIn'
+			})
+		} 
 	}
 }
 </script>
