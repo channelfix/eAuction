@@ -1,35 +1,72 @@
 <template>
-	<div id="profile_id">
-		<div id='profile' v-if="hasProfilePic"> 
-			<img :src="profilePic" width="500" height="500"/>
-		</div>
+	<v-container fluid>
+		<v-layout row justify-center align-center mt-5>
+			<div>				
+				<div id='profile' v-if="hasProfilePic">
+					<v-avatar 
+						:title = "image"
+						:size = 400
+						color = "blue">
+						<img :src="profilePic"/>
+					</v-avatar>
+				</div>
+				<input type="file" id="fileElem" v-on:change="updateImageDisplay">
+				<!-- [Current User] -->
 
-		<input type="file" id="fileElem" v-on:change="updateImageDisplay"><br>
+				<!-- Full Name -->
+				<v-layout row justify-center>
+					<div class = 'mx-auto' align='center'>
+						<!-- note: remove 'name: ', 'email' -->
+						<span class = 'body-2'>Name:</span>
+						<p v-text="name" class="title"></p>
 
-		<!-- [Current User] -->
+						<!-- Any Email -->
+						<span class = 'body-2'>Email:</span>
+						<p v-text="email"></p>
 
-		<!-- Full Name -->
-		<b>Name:</b>
-		<p v-text="name"></p>
+						<!-- Tags -->
+						<span class = 'body-2'>Tags:</span>
+						<ul>
+							<!-- Display all tags for current User. -->
+							<li v-for="tag in tags">
+								{{tag.name}} &nbsp
+							</li>
+						</ul>
+						<!-- <p v-for="tag in tags">
+							{{tag.name}}
+						</p> -->
 
-		<!-- Any Email -->
-		<b>Email:</b>
-		<p v-text="email"></p>
-
-		<!-- Biography -->
-		<b>Biography:</b>
-		<p v-text="biography"></p>
-
-		<!-- Tags -->
-		<b>Tags:</b>
-		<ul>
-			<!-- Display all tags for current User. -->
-			<li v-for="tag in tags">
-				{{tag.name}}
-			</li>
-		</ul>
- 	</div>
+						<!-- Biography -->
+						<span class = 'body-2'>Biography:</span>
+						<p v-text="biography"></p>
+					</div>
+				</v-layout>
+			</div>
+		</v-layout>
+	</v-container>
 </template>
+
+<style>
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+
+	li {
+		float: left;
+	}
+
+	html{
+		overflow: hidden;
+	}
+
+	img{
+		box-shadow: 0px 2px 10px #000000;
+	}
+
+</style>
 
 <script type="text/javascript">
 	import axios from 'axios';
