@@ -1,3 +1,5 @@
+Read me
+=======
 # eAuction
 A web platform that brings traditional auctioning to a modern online system, coupled with tools that’s necessary for the auctioning process.
 
