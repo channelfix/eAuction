@@ -84,15 +84,17 @@
 				return this.profilePic.length > 0
 			}
 		},
-		beforeMount: function() {
-				/*let request = new Request();
+		mounted: function() {
+				let request = new Request();
 				let formdata = new FormData();
 
 				//add username to formdata
+				formdata.set('username', this.username);
 
 				// Request for the user details from the server.
 				request.post("http://localhost:8000/profile/", "request_profile/", formdata, 
-					() => {
+					(response) => {
+
 						this.userProfile = response.data
 
 						//[Current User]
@@ -114,7 +116,7 @@
 
 						// Get a reference to File Selector
 						this.input = document.getElementById('fileElem');
-				})*/
+				})
 		}
 	}
 

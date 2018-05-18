@@ -31,9 +31,6 @@ def request_profile(request):
 
     user = request.user
 
-    # Get the User object
-    user = User.objects.get(username=user.username)
-
     # Get the Profile object
     user_profile = user.profile
 
