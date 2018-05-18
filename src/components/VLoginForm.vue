@@ -43,7 +43,12 @@
 						if(response instanceof Error){
 							// do error stuff
 						}else {
-							this.$router.push({path: '/menu'});
+							this.$router.push({path: '/menu',
+								params: {
+									currentPage: 'Home',
+									user: this.user,
+								}
+							});
 						}
 					}
 				);	

@@ -66,7 +66,7 @@ export default {
 					title: "Home",
 					icon: "home",
 					path: {
-						name: 'Home',
+						name: 'Home'
 					},
 				},{
 					title: "Profile",
@@ -82,9 +82,10 @@ export default {
 	},
 	methods: {
 		route(path){
-			if(path.name == "Home")
+			let currentRoute = this.$router.app._route.name
+			if(path.name == currentRoute)
 				this.showNav = false;
-
+			else
 			this.$router.push(path);
 		}
 	}

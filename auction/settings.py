@@ -25,13 +25,15 @@ SECRET_KEY = '-64!(_&y@a-$jgi#o@4z!h5k2j_t)$jypg9_&7_fh$bcln^q!o'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'login',
+    'profiles',
+    'app.tags',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,6 +121,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = '../Downloads'
+MEDIA_URL = 'Downloads/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build'),
