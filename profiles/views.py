@@ -3,7 +3,6 @@ from django.http import JsonResponse
 
 
 def request_profile_details(request):
-
     sent_username = request.POST.get('username', '')
 
     user = User.objects.get(username=sent_username)
