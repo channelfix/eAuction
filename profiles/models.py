@@ -12,12 +12,3 @@ class Profile(models.Model):
 
     # Profile picture
     avatar = models.ImageField()
-
-    # Filename
-    file_name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.file_name
-
-
-# Create your models here.
