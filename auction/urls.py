@@ -25,5 +25,5 @@ urlpatterns = [
     path('login/', include('login.urls')),
     path('admin/', admin.site.urls),
     path('profile/', include('profiles.urls')),
-    url(r'^.*$', TemplateView.as_view(template_name="../templates/index.html"))
+    path('', TemplateView.as_view(template_name="../templates/index.html"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
