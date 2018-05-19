@@ -2,13 +2,8 @@
 	<v-container fluid>
 		<v-layout row justify-center align-center mt-5>
 			<div>				
-				<div id='profile' v-if="hasProfilePic">
-					<v-avatar 
-						:title = "image"
-						:size = 400
-						color = "blue">
-						<img :src="profilePic"/>
-					</v-avatar>
+				<div id='profile' v-if="hasProfilePic">					
+					<img :src="profilePic"/>
 				</div>
 				<input type="file" id="fileElem" v-on:change="updateImageDisplay">
 				<!-- [Current User] -->
@@ -46,27 +41,6 @@
 	</v-container>
 </template>
 
-<style>
-	ul {
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-		overflow: hidden;
-	}
-
-	li {
-		float: left;
-	}
-
-	html{
-		overflow: hidden;
-	}
-
-	img{
-		box-shadow: 0px 2px 10px #000000;
-	}
-
-</style>
 
 <script type="text/javascript">
 	import Request from '../assets/js/Request.js';
@@ -140,6 +114,7 @@
 
 						// Profile Picture					
 						this.profilePic = '../../'+this.userProfile.avatar
+						console.log(this.profilePic)
 
 						// Full name
 						this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name;
@@ -161,5 +136,24 @@
 
 </script>
 
-<style scoped>
+<style>
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+
+	li {
+		float: left;
+	}
+
+	html{
+		overflow: hidden;
+	}
+
+	img{
+		box-shadow: 0px 2px 10px #000000;
+	}
+
 </style>
