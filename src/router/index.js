@@ -31,7 +31,8 @@ export default new Router({
           component: Profile
         }
       ],
-    },{
+    },
+    {
       path: '*',
       name: '404',
       component: ErrorPage,
