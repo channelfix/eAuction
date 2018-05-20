@@ -3,10 +3,7 @@
 		<v-layout row justify-center align-center mt-5>
 			<div>				
 				<div id='profile' v-if="hasProfilePic">
-					<v-avatar 
-						:title = "image"
-						:size = 400
-						color = "blue">
+					<v-avatar size = 400>
 						<img :src="profilePic"/>
 					</v-avatar>
 				</div>
@@ -124,7 +121,6 @@
 		mounted: function() {
 				let request = new Request();
 				let formdata = new FormData();
-
 				//add username to formdata
 				formdata.set('username', this.username);
 
