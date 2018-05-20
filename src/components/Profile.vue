@@ -1,7 +1,7 @@
 <template>
 	<v-container fluid>
 		<v-layout row justify-center align-center mt-5>
-			<div>				
+			<div>
 				<div id='profile' v-if="hasProfilePic">
 					<v-avatar size = 400>
 						<img :src="profilePic"/>
@@ -43,27 +43,6 @@
 	</v-container>
 </template>
 
-<style>
-	ul {
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-		overflow: hidden;
-	}
-
-	li {
-		float: left;
-	}
-
-	html{
-		overflow: hidden;
-	}
-
-	img{
-		box-shadow: 0px 2px 10px #000000;
-	}
-
-</style>
 
 <script type="text/javascript">
 	import Request from '../assets/js/Request.js';
@@ -82,20 +61,22 @@
 				biography: '',
 				profilePic: '',
 				tags: [],
-				input: ''
+				fileSelector: ''
 			}
 		},
 
 		methods: {
 			// This function will check the image format then updates the profile picture.
 			updateImageDisplay: function() {
-				var imageFile = this.input.files
+				var imageFile = this.fileSelector.files
 
 				// Check if any file is selected from File Selector.
 				if(imageFile.length == 1){
 					// Check if the file format is JPEG or PNG file.			
-					if(this.isValidImageFormat(imageFile[0].type))
+					if(this.isValidImageFormat(imageFile[0].type)){
 						this.profilePic = window.URL.createObjectURL(imageFile[0]);
+						console.log(this.profilePic)
+					}
 					else
 						alert('Cannot import this file. use only this following format (jpg, jpeg, and png).');
 				}
@@ -125,7 +106,7 @@
 				formdata.set('username', this.username);
 
 				// Request for the user details from the server.
-				request.post("http://localhost:8000/profile/", "request_profile/", formdata, 
+				request.post('http://localhost:8000/profile/', 'request_profile_details/', formdata, 
 					(response) => {
 
 						this.userProfile = response.data
@@ -133,10 +114,11 @@
 						//[Current User]
 
 						// Profile Picture					
-						this.profilePic = '../../../' + this.userProfile.avatar
+						this.profilePic = '../../'+this.userProfile.avatar
+						console.log(this.profilePic)
 
 						// Full name
-						this.name = this.userProfile.last_name + ", " + this.userProfile.first_name;
+						this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name;
 
 						// Email
 						this.email = this.userProfile.email;
@@ -148,12 +130,31 @@
 						this.tags = this.userProfile.tags;
 
 						// Get a reference to File Selector
-						this.input = document.getElementById('fileElem');
+						this.fileSelector = document.getElementById('fileElem');
 				})
 		}
 	}
 
 </script>
 
-<style scoped>
+<style>
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+
+	li {
+		float: left;
+	}
+
+	html{
+		overflow: hidden;
+	}
+
+	img{
+		box-shadow: 0px 2px 10px #000000;
+	}
+
 </style>

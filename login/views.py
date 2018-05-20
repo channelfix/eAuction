@@ -1,5 +1,5 @@
-import json
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse
+from django.http import HttpResponseBadRequest
 from django.views.generic import View
 from django.contrib import auth
 
@@ -12,6 +12,6 @@ class IndexViewPost(View):
 
         if user is not None:
             auth.login(request, user)
-            return HttpResponse(json.dumps({'isValid': True}))
+            return JsonResponse({'isValid': True})
         else:
             return HttpResponseBadRequest()

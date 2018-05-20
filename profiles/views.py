@@ -1,54 +1,30 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.contrib import auth
 from django.contrib.auth.models import User
-from django.views.generic import View
-import json
+from django.http import JsonResponse
 
 
-def view_profile(request):
-
-    # Check if the username and password were filled.
-    if 'username' in request.GET and 'password' in request.GET:
-        username = request.POST.get('username', request.GET['username'])
-        password = request.POST.get('password', request.GET['password'])
-
-        user = auth.authenticate(username=username, password=password)
-
-        # Check if th user account is still active.
-        if user and user.is_active:
-            # Store the username and password temporarily
-            # to be used by request_profile function.
-            auth.login(request, user)
-            # Go to Profile page.
-            return render(request, 'index.html')
-        else:
-            return HttpResponse('Failed to Login')
-
-    return HttpResponse('404 Not Found')
-
-
-def request_profile(request):
+def request_profile_details(request):
     sent_username = request.POST.get('username', '')
 
     user = User.objects.filter(username=sent_username)
 
     # Get the Profile object
-    # user_profile = user.profile
 
-    # # Get the list of tags
-    # user_tags = list(user_profile.tags_set.all().values())
+    user_profile = user.profile
 
-    # # Send all current User details to Client.
+    # Get the list of tags
+    user_tags = list(user_profile.tags_set.all().values())
+
+    print(user_profile.avatar.url)
+
+    # Send all current User details to Client.
     # context = {
     #     'username': user.username,
     #     'email': user.email,
     #     'last_name': user.last_name,
     #     'first_name': user.first_name,
-    #     'filename': user_profile.file_name,
     #     'biography': user_profile.biography,
     #     'avatar': user_profile.avatar.url,
     #     'tags': user_tags
     # }
 
-    return HttpResponse(json.dumps(''))
+    return JsonResponse(context)

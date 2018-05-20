@@ -44,3 +44,6 @@ local_settings.py
 *.hot-update.js
 
 assets/
+
+Downloads/
+
