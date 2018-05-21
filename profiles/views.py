@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 
 def request_profile_details(request):
@@ -27,3 +27,15 @@ def request_profile_details(request):
     }
 
     return JsonResponse(context)
+
+
+def save_profile_pic(request):
+    """ Save Image inside the media folder """
+
+    # File name of the current image to be upload.
+    user = request.user
+    profile = user.profile
+    profile.avatar = request.FILES['imageFile']
+    profile.save()
+
+    return HttpResponse('Successfully change profile')
