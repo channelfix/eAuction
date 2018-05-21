@@ -14,7 +14,7 @@ class Profile(models.Model):
     avatar = models.ImageField()
 
     # Filename
-    file_name = models.CharField(max_length=50)
+    file_name = models.CharField(max_length=50).blank = True
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
