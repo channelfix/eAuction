@@ -31,13 +31,14 @@ export default new Router({
           name: 'Profile',
           props: true,
           component: Profile
-        },{
+        },
+      ],
+    },
+    { //temp
           path: '/auction/:id',
           name: 'Auction',
           component: Auction,
         },
-      ],
-    },
     {
       path: '*',
       name: '404',
