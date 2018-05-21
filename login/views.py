@@ -1,19 +1,17 @@
-import json
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.template import loader
-from django.urls import reverse
-from django.views.generic import TemplateView
+from django.http import JsonResponse
+from django.http import HttpResponseBadRequest
+from django.views.generic import View
+from django.contrib import auth
 
 
-def index(request):
-	name = request.POST.get('name')
-	context = {
-		'name': name
-	}
-	# return HttpResponse(json.dumps(context))
-	return render(request, 'auction/index.html', context)
+class IndexViewPost(View):
+    def post(self, request):
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        user = auth.authenticate(username=username, password=password)
 
-
-class LoginView(TemplateView):
-	template_name='index.html'
+        if user is not None:
+            auth.login(request, user)
+            return JsonResponse({'isValid': True})
+        else:
+            return HttpResponseBadRequest()
