@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'login',
     'profiles',
     'app.tags',
+    'livestream',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
