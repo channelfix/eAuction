@@ -43,6 +43,7 @@
 						if(response instanceof Error){
 							// do error stuff
 						}else {
+							this.$store.commit('authenticated', true)
 							this.$router.push({
 								name: 'Home',
 								params: {

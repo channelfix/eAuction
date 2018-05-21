@@ -1,10 +1,16 @@
 <template>
 	<v-container fluid>
 		<v-layout row justify-center align-center mt-5>
+<<<<<<< HEAD
 			<div>				
 				<div id='profile' v-if="hasProfilePic">
 					<v-avatar 					
 						size = 400>
+=======
+			<div>
+				<div id='profile' v-if="hasProfilePic">
+					<v-avatar size = 400>
+>>>>>>> 6ac658cd1993c692365bb6a8ce9fd5f5bd10ec96
 						<img :src="profilePic"/>
 					</v-avatar>
 				</div>
@@ -116,7 +122,6 @@
 		mounted: function() {
 				let request = new Request();
 				let formdata = new FormData();
-
 				//add username to formdata
 				formdata.set('username', this.username);
 
