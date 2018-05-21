@@ -15,7 +15,7 @@
 				    	@click="showNav = !showNav"
 			   		>
 			   		</v-toolbar-side-icon>
-				    <v-toolbar-title>Home</v-toolbar-title>
+				    <v-toolbar-title>{{currentRoute}}</v-toolbar-title>
 			 	</v-toolbar>
 		 	</v-container>
 		 	<router-view></router-view>
@@ -63,6 +63,7 @@ export default {
 	data(){
 		return {
 			showNav: false,
+			currentRoute: "",
 			pages: [
 				{
 					title: "Home",
@@ -96,7 +97,15 @@ export default {
 				this.$router.push(path);
 		}
 	},
+	watch: {
+		'$route' (to,from) {
+			console.log(to);
+			this.currentRoute = this.$route.name;
+		}
+	},
 	mounted() {
+		this.currentRoute = this.$route.name;
+
 		if(this.username == undefined){
 			this.$router.push({
 				name: 'LogIn'
