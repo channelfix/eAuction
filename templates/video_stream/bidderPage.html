@@ -1,0 +1,18 @@
+{% load static %}
+
+<head>
+	<title>Bidder</title>
+	<script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+	<script type="text/javascript">
+		var apiKey = '{{api_key}}';
+		var sessionId = '{{session_id}}';
+		var token = '{{token}}';
+	</script>
+</head>
+<body>
+	<h1 id = "test"></h1> <!-- notifies the user that the stream is going on. -->
+	<h2></h2> <!-- notifies the user that there was an error connection between the pubisher and the session. -->
+	<script type="text/javascript" src="{% static 'bidder.js' %}"></script>
+</body>
+
+

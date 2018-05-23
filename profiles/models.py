@@ -12,14 +12,10 @@ class Profile(models.Model):
 
     # Profile picture
     avatar = models.ImageField()
-
-    # Filename
-    file_name = models.CharField(max_length=50).blank = True
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.file_name
+        return "profile " + str(self.id)
 
 
 # Create your models here.

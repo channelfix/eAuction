@@ -123,8 +123,7 @@
 				let request = new Request();
 				let formdata = new FormData();
 				//add username to formdata
-				formdata.set('username', this.username);
-
+				formdata.set('username', this.$route.params.username);
 				// Request for the user details from the server.
 				request.post('http://localhost:8000/', 'profile/request_profile_details/', formdata, 
 					(response) => {

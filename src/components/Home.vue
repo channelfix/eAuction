@@ -29,6 +29,7 @@
 				<v-card 
 					color="grey darken-1"
 					:hover="true"
+					@click.native="route(livestream.id)"
 				>
 					<v-card-media 
 						:src="livestream.thumbnail" 
@@ -63,16 +64,31 @@
 <script>
 export default {
 	name: 'Home',
+	props: {
+		username: String,
+	},
 	data(){
 		return {
 			showNav: false,
 			livestreams: [
 				{
+					id: 1,
 					title: "eAuction",
 					description: "eAuction",
 					thumbnail: "http://lheventures.com/wp-content/uploads/sites/7/2017/10/Cooke-Auction-Property-pic.png",
 				}
 			],
+		}
+	},
+	methods: {
+		route(id){
+			this.$router.push({
+				name: 'Auction',
+				params: {
+					id,
+					username: this.username,
+				}
+			})
 		}
 	}
 }

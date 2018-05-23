@@ -12,10 +12,11 @@
 		  			color="amber darken-3"
 				>
 				    <v-toolbar-side-icon 
-				    	@click="showNav = !showNav"
+				    	@click="navigate"
 			   		>
+			   			<v-icon>{{toolbarIcon}}</v-icon>
 			   		</v-toolbar-side-icon>
-				    <v-toolbar-title>Home</v-toolbar-title>
+				    <v-toolbar-title>{{currentRoute}}</v-toolbar-title>
 			 	</v-toolbar>
 		 	</v-container>
 		 	<router-view></router-view>
@@ -63,6 +64,8 @@ export default {
 	data(){
 		return {
 			showNav: false,
+			currentRoute: "",
+			toolbarIcon: "menu",
 			pages: [
 				{
 					title: "Home",
@@ -94,9 +97,33 @@ export default {
 				this.showNav = false;
 			else
 				this.$router.push(path);
+		},
+		navigate(){
+			if (this.toolbarIcon == "arrow_back"){
+				this.$router.push({
+					name: "Home",
+					params: {
+						username: this.username,
+					}
+				})
+			}else {
+				this.showNav = true;
+			}
+		}
+	},
+	watch: {
+		'$route' (to,from) {
+			this.currentRoute = this.$route.name;
+			if(this.currentRoute == "Auction"){
+				this.toolbarIcon = "arrow_back";
+			}else{
+				this.toolbarIcon = "menu";
+			}
 		}
 	},
 	mounted() {
+		this.currentRoute = this.$route.name;
+
 		if(this.username == undefined){
 			this.$router.push({
 				name: 'LogIn'

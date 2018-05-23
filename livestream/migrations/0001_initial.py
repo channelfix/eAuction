@@ -8,16 +8,21 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('profiles', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Tags',
+            name='Archive',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('profile', models.ManyToManyField(to='profiles.Profile')),
+                ('archive_id', models.CharField(max_length=1000)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Session',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('session_id', models.CharField(max_length=1000)),
             ],
         ),
     ]
