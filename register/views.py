@@ -1,8 +1,9 @@
 import json
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import get_object_or_404
 from django.views.generic import View
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
+from profiles.models import Profile
 from django.db.utils import IntegrityError
 # Create your views here.
 
@@ -21,6 +22,9 @@ class RegisterViewPost(View):
                                             username=username,
                                             email=email,
                                             password=password,)
+
+            newuser = get_object_or_404(User, username=username)
+            Profile.objects.create(user=newuser)
         except IntegrityError:
             return HttpResponseBadRequest()
 

@@ -53,6 +53,12 @@
 	</form>
 </template>
 
+<style>
+	html{
+		overflow: auto;
+	}
+</style>
+
 <script type="text/javascript">
 	import Request from '../assets/js/Request.js';
 
@@ -124,5 +130,5 @@
 </script>
 
 <style>
-	
+
 </style>

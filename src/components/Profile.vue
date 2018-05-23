@@ -15,11 +15,6 @@
 				<!-- Full Name -->
 				<v-layout row justify-center>
 					<div class = 'mx-auto' align='center'>
-						<v-btn
-							@click="moveToEdit"
-						>
-							Edit Profile
-						</v-btn>
 						<!-- note: remove 'name: ', 'email' -->
 						<span class = 'body-2'>Name:</span>
 						<p v-text="name" class="title"></p>
@@ -112,15 +107,6 @@
 
 				if(selectedFileType === 'image/jpg' || selectedFileType === 'image/jpeg' || selectedFileType === 'image/png')
 					return true;
-			},
-
-			moveToEdit(){
-				this.$router.push({
-					name: "Edit Profile",
-					params: {
-						username: this.username,
-					}
-				})
 			}
 		},
 
@@ -145,9 +131,10 @@
 						//[Current User]
 
 						// Profile Picture					
+
+						
 						this.profilePic = '/'+this.userProfile.avatar	
 						// Full name
-
 						this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name;
 
 						// Email
