@@ -32,13 +32,14 @@ export default new Router({
           props: true,
           component: Profile
         },
-      ],
-    },
-    { 
+        { 
           path: '/auction/:id',
           name: 'Auction',
           component: Auction,
         },
+      ],
+    },
+    
     {
       path: '*',
       name: '404',
