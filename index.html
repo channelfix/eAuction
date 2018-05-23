@@ -6,6 +6,20 @@
     <title>eAuction</title>
   </head>
   <body>
+
+    <script type="text/javascript">
+    
+      window.__INITIAL_STATE__ = {
+        'isAuthenticated' : false
+      }
+
+      {% if user.is_authenticated %}
+        window.__INITIAL_STATE__.isAuthenticated = true
+      {% endif %}
+
+    </script>
+
+  	{% csrf_token %}
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>

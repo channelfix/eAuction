@@ -64,6 +64,7 @@
 	import VRegisterForm from './VRegisterForm';
 
 	export default {
+		name: "LogIn",
 		data(){
 			return {
 				activeForm: 'VRegisterForm',
