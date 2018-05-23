@@ -100,12 +100,7 @@ export default {
 		},
 		navigate(){
 			if (this.toolbarIcon == "arrow_back"){
-				this.$router.push({
-					name: "Home",
-					params: {
-						username: this.username,
-					}
-				})
+				this.$router.go(-1);
 			}else {
 				this.showNav = true;
 			}
@@ -114,7 +109,9 @@ export default {
 	watch: {
 		'$route' (to,from) {
 			this.currentRoute = this.$route.name;
-			if(this.currentRoute == "Auction"){
+			if(this.currentRoute == "Auction" || 
+			   this.currentRoute == "Edit Profile"
+			){
 				this.toolbarIcon = "arrow_back";
 			}else{
 				this.toolbarIcon = "menu";
