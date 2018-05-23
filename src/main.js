@@ -22,7 +22,7 @@ Vue.use(Vuetify, {
 });
 
 Vue.config.productionTip = false
-store.commit('authenticated', window.__INITIAL_STATE__.isAuthenticated)
+/*store.commit('authenticated', window.__INITIAL_STATE__.isAuthenticated)
 router.beforeEach((to, from, next) => {
   let isAuth = store.state.isAuthenticated;
   console.log("Store isAuth: ", isAuth)
@@ -31,7 +31,7 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.isAuthRequired) return next()
   if (to.meta.isAuthRequired && isAuth) return next()
   return next('/')
-})
+})*/
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

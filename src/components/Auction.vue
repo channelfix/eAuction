@@ -76,10 +76,7 @@
 									column
 									justify-center
 								>
-									<p class="headline">product name</p>
-									<p class="headline">product name</p>
-									<p class="headline">product name</p>
-									<p class="headline">product name</p>
+									<p class="headline">{{currentProduct.name}}</p>
 								</v-layout>
 							</v-flex>
   						</v-layout>
@@ -90,14 +87,27 @@
   						<v-layout
 							align-center
 							justify-center
-							class="amber darken-3"
+							class="amber darken-1"
 						>
-							<span class="headline">Current Bid: &#8369 0.00</span>
+							<span class="headline">Current Bid: &#8369 {{formattedBid}}</span>
   						</v-layout>
 	  				</v-flex>
 	  				<v-flex md8
-						class="grey darken-3"
+						class="grey darken-4"
+	  					pa-4
 	  				>
+						<v-text-field
+						  name="log"
+						  id="log"
+						  flat
+						  :value="logMessage"
+						  no-resize
+						  disabled
+						  textarea
+						  multi-line
+						  rows="22"
+						>
+						</v-text-field>
 	  				</v-flex>
   		  		</v-layout>
 	  		</v-flex>
@@ -107,16 +117,44 @@
 </template>
 
 <script>
+function formatDecimal(num) {
+	return parseFloat(Math.round(num * 100) / 100).toFixed(2)
+}
+
 export default {
 	name: "Auction",
 	data(){
 		return{
-			messages: [
+			currentBid: 0,
+			products: [
 				{
-					name: 'Person',
-					accepted: false,
-				}
+					name: "Pencil",
+					price: 0,
+				},
 			],
+			activity: [
+				"Person accepted (Bid: 9999)",
+			],
+		}
+	},
+	computed: {
+		formattedBid() { 
+			return formatDecimal(this.currentBid);
+		},
+		logMessage(){
+			let msg = "";
+			this.activity.forEach(
+				(current) => {
+					msg += current+"\n";
+				}
+			);
+			console.log(msg);
+			return msg;
+		},
+		currentProduct() {
+			let current = this.products[this.products.length-1];
+			current.price = formatDecimal(current.price); 
+			return current;
 		}
 	},
 }

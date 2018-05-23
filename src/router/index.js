@@ -34,7 +34,7 @@ export default new Router({
         },
       ],
     },
-    { //temp
+    { 
           path: '/auction/:id',
           name: 'Auction',
           component: Auction,
