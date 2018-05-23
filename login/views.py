@@ -4,6 +4,7 @@ from django.views.generic import View
 from django.contrib import auth
 
 
+
 class IndexViewPost(View):
     def post(self, request):
         username = request.POST.get('username', '')

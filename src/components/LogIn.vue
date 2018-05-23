@@ -12,7 +12,7 @@
 				 >
 					<div>
 						<p class="text-lg-left display-4">eAuction</p>
-						<p class="text-lg-left headline">eAuction eAuction eAuction eAuction eAuction</p>
+						<p class="text-lg-left headline">eAasdsadsadaion eAuction eAuction</p>
 						<p class="text-lg-left headline">eAuction eAuction eAuction eAuction eAuction eAuction</p>
 						<p class="text-lg-left headline">eAuction eAuction eAuction eAuction eAuction eAuction eAuction</p>
 						<p class="text-lg-left headline">eAuction eAuction eAuction eAuction eAuction eAuction eAuction eAuction</p>

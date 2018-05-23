@@ -25,9 +25,6 @@ Vue.config.productionTip = false
 store.commit('authenticated', window.__INITIAL_STATE__.isAuthenticated)
 
 router.beforeEach((to, from, next) => {
-  console.log(to.params.username);
-  console.log(from);
-  console.log(next);
   let isAuth = store.state.isAuthenticated;
   if (to.name === 'LogIn' && isAuth) return next('/menu/profile/'+to.params.username) 
   if (!to.meta) return next()
