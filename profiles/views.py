@@ -6,7 +6,8 @@ from django.views.generic import View
 class ProfileView(View):
     def post(self, request):
         sent_username = request.POST.get('username', '')
-        user = User.objects.filter(username=sent_username).first()
+
+        user = User.objects.get(username=sent_username)
         user_profile = user.profile
         user_tags = list(user_profile.tags_set.all().values())
 
@@ -20,13 +21,15 @@ class ProfileView(View):
             'tags': user_tags
         }
 
+        print(context)
+
         return JsonResponse(context)
 
 
 class EditProfile(View):
     def post(self, request):
         sent_username = request.POST.get('username', '')
-        user = User.objects.filter(username=sent_username).first()
+        user = User.objects.get(username=sent_username)
 
         user.first_name = request.POST.get('first_name')
         user.last_name = request.POST.get('last_name')
