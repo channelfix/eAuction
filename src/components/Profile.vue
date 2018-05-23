@@ -23,21 +23,23 @@
 						<span class = 'body-2'>Email:</span>
 						<p v-text="email"></p>
 
-						<!-- Tags -->
-						<span class = 'body-2'>Tags:</span>
-						<ul>
-							<!-- Display all tags for current User. -->
-							<li v-for="tag in tags">
-								{{tag.name}} &nbsp
-							</li>
-						</ul>
-						<!-- <p v-for="tag in tags">
-							{{tag.name}}
-						</p> -->
+						<div v-if="isAuctioneer == true">
+							<!-- Tags -->
+							<span class = 'body-2'>Tags:</span>
+							<ul>
+								<!-- Display all tags for current User. -->
+								<li v-for="tag in tags">
+									{{tag.name}} &nbsp
+								</li>
+							</ul>
+							<!-- <p v-for="tag in tags">
+								{{tag.name}}
+							</p> -->
 
-						<!-- Biography -->
-						<span class = 'body-2'>Biography:</span>
-						<p v-text="biography"></p>
+							<!-- Biography -->
+							<span class = 'body-2'>Biography:</span>
+							<p v-text="biography"></p>
+						</div>
 					</div>
 				</v-layout>
 			</div>
@@ -63,6 +65,7 @@
 				biography: '',
 				profilePic: '',
 				tags: [],
+				isAuctioneer: true, //modify isAuctioneer for auctioneer identification
 			}
 		},
 
