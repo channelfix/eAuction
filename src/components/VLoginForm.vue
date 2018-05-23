@@ -39,8 +39,18 @@
 				formData.set('username', this.user.name);
 				formData.set('password', this.user.password);
 				request.post('http://localhost:8000/','login/', formData, 
-					function(response) {
-						// process response from server
+					(response) => {
+						if(response instanceof Error){
+							// do error stuff
+						}else {
+							this.$store.commit('authenticated', true)
+							this.$router.push({
+								name: 'Home',
+								params: {
+									username: this.user.name,
+								}
+							});
+						}
 					}
 				);	
 			}
