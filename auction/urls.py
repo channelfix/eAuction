@@ -22,8 +22,8 @@ from django.conf.urls.static import static
 from django.views.generic.base import TemplateView
 
 urlpatterns = [
-	  path('login/', include('login.urls')),
-	  # path('livestream/', include('livestream.urls')),
+    path('login/', include('login.urls')),
+    path('livestream/', include('livestream.urls')),
     path('admin/', admin.site.urls),
     path('profile/', include('profiles.urls')),
     # path('', TemplateView.as_view(template_name="../templates/index.html"))

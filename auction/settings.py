@@ -131,3 +131,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build'),
     os.path.join(BASE_DIR, 'assets'),
 ]
+
+OPENTOK_API_KEY = ''
+OPENTOK_API_SECRET = ''
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
