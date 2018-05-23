@@ -44,6 +44,7 @@
 							// do error stuff
 						}else {
 							this.$store.commit('authenticated', true)
+							this.$store.commit('setUsername', this.user.name)
 							this.$router.push({
 								name: 'Home',
 								params: {

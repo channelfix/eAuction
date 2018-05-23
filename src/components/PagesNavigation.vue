@@ -31,7 +31,7 @@
 				three-line
 	    	>
 	    		<v-toolbar class="transparent">
-					<v-toolbar-title>{{username}}</v-toolbar-title>
+					<v-toolbar-title></v-toolbar-title>
 	    		</v-toolbar>
 	    		<v-list-tile
 					v-for="page in pages"
@@ -58,9 +58,6 @@ import Home from './Home'
 
 export default {
 	name: 'PagesNavigation',
-	props: {
-		username: String,
-	},
 	data(){
 		return {
 			showNav: false,
@@ -88,10 +85,6 @@ export default {
 	methods: {
 		route(path){
 			let currentRoute = this.$route.name
-			
-			path.params = {
-				username: this.username,
-			}
 
 			if(path.name == currentRoute)
 				this.showNav = false;
@@ -118,7 +111,8 @@ export default {
 			}
 		}
 	},
-	mounted() {
+	mounted() {		
+		console.log(this.$store.getters.getUsername);
 		this.currentRoute = this.$route.name;
 
 		if(this.username == undefined){
