@@ -6,6 +6,7 @@ import ErrorPage from '@/components/ErrorPage'
 import PagesNavigation from '@/components/PagesNavigation'
 import Profile from '@/components/Profile'
 import Auction from '@/components/Auction'
+import EditProfile from '@/components/EditProfile'
 
 Vue.use(Router)
 
@@ -30,6 +31,10 @@ export default new Router({
           path: 'profile/:username',
           name: 'Profile',
           component: Profile
+        },{
+          path: 'edit-profile/:username',
+          name: 'Edit Profile',
+          component: EditProfile
         },
       ],
     },
