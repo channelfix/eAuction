@@ -15,7 +15,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "profile " + str(self.id)
+        return "profile " + str(self.user.id)
 
 
 # Create your models here.

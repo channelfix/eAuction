@@ -1,16 +1,11 @@
 <template>
 	<v-container fluid>
 		<v-layout row justify-center align-center mt-5>
-<<<<<<< HEAD
 			<div>				
 				<div id='profile' v-if="hasProfilePic">
 					<v-avatar 					
 						size = 400>
-=======
-			<div>
-				<div id='profile' v-if="hasProfilePic">
-					<v-avatar size = 400>
->>>>>>> 6ac658cd1993c692365bb6a8ce9fd5f5bd10ec96
+
 						<img :src="profilePic"/>
 					</v-avatar>
 				</div>
@@ -133,7 +128,9 @@
 						//[Current User]
 
 						// Profile Picture					
+						
 						this.profilePic = '/'+this.userProfile.avatar						
+
 
 						// Full name
 						this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name;
