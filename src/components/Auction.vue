@@ -5,11 +5,10 @@
 	>
 	  	<v-layout
 			row
-			wrap
 	  	>
 	  		<v-flex md7> <!-- left -->
 	  		  	<v-layout column>
-		  		  	<div class="box livestream">
+		  		  	<div class="livestream">
 		  		  	</div>
 		  		  	<v-flex md4>
 		  		  		<v-layout 
@@ -24,13 +23,7 @@
 									align-center
 									pa-3
 								>
-									<v-btn
-									block
-									large
-									color="error"
-									>
-										Decline
-									</v-btn>
+									<button class="red btn">Decline</button>	
 								</v-layout>
 		  		  			</v-flex>
 		  		  			<v-flex 
@@ -40,20 +33,14 @@
 									align-center
 									pa-3
 								>
-									<v-btn
-										block
-										large
-										color="success"
-									>
-										Accept
-									</v-btn>
+									<button class="green btn">Accept</button>	
 								</v-layout>
 		  		  			</v-flex>
 		  		  		</v-layout> 
 		  		  	</v-flex>
 	  		  	</v-layout>
 	  		</v-flex>
-	  		<v-flex>  <!-- right -->
+	  		<v-flex md5>  <!-- right -->
   		  		<v-layout
 					column	
 	  			>
@@ -63,10 +50,12 @@
   						<v-layout
 							row
 							class="amber darken-2"
+
 						>
 							<v-flex 
 								md6 
 							>
+								
 							</v-flex>
 							<v-flex 
 								md6
@@ -82,32 +71,40 @@
   						</v-layout>
 	  				</v-flex>
 	  				<v-flex 
-	  					md1
+	  					md2
   					>
   						<v-layout
 							align-center
 							justify-center
 							class="amber darken-1"
+							pa-2
 						>
 							<span class="headline">Current Bid: &#8369 {{formattedBid}}</span>
   						</v-layout>
 	  				</v-flex>
-	  				<v-flex md8
+	  				<v-flex 
+	  					md7
 						class="grey darken-4"
 	  					pa-4
 	  				>
-						<v-text-field
-						  name="log"
-						  id="log"
-						  flat
-						  :value="logMessage"
-						  no-resize
-						  disabled
-						  textarea
-						  multi-line
-						  rows="22"
+						<v-layout
+							column
+							wrap
 						>
-						</v-text-field>
+							<v-text-field
+							  name="log"
+							  id="log"
+							  flat
+							  :value="logMessage"
+							  disabled
+							  textarea
+							  multi-line
+							  rows="25"
+							  style="color: white;"
+							>
+							</v-text-field>
+							<button class="white" style="color: black;">CLEAR</button>						
+						</v-layout>
 	  				</v-flex>
   		  		</v-layout>
 	  		</v-flex>
@@ -132,9 +129,7 @@ export default {
 					price: 0,
 				},
 			],
-			activity: [
-				"Person accepted (Bid: 9999)",
-			],
+			activity: [],
 		}
 	},
 	computed: {
@@ -163,10 +158,13 @@ export default {
 <style scoped>
 	.livestream {
 		height: 700px;
-		width: ;
+		background-color: black;
 	}
+
+	
 
 	button {
 		height: 5em;
+		width: 100%;
 	}
 </style>
