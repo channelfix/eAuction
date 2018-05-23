@@ -7,6 +7,7 @@ import PagesNavigation from '@/components/PagesNavigation'
 import Profile from '@/components/Profile'
 import Auction from '@/components/Auction'
 import EditProfile from '@/components/EditProfile'
+import store from '../store'
 
 Vue.use(Router)
 
@@ -27,8 +28,8 @@ export default new Router({
           component: Home,
         },{
           path: 'profile/:username',
-          name: 'Profile',
-          component: Profile
+          name: 'Profile',     
+          component: Profile,
         },{
           path: 'edit-profile',
           name: 'Edit Profile',

@@ -24,7 +24,10 @@ class RegisterViewPost(View):
                                             password=password,)
 
             newuser = get_object_or_404(User, username=username)
-            Profile.objects.create(user=newuser)
+            profile = Profile.objects.create(user=newuser)
+            profile.avatar.name = 'anonymous.jpg'
+            profile.save()
+            user.save()
         except IntegrityError:
             return HttpResponseBadRequest()
 

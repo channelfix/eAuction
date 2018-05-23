@@ -109,8 +109,7 @@ export default {
 	watch: {
 		'$route' (to,from) {
 			this.currentRoute = this.$route.name;
-			if(this.currentRoute == "Auction" || 
-			   this.currentRoute == "Edit Profile"
+			if(this.currentRoute == "Auction"
 			){
 				this.toolbarIcon = "arrow_back";
 			}else{
