@@ -114,8 +114,6 @@
 
 						// Profile Picture					
 						this.profilePic = '../../'+this.userProfile.avatar
-						console.log(this.profilePic)
-
 						// Full name
 						this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name;
 

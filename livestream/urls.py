@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from livestream.views import AuctioneerView, BidderView
 
-app_name = 'lvs'
+app_name = 'livestream'
 urlpatterns = [
     # Location for main page
     path('', views.index, name='home'),
