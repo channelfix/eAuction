@@ -113,8 +113,7 @@
 						//[Current User]
 
 						// Profile Picture					
-						this.profilePic = '../../'+this.userProfile.avatar
-						console.log(this.profilePic)
+						this.profilePic = '/'+this.userProfile.avatar
 
 						// Full name
 						this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name;
