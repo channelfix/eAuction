@@ -1,4 +1,5 @@
 <template>
+	<!-- Edit Profile -->
 	<form>
 		<input type="file" id="fileSelector" v-on:change="updateImageDisplay">
 		
