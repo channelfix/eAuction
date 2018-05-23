@@ -3,7 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-
 # Created by https://www.gitignore.io/api/node,python,django
 
 ### Django ###
@@ -44,5 +43,7 @@ local_settings.py
 *.hot-update.json
 *.hot-update.js
 
-# assets
 assets/
+
+Downloads/
+
