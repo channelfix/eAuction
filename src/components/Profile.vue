@@ -59,9 +59,6 @@
 	export default {
 	// User Details
 		name: "Profile",
-		props: {
-			username: String,
-		},
 		data() {
 			return {
 				userProfile: '',
@@ -117,9 +114,6 @@
 			moveToEdit: function(){
 				this.$router.push({
 					name: "Edit Profile",
-					params: {
-						username: this.username,
-					},
 				})
 			}
 		},
@@ -134,8 +128,10 @@
 		mounted: function() {
 				let request = new Request();
 				let formdata = new FormData();
+				let username = this.$route.params.username;
+				
 				//add username to formdata
-				formdata.set('username', this.$route.params.username);
+				formdata.set('username', username);
 				// Request for the user details from the server.
 				request.post('http://localhost:8000/', 'profile/request_profile_details/', formdata, 
 					(response) => {

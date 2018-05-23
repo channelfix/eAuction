@@ -23,7 +23,7 @@ Vue.use(Vuetify, {
 
 Vue.config.productionTip = false
 store.commit('authenticated', window.__INITIAL_STATE__.isAuthenticated)
-
+//store username
 router.beforeEach((to, from, next) => {
   let isAuth = store.state.isAuthenticated;
   if (to.name === 'LogIn' && isAuth) return next('/menu/profile/'+to.params.username) 

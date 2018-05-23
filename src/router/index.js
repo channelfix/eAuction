@@ -20,19 +20,17 @@ export default new Router({
     },{
     	path: '/menu',
     	component: PagesNavigation,
-      props: true,
       children: [
         {
           path: 'home',
           name: 'Home',
-          props: true,
           component: Home,
         },{
           path: 'profile/:username',
           name: 'Profile',
           component: Profile
         },{
-          path: 'edit-profile/:username',
+          path: 'edit-profile',
           name: 'Edit Profile',
           component: EditProfile
         },
