@@ -161,6 +161,7 @@
 					request.post('http://localhost:8000/', 'profile/edit_password/', formdata,
 						(response)=>{
 							alert(response.data)
+							this.$router.go('localhost:8000')
 						}
 					)
 				}
