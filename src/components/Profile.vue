@@ -16,6 +16,7 @@
 					<div class = 'mx-auto' align='center'>
 						<!-- note: remove 'name: ', 'email' -->
 						<v-btn
+							v-if="$route.params.username == $store.getters.getUsername"
 							@click="moveToEdit"
 						>
 							Edit Profile
@@ -76,9 +77,6 @@
 			moveToEdit: function(){
 				this.$router.push({
 					name: "Edit Profile",
-					params: {
-						username: this.$route.params.username
-					}
 				})
 			}
 		},
