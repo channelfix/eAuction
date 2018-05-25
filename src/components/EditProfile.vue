@@ -23,7 +23,9 @@
 			<label v-if="hasMatchPassword">matched password</label>
 			<label v-else="hasMatchPassword">password does not match.</label>
 		</p>
-
+		<v-btn
+			@click="changePassword"
+		>Change Password</v-btn>
 
 		<p class='lastNameProperty'>
 			<label>Last Name:</label>
@@ -132,11 +134,8 @@
 				let request = new Request();
 				let formdata = new FormData();
 
-				if(this.matchedPassword && (this.lastName && this.firstName && this.email) != ''){
+				if((this.lastName && this.firstName && this.email) != ''){
 					formdata.set('username', this.username);
-
-					formdata.set('old_password', this.oldPassword);
-					formdata.set('new_password', this.newPassword);
 					formdata.set('last_name', this.lastName);
 					formdata.set('first_name', this.firstName);
 					formdata.set('email', this.email);
@@ -149,6 +148,21 @@
 					(response) => {
 						alert(response.data)
 					})
+				}
+			},
+			changePassword: function(){
+				let request = new Request();
+				let formdata = new FormData();
+				formdata.set('username', this.username);
+				formdata.set('old_password', this.oldPassword);
+				formdata.set('new_password', this.newPassword);
+				
+				if(this.matchedPassword){
+					request.post('http://localhost:8000/', 'profile/edit_password/', formdata,
+						(response)=>{
+							alert(response.data)
+						}
+					)
 				}
 			}
 		},

@@ -57,6 +57,7 @@ class EditPassword(View):
 
         if(user.check_password(request.POST.get('old_password', ''))):
             user.set_password(request.POST.get('new_password', ''))
+            user.save()
             return HttpResponse('Changed Password: You will be redirect to the login page.')
 
         return HttpResponse('Incorrect Old Password')
