@@ -48,6 +48,20 @@
 	    			  </v-list-tile-title>
 	    			</v-list-tile-content>
 	    		</v-list-tile>
+	    		<v-list-tile
+	    			@click="signOut"
+	    		>
+	    			<v-list-tile-action>
+	    				<v-icon>
+	    					exit_to_app
+	    				</v-icon>
+	    			</v-list-tile-action >
+	    			<v-list-tile-content>
+	    			  <v-list-tile-title>
+	    			  	<p class="subheading">Sign Out</p>
+	    			  </v-list-tile-title>
+	    			</v-list-tile-content>
+	    		</v-list-tile>
 	    	</v-list>
 	  	</v-navigation-drawer>
 	</v-layout>
@@ -55,7 +69,7 @@
 
 <script>
 import Home from './Home'
-
+import Cookies from 'js-cookie'
 export default {
 	name: 'PagesNavigation',
 	data(){
@@ -104,6 +118,9 @@ export default {
 			}else {
 				this.showNav = true;
 			}
+		},
+		signOut(){
+			// sign out here
 		}
 	},
 	watch: {
