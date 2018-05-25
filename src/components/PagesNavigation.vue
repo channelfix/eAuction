@@ -121,8 +121,10 @@ export default {
 		},
 		signOut(){
 			let request = new Request();
-			request.post("http://localhost:8000/login/", "logout/", {}, (response)=>{});
-			this.$router.go(0);
+			request.post("http://localhost:8000/login/", "logout/", {}, 
+			(response)=>{
+				this.$router.go(0);	
+			});			
 		}
 	},
 	watch: {
