@@ -10,7 +10,6 @@ class ProfileView(View):
         user = User.objects.get(username=sent_username)
         user_profile = user.profile
         user_tags = list(user_profile.tags_set.all().values())
-
         context = {
             'username': user.username,
             'email': user.email,
@@ -19,7 +18,8 @@ class ProfileView(View):
             'biography': user_profile.biography,
             'avatar': user_profile.avatar.url,
             'tags': user_tags,
-            'isAuctioneer': user_profile.isAuctioneer
+            'isAuctioneer': user_profile.isAuctioneer,
+            'subscribers': user_profile.subscribers
         }
 
         return JsonResponse(context)
