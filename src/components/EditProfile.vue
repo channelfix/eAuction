@@ -161,7 +161,8 @@
 					request.post('http://localhost:8000/', 'profile/edit_password/', formdata,
 						(response)=>{
 							alert(response.data)
-							this.$router.go('localhost:8000')
+							if(response.data == 'Changed Password: You will be redirect to the login page.')
+								this.$router.go(0)
 						}
 					)
 				}
