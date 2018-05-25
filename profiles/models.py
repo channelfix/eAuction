@@ -10,6 +10,8 @@ class Profile(models.Model):
         related_name='profile'
     )
 
+    isAuctioneer = False
+
     # Biography with a maximum of 100 characters
     biography = models.CharField(max_length=100)
 
