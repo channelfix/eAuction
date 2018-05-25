@@ -5,6 +5,7 @@ from django.views.generic import View
 from django.contrib.auth.models import User
 from profiles.models import Profile
 from django.db.utils import IntegrityError
+from django.core.files.images import ImageFile
 # Create your views here.
 
 
@@ -25,7 +26,7 @@ class RegisterViewPost(View):
 
             newuser = get_object_or_404(User, username=username)
             profile = Profile.objects.create(user=newuser)
-            profile.avatar.name = 'anonymous.jpg'
+            profile.avatar.save('anonymous.jpg', ImageFile(open('media/anonymous.jpg', 'rb')))
             profile.save()
             user.save()
         except IntegrityError:
