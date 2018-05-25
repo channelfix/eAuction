@@ -9,8 +9,8 @@ class Profile(models.Model):
         on_delete=models.CASCADE
     )
 
-    subscribers = models.PositiveIntegerField.default = 0
-    isAuctioneer = models.BooleanField.default = False
+    subscribers = models.PositiveIntegerField(default=0)
+    isAuctioneer = models.BooleanField(default=False)
 
     # Biography with a maximum of 100 characters
     biography = models.CharField(max_length=100, blank=True)
