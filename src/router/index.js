@@ -32,7 +32,7 @@ export default new Router({
           component: Profile,
         },{
           path: 'edit-profile',
-          name: 'Edit Profile',
+          name: 'Edit-Profile',
           component: EditProfile
         },
       ],
