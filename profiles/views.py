@@ -18,7 +18,8 @@ class ProfileView(View):
             'first_name': user.first_name,
             'biography': user_profile.biography,
             'avatar': user_profile.avatar.url,
-            'tags': user_tags
+            'tags': user_tags,
+            'isAuctioneer': user_profile.isAuctioneer
         }
 
         print(context)

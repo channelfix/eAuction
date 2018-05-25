@@ -9,6 +9,8 @@ class Profile(models.Model):
         on_delete=models.CASCADE
     )
 
+    isAuctioneer = False
+
     # Biography with a maximum of 100 characters
     biography = models.CharField(max_length=100, blank=True)
 
