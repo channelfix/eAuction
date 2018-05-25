@@ -32,8 +32,10 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'login',
+    'register',
     'profiles',
     'app.tags',
+    'livestream',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -121,12 +123,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'media/'
 
-MEDIA_ROOT = 'Downloads/'
-MEDIA_URL = 'Downloads/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build'),
     os.path.join(BASE_DIR, 'assets'),
 ]
+
+OPENTOK_API_KEY = ''
+OPENTOK_API_SECRET = ''
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

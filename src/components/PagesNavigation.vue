@@ -58,14 +58,12 @@ import Home from './Home'
 
 export default {
 	name: 'PagesNavigation',
-	props: {
-		username: String,
-	},
 	data(){
 		return {
 			showNav: false,
 			currentRoute: "",
 			toolbarIcon: "menu",
+			username: "",
 			pages: [
 				{
 					title: "Home",
@@ -88,11 +86,13 @@ export default {
 	methods: {
 		route(path){
 			let currentRoute = this.$route.name
-			
-			path.params = {
-				username: this.username,
-			}
 
+			if(path.name == "Profile"){
+				path.params = {
+					username: this.username,
+				}
+			}
+			
 			if(path.name == currentRoute)
 				this.showNav = false;
 			else
@@ -100,12 +100,7 @@ export default {
 		},
 		navigate(){
 			if (this.toolbarIcon == "arrow_back"){
-				this.$router.push({
-					name: "Home",
-					params: {
-						username: this.username,
-					}
-				})
+				this.$router.go(-1);
 			}else {
 				this.showNav = true;
 			}
@@ -114,21 +109,20 @@ export default {
 	watch: {
 		'$route' (to,from) {
 			this.currentRoute = this.$route.name;
-			if(this.currentRoute == "Auction"){
+			if(this.currentRoute == "Auction" || 
+			   this.currentRoute == "Edit Profile"
+			){
 				this.toolbarIcon = "arrow_back";
 			}else{
 				this.toolbarIcon = "menu";
 			}
 		}
 	},
-	mounted() {
+	mounted() {		
+		//console.log(this.$store.getters.getUsername);
 		this.currentRoute = this.$route.name;
-
-		if(this.username == undefined){
-			this.$router.push({
-				name: 'LogIn'
-			})
-		} 
+		this.username = this.$store.getters.getUsername;
+		//get username
 	}
 }
 </script>

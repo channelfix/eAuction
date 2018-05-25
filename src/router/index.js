@@ -6,6 +6,7 @@ import ErrorPage from '@/components/ErrorPage'
 import PagesNavigation from '@/components/PagesNavigation'
 import Profile from '@/components/Profile'
 import Auction from '@/components/Auction'
+import EditProfile from '@/components/EditProfile'
 
 Vue.use(Router)
 
@@ -19,18 +20,19 @@ export default new Router({
     },{
     	path: '/menu',
     	component: PagesNavigation,
-      props: true,
       children: [
         {
           path: 'home',
           name: 'Home',
-          props: true,
           component: Home,
         },{
-          path: 'profile',
+          path: 'profile/:username',
           name: 'Profile',
-          props: true,
           component: Profile
+        },{
+          path: 'edit-profile',
+          name: 'Edit Profile',
+          component: EditProfile
         },
         { 
           path: '/auction/:id',

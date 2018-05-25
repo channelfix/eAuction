@@ -1,9 +1,11 @@
 <template>
 	<v-container fluid>
 		<v-layout row justify-center align-center mt-5>
-			<div>
+			<div>				
 				<div id='profile' v-if="hasProfilePic">
-					<v-avatar size = 400>
+					<v-avatar 					
+						size = 400>
+
 						<img :src="profilePic"/>
 					</v-avatar>
 				</div>
@@ -14,6 +16,11 @@
 				<v-layout row justify-center>
 					<div class = 'mx-auto' align='center'>
 						<!-- note: remove 'name: ', 'email' -->
+						<v-btn
+							@click="moveToEdit"
+						>
+							Edit Profile
+						</v-btn>
 						<span class = 'body-2'>Name:</span>
 						<p v-text="name" class="title"></p>
 
@@ -21,21 +28,23 @@
 						<span class = 'body-2'>Email:</span>
 						<p v-text="email"></p>
 
-						<!-- Tags -->
-						<span class = 'body-2'>Tags:</span>
-						<ul>
-							<!-- Display all tags for current User. -->
-							<li v-for="tag in tags">
-								{{tag.name}} &nbsp
-							</li>
-						</ul>
-						<!-- <p v-for="tag in tags">
-							{{tag.name}}
-						</p> -->
+						<div v-if="isAuctioneer == true">
+							<!-- Tags -->
+							<span class = 'body-2'>Tags:</span>
+							<ul>
+								<!-- Display all tags for current User. -->
+								<li v-for="tag in tags">
+									{{tag.name}} &nbsp
+								</li>
+							</ul>
+							<!-- <p v-for="tag in tags">
+								{{tag.name}}
+							</p> -->
 
-						<!-- Biography -->
-						<span class = 'body-2'>Biography:</span>
-						<p v-text="biography"></p>
+							<!-- Biography -->
+							<span class = 'body-2'>Biography:</span>
+							<p v-text="biography"></p>
+						</div>
 					</div>
 				</v-layout>
 			</div>
@@ -50,9 +59,6 @@
 	export default {
 	// User Details
 		name: "Profile",
-		props: {
-			username: String,
-		},
 		data() {
 			return {
 				userProfile: '',
@@ -61,21 +67,35 @@
 				biography: '',
 				profilePic: '',
 				tags: [],
-				fileSelector: ''
+				isAuctioneer: true, //modify isAuctioneer for auctioneer identification
 			}
 		},
 
 		methods: {
 			// This function will check the image format then updates the profile picture.
-			updateImageDisplay: function() {
-				var imageFile = this.fileSelector.files
+			updateImageDisplay: function(e) {
+				var imageFile = e.target.files
 
 				// Check if any file is selected from File Selector.
 				if(imageFile.length == 1){
 					// Check if the file format is JPEG or PNG file.			
 					if(this.isValidImageFormat(imageFile[0].type)){
-						this.profilePic = window.URL.createObjectURL(imageFile[0]);
-						console.log(this.profilePic)
+						this.profilePic = imageFile[0]
+						/* Save an image in a media folder
+						   and update the profile picture
+						   of a certain User. */
+
+						let request = new Request();
+						let formdata = new FormData();
+
+						formdata.append('imageFile', imageFile[0], imageFile[0].name)
+
+						
+						request.post('http://localhost:8000/', 'profile/save_profile_pic/', formdata,
+						(response) => {
+							alert(response.data);
+						})
+
 					}
 					else
 						alert('Cannot import this file. use only this following format (jpg, jpeg, and png).');
@@ -89,6 +109,12 @@
 
 				if(selectedFileType === 'image/jpg' || selectedFileType === 'image/jpeg' || selectedFileType === 'image/png')
 					return true;
+			},
+
+			moveToEdit: function(){
+				this.$router.push({
+					name: "Edit Profile",
+				})
 			}
 		},
 
@@ -102,11 +128,12 @@
 		mounted: function() {
 				let request = new Request();
 				let formdata = new FormData();
+				let username = this.$route.params.username;
+				
 				//add username to formdata
-				formdata.set('username', this.username);
-
+				formdata.set('username', username);
 				// Request for the user details from the server.
-				request.post('http://localhost:8000/profile/', 'request_profile_details/', formdata, 
+				request.post('http://localhost:8000/', 'profile/request_profile_details/', formdata, 
 					(response) => {
 
 						this.userProfile = response.data
@@ -114,9 +141,9 @@
 						//[Current User]
 
 						// Profile Picture					
-						this.profilePic = '../../'+this.userProfile.avatar
-						console.log(this.profilePic)
 
+						
+						this.profilePic = '/'+this.userProfile.avatar	
 						// Full name
 						this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name;
 
@@ -129,8 +156,8 @@
 						// Tags
 						this.tags = this.userProfile.tags;
 
-						// Get a reference to File Selector
-						this.fileSelector = document.getElementById('fileElem');
+						// Auctioneer or not
+						this.isAuctioneer = this.userProfile.isAuctioneer
 				})
 		}
 	}
