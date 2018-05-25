@@ -81,7 +81,7 @@
 		name: 'EditProfile',
 		data() {
 			return {
-				username: this.$route.params.username,
+				username: this.$store.getters.getUsername,
 				userProfile: '',
 				profilePic: '',
 				lastName: '',
