@@ -64,9 +64,6 @@
 <script>
 export default {
 	name: 'Home',
-	props: {
-		username: String,
-	},
 	data(){
 		return {
 			showNav: false,
@@ -84,10 +81,6 @@ export default {
 		route(id){
 			this.$router.push({
 				name: 'Auction',
-				params: {
-					id,
-					username: this.username,
-				}
 			})
 		}
 	}

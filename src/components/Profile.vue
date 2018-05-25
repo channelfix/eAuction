@@ -9,7 +9,6 @@
 						<img :src="profilePic"/>
 					</v-avatar>
 				</div>
-				<input type="file" id="fileElem" v-on:change="updateImageDisplay">
 				<!-- [Current User] -->
 
 				<!-- Full Name -->
@@ -55,115 +54,61 @@
 
 <script type="text/javascript">
 	import Request from '../assets/js/Request.js';
+	import store from '../store'
 
 	export default {
 	// User Details
 		name: "Profile",
-		props: {
-			username: String,
-		},
 		data() {
 			return {
 				userProfile: '',
-				name: '',
-				email: '',
+				name:'',
+				email:'',
 				biography: '',
 				profilePic: '',
-				tags: [],
-				isAuctioneer: true, //modify isAuctioneer for auctioneer identification
+				tags: '',
+				isAuctioneer: ''//modify isAuctioneer for auctioneer identification
 			}
 		},
 
 		methods: {
-			// This function will check the image format then updates the profile picture.
-			updateImageDisplay: function(e) {
-				var imageFile = e.target.files
-
-				// Check if any file is selected from File Selector.
-				if(imageFile.length == 1){
-					// Check if the file format is JPEG or PNG file.			
-					if(this.isValidImageFormat(imageFile[0].type)){
-						this.profilePic = imageFile[0]
-						/* Save an image in a media folder
-						   and update the profile picture
-						   of a certain User. */
-
-						let request = new Request();
-						let formdata = new FormData();
-
-						formdata.append('imageFile', imageFile[0], imageFile[0].name)
-
-						
-						request.post('http://localhost:8000/', 'profile/save_profile_pic/', formdata,
-						(response) => {
-							alert(response.data);
-						})
-
-					}
-					else
-						alert('Cannot import this file. use only this following format (jpg, jpeg, and png).');
-				}
-				else
-					alert('No file selected.');
-			},
-
 			// This function will return true if the file is JPEG or PNG.
-			isValidImageFormat: function(selectedFileType) {
-
-				if(selectedFileType === 'image/jpg' || selectedFileType === 'image/jpeg' || selectedFileType === 'image/png')
-					return true;
-			},
-
 			moveToEdit: function(){
 				this.$router.push({
 					name: "Edit Profile",
 					params: {
-						username: this.username,
-					},
+						username: this.$route.params.username
+					}
 				})
 			}
 		},
 
 		computed: {
-
 			// This function will return true if there exist a picture.
 			hasProfilePic() {
 				return this.profilePic.length > 0
-			}
+			},
 		},
+
 		mounted: function() {
-				let request = new Request();
-				let formdata = new FormData();
-				//add username to formdata
-				formdata.set('username', this.$route.params.username);
-				// Request for the user details from the server.
-				request.post('http://localhost:8000/', 'profile/request_profile_details/', formdata, 
-					(response) => {
+			let request = new Request();
+			let formdata = new FormData();
 
-						this.userProfile = response.data
+			formdata.set('username', this.$route.params.username)
 
-						//[Current User]
 
-						// Profile Picture					
+			request.post('http://localhost:8000/','profile/request_profile_details/', formdata,
+			(response) => {
+				this.userProfile = response.data
 
-						
-						this.profilePic = '/'+this.userProfile.avatar	
-						// Full name
-						this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name;
-
-						// Email
-						this.email = this.userProfile.email;
-
-						// Biography
-						this.biography = this.userProfile.biography;
-
-						// Tags
-						this.tags = this.userProfile.tags;
-
-						// Auctioneer or not
-						this.isAuctioneer = this.userProfile.isAuctioneer
-				})
-		}
+				this.profilePic = '/'+this.userProfile.avatar
+				this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name
+				this.email = this.userProfile.email
+				this.biography = this.userProfile.biography
+				this.tags = this.userProfile.tags
+				this.isAuctioneer = this.userProfile.isAuctioneer
+			})
+		},
 	}
 
 </script>

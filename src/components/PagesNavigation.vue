@@ -31,7 +31,7 @@
 				three-line
 	    	>
 	    		<v-toolbar class="transparent">
-					<v-toolbar-title></v-toolbar-title>
+					<v-toolbar-title>{{username}}</v-toolbar-title>
 	    		</v-toolbar>
 	    		<v-list-tile
 					v-for="page in pages"
@@ -63,6 +63,7 @@ export default {
 			showNav: false,
 			currentRoute: "",
 			toolbarIcon: "menu",
+			username: "",
 			pages: [
 				{
 					title: "Home",
@@ -86,6 +87,12 @@ export default {
 		route(path){
 			let currentRoute = this.$route.name
 
+			if(path.name == "Profile"){
+				path.params = {
+					username: this.username,
+				}
+			}
+			
 			if(path.name == currentRoute)
 				this.showNav = false;
 			else
@@ -102,8 +109,7 @@ export default {
 	watch: {
 		'$route' (to,from) {
 			this.currentRoute = this.$route.name;
-			if(this.currentRoute == "Auction" || 
-			   this.currentRoute == "Edit Profile"
+			if(this.currentRoute == "Auction"
 			){
 				this.toolbarIcon = "arrow_back";
 			}else{
@@ -112,14 +118,10 @@ export default {
 		}
 	},
 	mounted() {		
-		console.log(this.$store.getters.getUsername);
+		//console.log(this.$store.getters.getUsername);
 		this.currentRoute = this.$route.name;
-
-		if(this.username == undefined){
-			this.$router.push({
-				name: 'LogIn'
-			})
-		} 
+		this.username = this.$store.getters.getUsername;
+		//get username
 	}
 }
 </script>
