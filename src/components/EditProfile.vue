@@ -64,7 +64,6 @@
 		</p>
 
 		<input type="button" id="changeButton" value="Change" v-on:click="changeProfile">
-		<input type="button" id="cancelButton" value="Cancel">
 
 	</form>
 </template>
