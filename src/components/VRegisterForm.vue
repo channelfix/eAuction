@@ -68,11 +68,13 @@
 				let request = new Request();
 				let formData = new FormData();
 
+
 				formData.set('username', this.user.name);
 				formData.set('password', this.user.password);
 				formData.set('email', this.user.email);
 				formData.set('firstname', this.user.fname);
 				formData.set('lastname', this.user.lname);
+
 				request.post('http://localhost:8000/','register/', formData, 
 					function(response) {
 						// process response from server

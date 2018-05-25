@@ -9,11 +9,14 @@
     <script type="text/javascript">
     
       window.__INITIAL_STATE__ = {
-        'isAuthenticated' : false
+        'isAuthenticated' : false,
+        'username' : ''
       }
 
       {% if user.is_authenticated %}
-        window.__INITIAL_STATE__.isAuthenticated = true
+        window.__INITIAL_STATE__.isAuthenticated = true;
+        window.__INITIAL_STATE__.username = "{{ user.username }}";
+        console.log(window);
       {% endif %}
     </script>
   	{% csrf_token %}

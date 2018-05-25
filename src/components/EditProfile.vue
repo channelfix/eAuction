@@ -1,37 +1,53 @@
 <template>
 	<!-- Edit Profile -->
 	<form>
-		<input type="file" id="fileSelector" v-on:change="updateImageDisplay">
+		<input type="file" id="fileSelector" v-on:change="updateImageDisplay" />
 		
-		<div id="profile" v-if="" />
+		<div id="profile"/>
 			<img :src="profilePic" />
 		</div>
 
-		<p class='usernameProperty'>
-			<label>Username:</label>
-			<input type="text" id="usernameField" v-model="username">
+		<p>
+			<label>Old Password:</label>
+			<input type="text" id="oldPasswordField" v-model="oldPassword">
 		</p>
 
-		<p class="passwordProperty">
-			<label>Password:</label>
-			<input type="text" id="passwordField">
+		<p>
+			<label>New Password:</label>
+			<input type="text" id="newPasswordField" v-model="newPassword">
+		</p>
+
+		<p>
+			<label>Confirm Password:</label>
+			<input type="text" id="confirmedPasswordField" v-model="confirmPassword">
+			<label v-if="hasMatchPassword">matched password</label>
+			<label v-else="hasMatchPassword">password does not match.</label>
 		</p>
 
 
 		<p class='lastNameProperty'>
 			<label>Last Name:</label>
 			<input type="text" id="lastNameField" v-model="lastName">
+
+			<label v-if="lastName != ''">filled</label>
+			<label v-else>this field is empty</label>
 		</p>
 
 		<p class='firstNameProperty'>
 			<label>First Name:</label>
 			<input type="text" id="firstNameField" v-model="firstName">
+
+			<label v-if="firstName != ''">filled</label>
+			<label v-else>this field is empty</label>
 		</p>
 
 
 		<p class="emailProperty">
 			<label>Email:</label>
 			<input type="text" id="emailField" v-model="email">
+
+			<label v-if="email != ''">filled</label>
+			<label v-else>this field is empty</label>
 		</p>
 
 
@@ -64,46 +80,77 @@
 
 	export default{	
 		name: 'EditProfile',
-		props: {
-			username: String,
-		},
 		data() {
 			return {
+				username: this.$route.params.username,
 				userProfile: '',
 				profilePic: '',
 				lastName: '',
 				firstName: '',
 				email: '',
 				biography: '',
-				userName: '',
+				oldPassword: '',
+				newPassword: '',				
+				confirmPassword: '',
+				imageFile: '',
+				hasChangePic: false,
+				matchedPassword: false
 			}
 		},
 		computed: {
-			hasProfilePic() {
-				return profilePic.length > 0
-			}
+			hasMatchPassword() {
+				if(this.newPassword === this.confirmPassword){
+					this.matchedPassword = true
+					return true;
+				}
+			},
 		},
 		methods: {
-			updateImageDisplay: function(e) {
-				var imageFile = e.target.files;
-				if(imageFile.length == 1){
-					if(this.isValidImageFormat(imageFile[0]))
-						this.profilePic = window.URL.createObjectURL(imageFile[0])
-					else
-						alert('Cannot import this file. Use only this following format (jpg, jpeg, and png).')
-				}
-				else
-					alert('No image selected');
-			},
-			isValidImageFormat: function(imageFile) {
-				if(imageFile.type === 'image/jpg' || imageFile.type === 'image/png' || imageFile.type === 'image/jpeg')
+			hasNotFilled(field) {
+				if(field != '')
 					return true;
+			},
+			isValidImageFormat: function(selectedFile) {
+				if(selectedFile.type === 'image/jpg' || selectedFile.type === 'image/png' || selectedFile.type === 'image/jpeg')
+					return true;
+			},
+			updateImageDisplay: function(e) {
+				let file = e.target.files;
+
+				// Check if the selected file exist.
+				if(file.length == 1){
+					if(this.isValidImageFormat(file[0])){
+						// Update Image
+						this.imageFile = file[0];
+						this.hasChangePic = true;						
+						this.profilePic = window.URL.createObjectURL(this.imageFile);
+					}
+					else
+						alert('Cannot import this file. Use only this following format (.jpg, .jpeg, or .png).');
+				}
 			},
 			changeProfile: function() {
 				let request = new Request();
 				let formdata = new FormData();
 
-				alert(this.username)
+				if(this.matchedPassword && (this.lastName && this.firstName && this.email) != ''){
+					formdata.set('username', this.username);
+
+					formdata.set('old_password', this.oldPassword);
+					formdata.set('new_password', this.newPassword);
+					formdata.set('last_name', this.lastName);
+					formdata.set('first_name', this.firstName);
+					formdata.set('email', this.email);
+					formdata.set('biography', this.biography);
+					
+					if(this.hasChangePic)
+						formdata.append('imageFile', this.imageFile, this.imageFile.name)
+
+					request.post('http://localhost:8000/', 'profile/edit_profile_details/', formdata,
+					(response) => {
+						alert(response.data)
+					})
+				}
 			}
 		},
 		mounted: function() {
@@ -116,8 +163,7 @@
 				(response) => {
 					this.userProfile = response.data;
 
-					this.profilePic = this.userProfile.avatar;
-					this.userName = this.userProfile.username;
+					this.profilePic = '/'+this.userProfile.avatar;
 					this.lastName = this.userProfile.last_name;
 					this.firstName = this.userProfile.first_name;
 					this.email = this.userProfile.email;

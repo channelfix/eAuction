@@ -6,12 +6,13 @@ class Profile(models.Model):
     """ Profile Table """
     user = models.OneToOneField(
         User,
-        on_delete=models.CASCADE,
-        related_name='profile'
+        on_delete=models.CASCADE
     )
 
+    isAuctioneer = False
+
     # Biography with a maximum of 100 characters
-    biography = models.CharField(max_length=100)
+    biography = models.CharField(max_length=100, blank=True)
 
     # Profile picture
     avatar = models.ImageField()
