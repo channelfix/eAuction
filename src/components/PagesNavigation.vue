@@ -123,7 +123,7 @@ export default {
 			// sign out here
 			let request = new Request();
 			request.post("http://localhost:8000/login/", "logout/", {}, (response)=>{});
-			this.$router.go(0);
+			this.$router.go('localhost:8000');
 		}
 	},
 	watch: {
@@ -138,10 +138,9 @@ export default {
 		}
 	},
 	mounted() {		
-		//console.log(this.$store.getters.getUsername);
 		this.currentRoute = this.$route.name;
-		this.username = this.$store.getters.getUsername;
 		//get username
+		this.username = this.$store.getters.getUsername;		
 	}
 }
 </script>
