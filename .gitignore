@@ -13,7 +13,7 @@ __pycache__/
 __pycache__/
 local_settings.py
 db.sqlite3
-media/
+media/!anonymous.jpg
 local_settings.py
 
 # Dependency directories
