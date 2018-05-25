@@ -5,7 +5,6 @@ from django.views.generic import View
 from django.contrib.auth.models import User
 from profiles.models import Profile
 from django.db.utils import IntegrityError
-# Create your views here.
 
 
 class RegisterViewPost(View):

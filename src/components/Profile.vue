@@ -9,12 +9,8 @@
 						<img :src="profilePic"/>
 					</v-avatar>
 				</div>
-				<!-- [Current User] -->
-
-				<!-- Full Name -->
 				<v-layout row justify-center>
 					<div class = 'mx-auto' align='center'>
-						<!-- note: remove 'name: ', 'email' -->
 						<v-btn
 							v-if="$route.params.username == $store.getters.getUsername"
 							@click="moveToEdit"
@@ -25,7 +21,7 @@
 							v-if="
 								$route.params.username != $store.getters.getUsername && isAuctioneer
 							"
-							@click="subscibe"
+							@click="subscribe"
 						>
 							Subscribe
 						</v-btn>
@@ -37,7 +33,6 @@
 							<p class="title">{{subscribers}}</p>
 						</div>
 						
-						<!-- Any Email -->
 						<span class = 'body-2'>Email:</span>
 						<p v-text="email"></p>
 
@@ -50,10 +45,6 @@
 									{{tag.name}} &nbsp
 								</li>
 							</ul>
-							<!-- <p v-for="tag in tags">
-								{{tag.name}}
-							</p> -->
-
 							<!-- Biography -->
 							<span class = 'body-2'>Biography:</span>
 							<p v-text="biography"></p>
@@ -78,11 +69,11 @@
 				userProfile: '',
 				name:'',
 				email:'',
-				subscribers: 0,
+				subscribers: '',
 				biography: '',
 				profilePic: '',
 				tags: '',
-				isAuctioneer: ''//modify isAuctioneer for auctioneer identification
+				isAuctioneer: ''
 			}
 		},
 
@@ -94,7 +85,8 @@
 				})
 			},
 			subscribe() {
-				//
+				//add subsciber if clicked
+				this.subscribers++
 			}
 		},
 
@@ -115,7 +107,6 @@
 			request.post('http://localhost:8000/','profile/request_profile_details/', formdata,
 			(response) => {
 				this.userProfile = response.data
-
 				this.profilePic = '/'+this.userProfile.avatar
 				this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name
 				this.email = this.userProfile.email
