@@ -21,8 +21,6 @@ class ProfileView(View):
             'tags': user_tags
         }
 
-        print(context)
-
         return JsonResponse(context)
 
 
@@ -46,7 +44,10 @@ class EditProfile(View):
             user.email = email
             user.biography = biography
             user_profile = user.profile
-            user_profile.avatar = request.FILES['imageFile']
+
+            if request.FILES:
+                user_profile.avatar = request.FILES['imageFile']
+
             user_profile.save()
             user.save()
 
