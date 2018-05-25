@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponse
 from django.views.generic import View
 from django.contrib import auth
 
@@ -19,4 +19,6 @@ class IndexViewPost(View):
 
 class LogoutOutUser(View):
     def post(self, request):
+        print(request)
         auth.logout(request)
+        return HttpResponse("Success")

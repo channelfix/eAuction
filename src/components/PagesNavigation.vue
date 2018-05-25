@@ -69,7 +69,7 @@
 
 <script>
 import Home from './Home'
-import Cookies from 'js-cookie'
+import Request from '../assets/js/Request.js'
 export default {
 	name: 'PagesNavigation',
 	data(){
@@ -121,6 +121,9 @@ export default {
 		},
 		signOut(){
 			// sign out here
+			let request = new Request();
+			request.post("http://localhost:8000/login/", "logout/", {}, (response)=>{});
+			this.$router.go(0);
 		}
 	},
 	watch: {
