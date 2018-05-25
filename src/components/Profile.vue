@@ -21,6 +21,14 @@
 						>
 							Edit Profile
 						</v-btn>
+						<v-btn
+							v-if="
+								$route.params.username != $store.getters.getUsername && isAuctioneer
+							"
+							@click="subscibe"
+						>
+							Subscribe
+						</v-btn>
 						<span class = 'body-2'>Name:</span>
 						<p v-text="name" class="title"></p>
 
@@ -74,10 +82,13 @@
 
 		methods: {
 			// This function will return true if the file is JPEG or PNG.
-			moveToEdit: function(){
+			moveToEdit(){
 				this.$router.push({
-					name: "Edit Profile",
+					name: "Edit-Profile",
 				})
+			},
+			subscribe() {
+				//
 			}
 		},
 
