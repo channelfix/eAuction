@@ -4,22 +4,22 @@
 		<input type="file" id="fileSelector" v-on:change="updateImageDisplay" />
 		
 		<div id="profile"/>
-			<img :src="profilePic" />
+			<img :src="profilePic" width="200" height="200" />
 		</div>
 
 		<p>
 			<label>Old Password:</label>
-			<input type="text" id="oldPasswordField" v-model="oldPassword">
+			<input type="password" id="oldPasswordField" v-model="oldPassword">
 		</p>
 
 		<p>
 			<label>New Password:</label>
-			<input type="text" id="newPasswordField" v-model="newPassword">
+			<input type="password" id="newPasswordField" v-model="newPassword">
 		</p>
 
 		<p>
 			<label>Confirm Password:</label>
-			<input type="text" id="confirmedPasswordField" v-model="confirmPassword">
+			<input type="password" id="confirmedPasswordField" v-model="confirmPassword">
 			<label v-if="hasMatchPassword">matched password</label>
 			<label v-else="hasMatchPassword">password does not match.</label>
 		</p>
