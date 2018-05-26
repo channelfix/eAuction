@@ -187,7 +187,7 @@
 					newTags.push(this.tag);
 					this.tags = newTags
 					alert(this.tag+' added')
-					this.tag = ''	
+					this.tag = ''
 				}			
 				else
 					alert('Please insert a text.')	
