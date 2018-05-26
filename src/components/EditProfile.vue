@@ -52,18 +52,29 @@
 			<label v-else>this field is empty</label>
 		</p>
 
+		<div v-if="isAuctioneer">
+			<p class="biograpyProperty">
+				<label>Biography:</label><br>
+				<textarea
+					id = "biographyField"
+					rows="3"
+					cols="80"
+					placeholder="Description here."
+					v-model="biography"
+				>.				
+				</textarea>
+			</p>
+		</div> 
 
-		<p class="biograpyProperty">
-			<label>Biography:</label><br>
-			<textarea
-				id = "biographyField"
-				rows="3"
-				cols="80"
-				placeholder="Description here."
-				v-model="biography"
-			>.				
-			</textarea>
-		</p>
+
+		<div v-if="isAuctioneer">
+			<p class="tagsProperty">
+				<label>Tags:</label>
+				<input type="text" v-model="tag" placeholder="Tags here" size="10" v-on:keyup.enter="addTag">	
+				<button @click.prevent="addTag">+</button>
+				<button @click.prevent="removeTag">-</button>
+			</p>
+		</div>
 
 		<input type="button" id="changeButton" value="Change" v-on:click="changeProfile">
 
@@ -90,12 +101,15 @@
 				firstName: '',
 				email: '',
 				biography: '',
+				tags: [],
+				tag: '',
 				oldPassword: '',
 				newPassword: '',				
 				confirmPassword: '',
 				imageFile: '',
 				hasChangePic: false,
-				matchedPassword: false
+				matchedPassword: false,
+				isAuctioneer: false
 			}
 		},
 		computed: {
@@ -139,7 +153,8 @@
 					formdata.set('last_name', this.lastName);
 					formdata.set('first_name', this.firstName);
 					formdata.set('email', this.email);
-					formdata.set('biography', this.biography);
+					formdata.set('tags', this.tags);
+					formdata.set('biography', this.biography);			
 					
 					if(this.hasChangePic)
 						formdata.append('imageFile', this.imageFile, this.imageFile.name)
@@ -166,7 +181,31 @@
 						}
 					)
 				}
-			}
+			},
+			addTag: function() {	
+				if (this.tag != ''){
+					let newTags = this.tags.map(item=>item)
+					newTags.push(this.tag);
+					this.tags = newTags
+					alert(this.tag+' added')
+					this.tag = ''	
+				}			
+				else
+					alert('Please insert a text.')	
+			},
+			removeTag: function(){
+				let request = new Request();
+				let formdata = new FormData();
+
+				formdata.set('username', this.username);
+				formdata.set('tag', this.tag);
+
+				request.post('http://localhost:8000/', 'profile/remove_tag/', formdata,
+				(response) => { 
+					alert(response.data);
+					this.tag = ''; 							
+				});
+			}	
 		},
 		mounted: function() {
 			let request = new Request();
@@ -183,6 +222,8 @@
 					this.firstName = this.userProfile.first_name;
 					this.email = this.userProfile.email;
 					this.biography = this.userProfile.biography;
+					this.isAuctioneer = this.userProfile.isAuctioneer;
+					this.tags = this.userProfile.tags;
 				}
 			);	
 		}

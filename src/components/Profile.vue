@@ -25,7 +25,7 @@
 							v-if="
 								$route.params.username != $store.getters.getUsername && isAuctioneer
 							"
-							@click="subscibe"
+							@click="subscribe"
 						>
 							Subscribe
 						</v-btn>
@@ -81,7 +81,7 @@
 				subscribers: 0,
 				biography: '',
 				profilePic: '',
-				tags: '',
+				tags: [],
 				isAuctioneer: ''//modify isAuctioneer for auctioneer identification
 			}
 		},
