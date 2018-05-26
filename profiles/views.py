@@ -10,7 +10,7 @@ class ProfileView(View):
         sent_username = request.POST.get('username', '')
         user = User.objects.get(username=sent_username)
         user_profile = user.profile
-        user_tags = list(user_profile.tags_set.all().values('names'))
+        user_tags = list(user_profile.tags_set.all().values('name'))
         context = {
             'username': user.username,
             'email': user.email,
