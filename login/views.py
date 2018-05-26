@@ -17,8 +17,7 @@ class IndexViewPost(View):
             return HttpResponseBadRequest()
 
 
-class LogoutOutUser(View):
+class LogoutUser(View):
     def post(self, request):
-        print(request)
         auth.logout(request)
         return HttpResponse("Success")
