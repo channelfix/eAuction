@@ -17,7 +17,6 @@
       {% if user.is_authenticated %}
         window.__INITIAL_STATE__.isAuthenticated = true;
         window.__INITIAL_STATE__.username = "{{ user.username }}";
-        console.log(window);
       {% endif %}
 
     </script>

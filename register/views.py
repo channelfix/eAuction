@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from profiles.models import Profile
 from django.db.utils import IntegrityError
 from django.core.files.images import ImageFile
-# Create your views here.
 
 
 class RegisterViewPost(View):

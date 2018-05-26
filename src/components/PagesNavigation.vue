@@ -120,7 +120,6 @@ export default {
 			}
 		},
 		signOut(){
-			// sign out here
 			let request = new Request();
 			request.post("http://localhost:8000/login/", "logout/", {}, 
 			(response)=>{
@@ -139,10 +138,9 @@ export default {
 			}
 		}
 	},
-	mounted() {		
+	mounted() {
 		this.currentRoute = this.$route.name;
-		//get username
-		this.username = this.$store.getters.getUsername;		
+		this.username = this.$store.getters.getUsername;
 	}
 }
 </script>

@@ -4,4 +4,3 @@ from app.tags.models import Tags
 
 admin.site.register(Profile)
 admin.site.register(Tags)
-# Register your models here.
