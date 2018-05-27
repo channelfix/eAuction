@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(
         User,
+        related_name='profile',
         on_delete=models.CASCADE
     )
 
@@ -18,10 +19,14 @@ class Profile(models.Model):
 
 
 class Subscribed(models.Model):
+    """
+      auctioneer is person to be subscribed to
+      bidder is person that will subscribe
+    """
     auctioneer = models.ForeignKey(User,
                                    on_delete=models.CASCADE,
-                                   related_name='auctioneer')
+                                   related_name='bidder')
 
     bidder = models.ForeignKey(User,
                                on_delete=models.CASCADE,
-                               related_name='bidder')
+                               related_name='auctioneer')

@@ -3,16 +3,16 @@ from django.http import JsonResponse
 from django.views.generic import View
 from django.http import HttpResponse
 from app.tags.models import Tags
+from profiles.models import Subscribed
 
 
 class ProfileView(View):
     def post(self, request):
         sent_username = request.POST.get('username', '')
         user = User.objects.get(username=sent_username)
-
         user_profile = user.profile
         user_tags = list(user_profile.tags_set.all().values('name'))
-
+        check = Subscribed.objects.filter(auctioneer=user, bidder=request.user).exists()
         context = {
             'username': user.username,
             'email': user.email,
@@ -22,7 +22,8 @@ class ProfileView(View):
             'avatar': user_profile.avatar.url,
             'tags': user_tags,
             'isAuctioneer': user_profile.isAuctioneer,
-            'subscribers': user_profile.subscribers
+            'subscribers': user_profile.subscribers,
+            'isSubscribed': check
         }
 
         return JsonResponse(context)
@@ -86,3 +87,19 @@ class TagRemoval(View):
             tag.delete()
             return HttpResponse('Removed tag successfully')
         return HttpResponse('%s not found' % sent_tag)
+
+
+class Subscribe(View):
+    def post(self, request):
+        current_user = request.user
+        subscribed_user = request.POST.get('username', '')
+        subscribed = User.objects.get(username=subscribed_user)
+        check = Subscribed.objects.filter(bidder=request.user,
+                                          auctioneer=subscribed.username).first()
+        if check is None:
+            Subscribed.create(subscriber=current_user, subscribed=subscribed)
+            res = 'Subscribed'
+        else:
+            check.delete()
+            res = 'Unsubscribed'
+        return HttpResponse(res)
