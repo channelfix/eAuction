@@ -9,8 +9,10 @@ class ProfileView(View):
     def post(self, request):
         sent_username = request.POST.get('username', '')
         user = User.objects.get(username=sent_username)
+
         user_profile = user.profile
         user_tags = list(user_profile.tags_set.all().values('name'))
+
         context = {
             'username': user.username,
             'email': user.email,
@@ -40,7 +42,7 @@ class EditProfile(View):
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
-        user.biography = biography
+        user.profile.biography = biography
         user_profile = user.profile
 
         if request.FILES:
