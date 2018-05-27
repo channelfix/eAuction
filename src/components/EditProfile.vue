@@ -101,6 +101,7 @@
 				email: '',
 				biography: '',
 				tags: [],
+				subTag: [],
 				tag: '',
 				oldPassword: '',
 				newPassword: '',				
@@ -152,8 +153,8 @@
 					formdata.set('last_name', this.lastName);
 					formdata.set('first_name', this.firstName);
 					formdata.set('email', this.email);
-					formdata.set('tags', this.tags);
-					formdata.set('biography', this.biography);			
+					formdata.set('tags', this.subTag);
+					formdata.set('biography', this.biography);		
 					
 					if(this.hasChangePic)
 						formdata.append('imageFile', this.imageFile, this.imageFile.name)
@@ -161,6 +162,7 @@
 					request.post('http://localhost:8000/', 'profile/edit_profile_details/', formdata,
 					(response) => {
 						alert(response.data)
+						this.requestProfileDetails()
 					})
 				}
 			},
@@ -181,13 +183,22 @@
 					)
 				}
 			},
-			addTag: function() {	
+			findTag: function(element) {
+				return element.name === this.tag.toLowerCase()
+			},
+			addTag: function() {
 				if (this.tag != ''){
 					let newTags = this.tags.map(item=>item)
-					newTags.push(this.tag);
-					this.tags = newTags
-					alert(this.tag+' added')
-					this.tag = ''
+					if(newTags.find(this.findTag))
+						alert('You already have this tag.')
+					else{					
+						let tag = this.tag.toLowerCase()	
+						newTags.push(tag);
+						this.subTag.push(tag);
+						this.tags = newTags
+						alert(this.tag+' added')
+						this.tag = ''						
+					}
 				}			
 				else
 					alert('Please insert a text.')	
@@ -197,34 +208,37 @@
 				let formdata = new FormData();
 
 				formdata.set('username', this.username);
-				formdata.set('tag', this.tag);
+				formdata.set('tag', this.tag.toLowerCase());
 
 				request.post('http://localhost:8000/', 'profile/remove_tag/', formdata,
 				(response) => { 
 					alert(response.data);
 					this.tag = ''; 							
 				});
+			},
+			requestProfileDetails() {				
+				let request = new Request();
+				let formdata = new FormData();
+
+				formdata.set('username', this.username);
+
+				request.post('http://localhost:8000/', 'profile/request_profile_details/', formdata,
+					(response) => {
+						this.userProfile = response.data;
+
+						this.profilePic = '/'+this.userProfile.avatar;
+						this.lastName = this.userProfile.last_name;
+						this.firstName = this.userProfile.first_name;
+						this.email = this.userProfile.email;
+						this.biography = this.userProfile.biography;
+						this.isAuctioneer = this.userProfile.isAuctioneer;
+						this.tags = this.userProfile.tags;
+					}
+				);
 			}	
 		},
 		mounted: function() {
-			let request = new Request();
-			let formdata = new FormData();
-
-			formdata.set('username', this.username);
-
-			request.post('http://localhost:8000/', 'profile/request_profile_details/', formdata,
-				(response) => {
-					this.userProfile = response.data;
-
-					this.profilePic = '/'+this.userProfile.avatar;
-					this.lastName = this.userProfile.last_name;
-					this.firstName = this.userProfile.first_name;
-					this.email = this.userProfile.email;
-					this.biography = this.userProfile.biography;
-					this.isAuctioneer = this.userProfile.isAuctioneer;
-					this.tags = this.userProfile.tags;
-				}
-			);	
+			this.requestProfileDetails()
 		}
 	}
 
