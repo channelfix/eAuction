@@ -22,8 +22,9 @@
 								$route.params.username != $store.getters.getUsername && isAuctioneer
 							"
 							@click="subscribe"
+
+							v-text="subscriptionStatus"
 						>
-							Subscribe
 						</v-btn>
 						<span class = 'body-2'>Name:</span>
 						<p v-text="name" class="title"></p>
@@ -73,7 +74,8 @@
 				biography: '',
 				profilePic: '',
 				tags: [],
-				isAuctioneer: ''//modify isAuctioneer for auctioneer identification
+				isAuctioneer: '',//modify isAuctioneer for auctioneer identification
+				subscriptionStatus: '' // Displays text either subscribe or unsubscribe
 			}
 		},
 
@@ -86,7 +88,20 @@
 			},
 			subscribe() {
 				//add subsciber if clicked
-				this.subscribers++
+				let request = new Request();
+				let formdata = new FormData();
+
+				formdata.set('username', this.$route.params.username)
+
+				request.post('http://localhost:8000/', 'profile/subscribe/', formdata,
+				(response) => {
+					this.subscriptionStatus = response.data
+
+					if(this.subscriptionStatus == 'Unsubscribe')
+						this.subscribers++;
+					else
+						this.subscribers--;
+				})
 			}
 		},
 
@@ -114,6 +129,13 @@
 				this.tags = this.userProfile.tags
 				this.isAuctioneer = this.userProfile.isAuctioneer
 				this.subscribers = this.userProfile.subscribers
+
+				let hasSubscribed = this.userProfile.hasSubscribed
+
+				if(hasSubscribed)
+					this.subscriptionStatus = 'unsubscribe'
+				else
+					this.subscriptionStatus = 'subscribe'
 			})
 		},
 	}
