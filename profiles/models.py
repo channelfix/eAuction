@@ -25,8 +25,8 @@ class Subscribed(models.Model):
     """
     auctioneer = models.ForeignKey(User,
                                    on_delete=models.CASCADE,
-                                   related_name='bidder')
+                                   related_name='auctioneer')
 
     bidder = models.ForeignKey(User,
                                on_delete=models.CASCADE,
-                               related_name='auctioneer')
+                               related_name='bidder')
