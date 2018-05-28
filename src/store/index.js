@@ -14,7 +14,7 @@ export default new Vuex.Store({
     firstname: '',
     avatar: '',
     tags: '',
-    isAuctioneer: true
+    isAuctioneer: false
   },
 
   mutations: {
@@ -66,7 +66,7 @@ export default new Vuex.Store({
     getFirstName: (state) => { return state.firstname },
     getProfilePic: (state) => { return state.avatar },
     getTags: (state) => { return state.tags },
-    getAuctioneer: (state) => { return state.isAuctioneer }
+    isAuctioneer: (state) => { return state.isAuctioneer }
   }
 
 })
