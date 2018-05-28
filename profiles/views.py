@@ -4,6 +4,7 @@ from django.views.generic import View
 from django.http import HttpResponse
 from app.tags.models import Tags
 from profiles.models import Subscribed
+from django.db.models import F
 
 
 class ProfileView(View):
@@ -12,7 +13,8 @@ class ProfileView(View):
         user = User.objects.get(username=sent_username)
         user_profile = user.profile
         user_tags = list(user_profile.tags_set.all().values('name'))
-        check = Subscribed.objects.filter(auctioneer=user, bidder=request.user).exists()
+
+        hasSubscribed = Subscribed.objects.filter(auctioneer=user, bidder=request.user).exists()
         context = {
             'username': user.username,
             'email': user.email,
@@ -23,7 +25,8 @@ class ProfileView(View):
             'tags': user_tags,
             'isAuctioneer': user_profile.isAuctioneer,
             'subscribers': user_profile.subscribers,
-            'isSubscribed': check
+            'hasSubscribed': hasSubscribed,
+            'subscribers': user.profile.subscribers
         }
 
         return JsonResponse(context)
@@ -92,14 +95,22 @@ class TagRemoval(View):
 class Subscribe(View):
     def post(self, request):
         current_user = request.user
-        subscribed_user = request.POST.get('username', '')
-        subscribed = User.objects.get(username=subscribed_user)
-        check = Subscribed.objects.filter(bidder=request.user,
-                                          auctioneer=subscribed.username).first()
-        if check is None:
-            Subscribed.create(subscriber=current_user, subscribed=subscribed)
-            res = 'Subscribed'
+        sent_username = request.POST.get('username', '')
+        subscribed_user = User.objects.get(username=sent_username)
+
+        subscribed = Subscribed.objects.filter(auctioneer=subscribed_user,
+                                               bidder=current_user)
+
+        if subscribed:
+            subscribed.delete()
+            res = 'Subscribe'
+            subscribed_user.profile.subscribers = F('subscribers') - 1
+            subscribed_user.profile.save()
         else:
-            check.delete()
-            res = 'Unsubscribed'
+            Subscribed.objects.create(auctioneer=subscribed_user,
+                                      bidder=current_user)
+            res = 'Unsubscribe'
+            subscribed_user.profile.subscribers = F('subscribers') + 1
+            subscribed_user.profile.save()
+
         return HttpResponse(res)
