@@ -163,6 +163,12 @@
 					(response) => {
 						alert(response.data)
 						this.requestProfileDetails()
+						this.$router.push({
+							name: "Profile",
+							params: {
+								username: this.username
+							}
+						})
 					})
 				}
 			},

@@ -12,7 +12,10 @@ class IndexViewPost(View):
 
         if user is not None:
             auth.login(request, user)
-            return JsonResponse({'isValid': True})
+            isAuctioneer = user.profile.isAuctioneer
+
+            return JsonResponse({'isValid': True,
+                                 'isAuctioneer': isAuctioneer})
         else:
             return HttpResponseBadRequest()
 

@@ -81,6 +81,9 @@ export default {
 		route(id){
 			this.$router.push({
 				name: 'Auction',
+				params: {
+					id:id
+				}
 			})
 		}
 	}

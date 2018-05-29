@@ -11,12 +11,14 @@
     
       window.__INITIAL_STATE__ = {
         'isAuthenticated' : false,
-        'username' : ''
+        'username' : '',
+        'isAuctioneer': false
       }
 
       {% if user.is_authenticated %}
         window.__INITIAL_STATE__.isAuthenticated = true;
         window.__INITIAL_STATE__.username = "{{ user.username }}";
+        window.__INITIAL_STATE__.isAuctioneer = "{{user.profile.isAuctioneer}}"
       {% endif %}
 
     </script>
