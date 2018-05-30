@@ -30,3 +30,10 @@ class Subscribed(models.Model):
     bidder = models.ForeignKey(User,
                                on_delete=models.CASCADE,
                                related_name='bidder')
+
+
+class Credits(models.Model):
+    owner = models.OneToOneField(User,
+                                 on_delete=models.CASCADE,
+                                 related_name='credits')
+    credits = models.PositiveIntegerField()
