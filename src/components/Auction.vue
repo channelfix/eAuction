@@ -103,7 +103,11 @@
 							  style="color: white;"
 							>
 							</v-text-field>
-							<button class="white" style="color: black;">CLEAR</button>						
+							<button 
+								class="white" 
+								style="color: black;"
+								@click="clear"
+							>CLEAR</button>						
 						</v-layout>
 	  				</v-flex>
   		  		</v-layout>
@@ -116,6 +120,8 @@
 function formatDecimal(num) {
 	return parseFloat(Math.round(num * 100) / 100).toFixed(2)
 }
+
+let logThread;
 
 export default {
 	name: "Auction",
@@ -179,6 +185,14 @@ export default {
 					console.log('This browser does not support WebRTC.');
 			})
 		}
+
+		//// get activity log thread
+		logThread = setInterval(
+			() => {
+				// constantly ask from the server for new log 
+			},
+			500
+		)
 	},
 	computed: {
 		formattedBid() { 
