@@ -174,7 +174,7 @@ export default {
 		div.appendChild(opentokClient)
 
 		if(this.isAuctioneer){
-			this.axios.get('http://localhost:8000/livestream/auctioneer/')
+			this.axios.get('/livestream/auctioneer/')
 			.then((response) => {
 				this.opentokCloud = response.data
 
@@ -209,7 +209,7 @@ export default {
 					console.log('This browser does not support WebRTC.');
 			})
 		}else{
-			this.axios.get('http://localhost:8000/livestream/bidder/')
+			this.axios.get('/livestream/bidder/')
 			.then((response) => {
 				this.opentokCloud = response.data
 
