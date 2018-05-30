@@ -7,8 +7,9 @@
 	  	>
 	  		<v-flex md7> <!-- left -->
 	  		  	<v-layout column>
-		  		  	<div class="box livestream" id="livestream">			  		  			  
+		  		  	<div class="box livestream" id="livestream">		  		 
 					    <div id="publisher"></div>
+					    <div id="subscriber"></div>
 		  		  	</div>
 		  		  	<v-flex md4>
 		  		  		<v-layout 
@@ -146,7 +147,6 @@ export default {
 			this.axios.get('http://localhost:8000/livestream/auctioneer/')
 			.then((response) => {
 				this.opentokCloud = response.data
-				console.log(this.opentokCloud)
 
 				this.apiKey = this.opentokCloud.api_key
 				this.sessionId = this.opentokCloud.session_id
@@ -176,6 +176,49 @@ export default {
 					});
 				}
 				else
+					console.log('This browser does not support WebRTC.');
+			})
+		}
+		else{
+			this.axios.get('http://localhost:8000/livestream/bidder/')
+			.then((response) => {
+				this.opentokCloud = response.data
+
+				this.apiKey = this.opentokCloud.api_key
+				this.sessionId = this.opentokCloud.session_id
+				this.token = this.opentokCloud.token
+
+				console.log('ApiKey: ' + this.apiKey)
+				console.log('Session ID: ' + this.sessionId);
+				console.log('Token: ' + this.token);
+
+
+				let session;
+
+				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
+					console.log('This browser supports WebRTC.');
+					session = OT.initSession(this.apiKey, this.sessionId);
+
+					session.connect(this.token, function(error) { // Check if this client is connected to the session.
+						if(error)
+							console.log('Cannot connect to the session.'); // Display Message: client has successfully connected to the session.
+						else
+							console.log('Connected to the session'); // Display Message: client has failed connect to the session.		
+					});
+
+					session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
+
+						// Accept the exposed video who is connected to the same session.
+						session.subscribe(event.stream, 'subscriber', {inserMode:'append', width:'50%', height:'50%'}); 
+						console.log('Successfully subscribe');
+					});
+
+
+					session.on("streamDestroyed", function(event) {	
+						console.log('Failed to subscribe');
+					});
+				}
+				else // Failed to launch the livestream.
 					console.log('This browser does not support WebRTC.');
 			})
 		}
@@ -214,6 +257,17 @@ export default {
 	}
 
 	.publisher {
+	    position: absolute;
+	    width: 360px;
+	    height: 240px;
+	    bottom: 10px;
+	    left: 10px;
+	    z-index: 100;
+	    border: 3px solid white;
+	    border-radius: 3px;
+	}
+
+	.subscriber {
 	    position: absolute;
 	    width: 360px;
 	    height: 240px;

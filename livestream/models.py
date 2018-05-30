@@ -15,5 +15,3 @@ class Archive(models.Model):
 
     def __str__(self):
         return self.archive_id
-
-# Create your models here.

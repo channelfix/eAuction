@@ -6,18 +6,24 @@ from django.http import HttpResponse, JsonResponse
 from django.views import View
 
 
-class IndexView(View):
-    def get(self, request):
-        return render(request, 'video_stream/selection.html')
-
-
-class AuctioneerView(View):
+class OpenTokCloudView(View):
     opentok_cloud = OpenTok(settings.OPENTOK_API_KEY,
                             settings.OPENTOK_API_SECRET)
+
+    print(opentok_cloud)
+
+    def get_cloud(self):
+        return self.opentok_cloud
+
+
+class AuctioneerView(OpenTokCloudView):
     session_id = ''
     token = ''
 
-    def getAuction(self):
+    def get_auction(self):
+        """ Create an Auction Event """
+
+        print(super(AuctioneerView, self).get_cloud())
         session_address = "127.0.0.1"
         session = self.opentok_cloud.create_session(session_address,
                                                     media_mode=MediaModes.routed)
@@ -26,15 +32,21 @@ class AuctioneerView(View):
         Session.objects.create(session_id=session.session_id)
         self.session_id = session.session_id
 
+        print('Session ID: ', self.session_id)
+
         return {'session_id': self.session_id}
 
-    def getCloud(self):
-        return self.opentok_cloud
+    def set_session_id(self):
+
+        # Hard coded
+        self.session_id = Session.objects.get(pk=Session.objects.count()).session_id
+
+    def get_session_id(self):
+        return self.session_id
 
     def get(self, request):
-        auction = self.getAuction()
+        auction = self.get_auction()
         self.session_id = auction['session_id']
-        print(self.session_id)
         self.token = self.opentok_cloud.generate_token(self.session_id)
 
         context = {
@@ -48,21 +60,24 @@ class AuctioneerView(View):
 
 # This class will generate a token from
 # the generated session id for the bidder.
-# class BidderView(AuctioneerView):
+class BidderView(AuctioneerView):
+    token = ''
 
-#     token = None
-#     context = {}
+    def get(self, request):
+        auctioneer_view = super(BidderView, self)
+        auctioneer_view.set_session_id()
+        session_id = auctioneer_view.get_session_id()
+        self.token = auctioneer_view.get_cloud().generate_token(session_id,
+                                                                role=Roles.subscriber)
+        context = {
+            'api_key': settings.OPENTOK_API_KEY,
+            'session_id': session_id,
+            'token': self.token,
+        }
 
-#     def get(self, request):
-#         self.token = super(BidderView,
-#                            self).getCloud().generate_token(self.session_id,
-#                                                            role=Roles.subscriber)
-#         self.context = {
-#             'api_key': settings.OPENTOK_API_KEY,
-#             'session_id': self.session_id,
-#             'token': self.token,
-#         }
-#         return render('Bidder View')
+        print('Session ID: ', session_id)
+
+        return JsonResponse(context)
 
 
 # # start to record the video.
