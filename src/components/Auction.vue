@@ -23,7 +23,12 @@
 									align-center
 									pa-3
 								>
-									<button class="red btn">Decline</button>	
+									<button 
+										:class="buttonStatus.decline.style"
+										:disabled="!buttonStatus.decline.open"
+									>
+									Decline
+									</button>	
 								</v-layout>
 		  		  			</v-flex>
 		  		  			<v-flex 
@@ -33,7 +38,12 @@
 									align-center
 									pa-3
 								>
-									<button class="green btn">Accept</button>	
+									<button
+										:class="buttonStatus.accept.style"
+										:disabled="!buttonStatus.accept.open"
+									>
+									Accept
+									</button>	
 								</v-layout>
 		  		  			</v-flex>
 		  		  		</v-layout> 
@@ -106,7 +116,7 @@
 							<button 
 								class="white" 
 								style="color: black;"
-								@click="clear"
+								@click=""
 							>CLEAR</button>						
 						</v-layout>
 	  				</v-flex>
@@ -139,6 +149,7 @@ export default {
 					price: 0,
 				},
 			],
+			status: "open",
 			activity: [],
 		}
 	},
@@ -195,6 +206,46 @@ export default {
 		)
 	},
 	computed: {
+		buttonStatus() {
+			let accept = {
+				style: {
+				},
+				open: true,
+			}
+			let decline = {
+				style: {
+				},
+				open: true,
+			}
+
+			if(this.status == "open"){
+				accept.style.green = true;
+				accept.open = true;
+
+				decline.style.red = true;
+				decline.open = true;
+			}else if(this.status == "closed"){
+				accept.style.grey = true;
+				accept.open = false;
+
+				decline.style.grey = true;
+				decline.open = false;
+			}else if(this.status == "noaccept"){
+				accept.style.grey = true;
+				accept.open = false;
+
+				decline.style.red = true;
+				decline.open = true;
+			}else if(this.status == "nodecline"){
+				accept.style.green = true;
+				accept.open = true;
+
+				decline.style.grey = true;
+				decline.open = false;
+			}
+
+			return {accept, decline}
+		},
 		formattedBid() { 
 			return formatDecimal(this.currentBid);
 		},
