@@ -169,9 +169,9 @@ export default {
 	},
 	mounted: function(){
 		let div = document.getElementById('livestream')
-		let opentokClient = document.createElement('script')
-		opentokClient.setAttribute('src','https://static.opentok.com/v2/js/opentok.min.js')
-		div.appendChild(opentokClient)
+		/*let opentokClient = document.createElement('script')*/
+	/*		opentokClient.setAttribute('src','https://static.opentok.com/v2/js/opentok.min.js')*/
+	/*		div.appendChild(opentokClient)*/
 
 		if(this.isAuctioneer){
 			this.axios.get('/livestream/auctioneer/')
