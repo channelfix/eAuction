@@ -24,8 +24,8 @@
 									pa-3
 								>
 									<button 
-										:class="buttonStatus.decline.style"
-										:disabled="!buttonStatus.decline.open"
+										:class="decline.style"
+										:disabled="!decline.open"
 									>
 									Decline
 									</button>	
@@ -39,8 +39,9 @@
 									pa-3
 								>
 									<button
-										:class="buttonStatus.accept.style"
-										:disabled="!buttonStatus.accept.open"
+										:class="accept.style"
+										:disabled="!accept.open"
+										@click="accepted"
 									>
 									Accept
 									</button>	
@@ -127,11 +128,14 @@
 </template>
 
 <script>
+import Request from '../assets/js/Request.js'
+
 function formatDecimal(num) {
 	return parseFloat(Math.round(num * 100) / 100).toFixed(2)
 }
 
 let logThread;
+let request = new Request();
 
 export default {
 	name: "Auction",
@@ -149,8 +153,22 @@ export default {
 					price: 0,
 				},
 			],
-			status: "open",
+			status: "open", //status: open, closed, nodecline, noaccept
 			activity: [],
+			accept: {
+				style: {
+					green: true,
+					grey: false,
+				},
+				open: true,
+			},
+			decline: {
+				style: {
+					red: true,
+					grey: false,
+				},
+				open: true,
+			}
 		}
 	},
 	mounted: function(){
@@ -205,47 +223,43 @@ export default {
 			500
 		)
 	},
-	computed: {
-		buttonStatus() {
-			let accept = {
-				style: {
-				},
-				open: true,
-			}
-			let decline = {
-				style: {
-				},
-				open: true,
-			}
+	methods: {
+		accepted() {
+			this.status = "closed"
 
+			let formdata = new FormData();
+
+			let data = {
+				username: this.$store.getters.getUsername,
+				currentBid: this.currentBid,
+				product: this.currentProduct,
+			}
+		}
+	},
+	watch: {
+		status() {
+			console.log(this.status);
 			if(this.status == "open"){
-				accept.style.green = true;
-				accept.open = true;
-
-				decline.style.red = true;
-				decline.open = true;
+				this.accept.open = true;
+				this.decline.open = true;
 			}else if(this.status == "closed"){
-				accept.style.grey = true;
-				accept.open = false;
-
-				decline.style.grey = true;
-				decline.open = false;
+				this.accept.open = false;
+				this.decline.open = false;
 			}else if(this.status == "noaccept"){
-				accept.style.grey = true;
-				accept.open = false;
-
-				decline.style.red = true;
-				decline.open = true;
+				this.accept.open = false;
+				this.decline.open = true;
 			}else if(this.status == "nodecline"){
-				accept.style.green = true;
-				accept.open = true;
-
-				decline.style.grey = true;
-				decline.open = false;
+				this.accept.open = true;
+				this.decline.open = false;
 			}
 
-			return {accept, decline}
+			this.accept.style.green = this.accept.open;
+			this.accept.style.grey = !this.accept.open;
+			this.decline.style.red = this.decline.open;
+			this.decline.style.grey = !this.decline.open;
 		},
+	},
+	computed:{
 		formattedBid() { 
 			return formatDecimal(this.currentBid);
 		},
