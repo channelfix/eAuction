@@ -38,7 +38,7 @@
 
 				formData.set('username', this.user.name);
 				formData.set('password', this.user.password);
-				request.post('http://localhost:8000/','login/', formData, 
+				request.post('','login/', formData, 
 					(response) => {
 						if(response instanceof Error){
 							// do error stuff

@@ -31,8 +31,8 @@
 		      </v-card>
 		    </v-dialog> -->
 		 	<router-view>
-		 	</router-view>
-		</v-container>
+		 	</router-view
+>		</v-container>
 		<v-navigation-drawer 
 			temporary 
 			absolute 
