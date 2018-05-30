@@ -10,8 +10,6 @@ class OpenTokCloudView(View):
     opentok_cloud = OpenTok(settings.OPENTOK_API_KEY,
                             settings.OPENTOK_API_SECRET)
 
-    print(opentok_cloud)
-
     def get_cloud(self):
         return self.opentok_cloud
 
@@ -23,16 +21,14 @@ class AuctioneerView(OpenTokCloudView):
     def get_auction(self):
         """ Create an Auction Event """
 
-        print(super(AuctioneerView, self).get_cloud())
+        opentok_cloud = super(AuctioneerView, self).get_cloud()
         session_address = "127.0.0.1"
-        session = self.opentok_cloud.create_session(session_address,
+        session = opentok_cloud.create_session(session_address,
                                                     media_mode=MediaModes.routed)
 
         # Store the new session id
         Session.objects.create(session_id=session.session_id)
         self.session_id = session.session_id
-
-        print('Session ID: ', self.session_id)
 
         return {'session_id': self.session_id}
 
@@ -74,8 +70,6 @@ class BidderView(AuctioneerView):
             'session_id': session_id,
             'token': self.token,
         }
-
-        print('Session ID: ', session_id)
 
         return JsonResponse(context)
 

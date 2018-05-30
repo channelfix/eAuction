@@ -168,11 +168,6 @@ export default {
 		}
 	},
 	mounted: function(){
-		let div = document.getElementById('livestream')
-		/*let opentokClient = document.createElement('script')*/
-	/*		opentokClient.setAttribute('src','https://static.opentok.com/v2/js/opentok.min.js')*/
-	/*		div.appendChild(opentokClient)*/
-
 		if(this.isAuctioneer){
 			this.axios.get('/livestream/auctioneer/')
 			.then((response) => {
@@ -182,39 +177,24 @@ export default {
 				this.sessionId = this.opentokCloud.session_id
 				this.token = this.opentokCloud.token
 
-				console.log('ApiKey: ' + this.apiKey)
-				console.log('Session ID: ' + this.sessionId);
-				console.log('Token: ' + this.token);
-
 				let session, publisher;
 				let hasPublish = false;
 				let xhttp;
 
 				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
-					console.log('This browser supports WebRTC.');
 					session = OT.initSession(this.apiKey, this.sessionId);
 
 					session.connect(this.token, function(error) { // Check if the client has successfully connected to the session.
-						if(error)
-							console.log('Cannot connect to the session.');
-						else{
-							console.log('Connected to the session.');
+						if(error){
 
+						}
+						else{				
 							// Create a publisher for exposing the video to other client who is also connected to the same session.
-							publisher = OT.initPublisher('publisher', {insertMode: 'append', width: "100%", height: "100%"}); 
-						    session.publish(publisher, (e) => {
-						    	console.log(e);
-						    });
-						    console.log(session)
-
-						    publisher.on('streamCreated', function(e){
-						    	console.log("Stream created")
-						    })
+							publisher = OT.initPublisher('publisher', {insertMode: 'append', width: "40%", height: "100%"}); 
+						    session.publish(publisher);
 						}
 					});
 				}
-				else
-					console.log('This browser does not support WebRTC.');
 			})
 		}else{
 			this.axios.get('/livestream/bidder/')
@@ -225,37 +205,24 @@ export default {
 				this.sessionId = this.opentokCloud.session_id
 				this.token = this.opentokCloud.token
 
-				console.log('ApiKey: ' + this.apiKey)
-				console.log('Session ID: ' + this.sessionId);
-				console.log('Token: ' + this.token);
-
 				let session;
 
 				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
-					console.log('This browser supports WebRTC.');
 					session = OT.initSession(this.apiKey, this.sessionId);
 
-					session.connect(this.token, function(error) { // Check if this client is connected to the session.
-						if(error)
-							console.log('Cannot connect to the session.'); // Display Message: client has successfully connected to the session.
-						else
-							console.log('Connected to the session'); // Display Message: client has failed connect to the session.		
+					session.connect(this.token, function(error) { // Check if this client is connected to the 
 					});
 
 					session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
-						console.log(event)
+						
 						// Accept the exposed video who is connected to the same session.
-						session.subscribe(event.stream, 'subscriber', {insertMode:'append', width:'100%', height:'100%'}); 
-						console.log('Successfully subscribe');
+						session.subscribe(event.stream, 'subscriber', {insertMode:'append', width:'100%', height:'100%'}); 						
 					});
 
 
-					session.on("streamDestroyed", function(event) {	
-						console.log('Failed to subscribe');
+					session.on("streamDestroyed", function(event) {							
 					});
 				}
-				else // Failed to launch the livestream.
-					console.log('This browser does not support WebRTC.');
 			})
 		}
 
@@ -288,7 +255,6 @@ export default {
 	},
 	watch: {
 		status() {
-			console.log(this.status);
 			if(this.status == "open"){
 				this.accept.open = true;
 				this.decline.open = true;
@@ -320,7 +286,6 @@ export default {
 					msg += current+"\n";
 				}
 			);
-			console.log(msg);
 			return msg;
 		},
 		currentProduct() {
