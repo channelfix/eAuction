@@ -22,6 +22,7 @@ Vue.use(Vuetify, {
 });
 
 Vue.config.productionTip = false
+
 store.commit('authenticated', window.__INITIAL_STATE__.isAuthenticated)
 store.commit('setUsername', window.__INITIAL_STATE__.username)
 store.commit('asAuctioneer', window.__INITIAL_STATE__.isAuctioneer)

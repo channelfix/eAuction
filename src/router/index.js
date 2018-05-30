@@ -34,14 +34,13 @@ export default new Router({
           path: 'edit-profile',
           name: 'Edit-Profile',
           component: EditProfile
-        },
-      ],
-    },
-    {
+        },{ 
           path: '/auction/:id',
           name: 'Auction',
           component: Auction,
         },
+      ],
+    },
     {
       path: '*',
       name: '404',
