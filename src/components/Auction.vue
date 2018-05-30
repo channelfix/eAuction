@@ -201,7 +201,15 @@ export default {
 							console.log('Connected to the session.');
 
 							// Create a publisher for exposing the video to other client who is also connected to the same session.
-							publisher = OT.initPublisher('publisher', {insertMode: "append"}); 
+							publisher = OT.initPublisher('publisher', {insertMode: 'append', width: "100%", height: "100%"}); 
+						    session.publish(publisher, (e) => {
+						    	console.log(e);
+						    });
+						    console.log(session)
+
+						    publisher.on('streamCreated', function(e){
+						    	console.log("Stream created")
+						    })
 						}
 					});
 				}
@@ -221,7 +229,6 @@ export default {
 				console.log('Session ID: ' + this.sessionId);
 				console.log('Token: ' + this.token);
 
-
 				let session;
 
 				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
@@ -236,9 +243,9 @@ export default {
 					});
 
 					session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
-
+						console.log(event)
 						// Accept the exposed video who is connected to the same session.
-						session.subscribe(event.stream, 'subscriber', {inserMode:'append', width:'50%', height:'50%'}); 
+						session.subscribe(event.stream, 'subscriber', {insertMode:'append', width:'100%', height:'100%'}); 
 						console.log('Successfully subscribe');
 					});
 
