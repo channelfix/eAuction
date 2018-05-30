@@ -43,7 +43,7 @@
 										:disabled="!accept.open"
 										@click="accepted"
 									>
-									Accept
+										Accept
 									</button>	
 								</v-layout>
 		  		  			</v-flex>
@@ -113,12 +113,7 @@
 							  rows="25"
 							  style="color: white;"
 							>
-							</v-text-field>
-							<button 
-								class="white" 
-								style="color: black;"
-								@click=""
-							>CLEAR</button>						
+							</v-text-field>					
 						</v-layout>
 	  				</v-flex>
   		  		</v-layout>
@@ -234,6 +229,12 @@ export default {
 				currentBid: this.currentBid,
 				product: this.currentProduct,
 			}
+
+			for(let key in data){
+				formdata.set(key, data[key]);
+			}
+
+			// send data
 		}
 	},
 	watch: {

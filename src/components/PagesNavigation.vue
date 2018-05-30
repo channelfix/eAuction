@@ -19,7 +19,19 @@
 				    <v-toolbar-title>{{currentRoute}}</v-toolbar-title>
 			 	</v-toolbar>
 		 	</v-container>
-		 	<router-view></router-view>
+		 	<!-- <v-dialog v-model="warningModal" persistent max-width="290">
+		      <v-card>
+		        <v-card-title class="headline">Auction Seesion Warning</v-card-title>
+		        <v-card-text>You are leaving your auction session. All your progress will be lost.</v-card-text>
+		        <v-card-actions>
+		          <v-spacer></v-spacer>
+		          <v-btn color="primary" flat @click.native="warningModal = false">Leave</v-btn>
+		          <v-btn color="primary" flat @click.native="warningModal = false">Return</v-btn>
+		        </v-card-actions>
+		      </v-card>
+		    </v-dialog> -->
+		 	<router-view>
+		 	</router-view>
 		</v-container>
 		<v-navigation-drawer 
 			temporary 
@@ -94,7 +106,7 @@ export default {
 				},
 
 			],
-
+			warningModal: false,
 		}
 	},
 	methods: {
@@ -129,6 +141,9 @@ export default {
 	},
 	watch: {
 		'$route' (to,from) {
+			/*if(from.name == "Auction")
+				this.warningModal = true;
+			*/
 			this.currentRoute = this.$route.name;
 			if(this.currentRoute == "Auction"
 			){
