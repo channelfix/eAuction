@@ -93,7 +93,7 @@
 
 				formdata.set('username', this.$route.params.username)
 
-				request.post('http://localhost:8000/', 'profile/subscribe/', formdata,
+				request.post('/profile/subscribe/', formdata,
 				(response) => {
 					this.subscriptionStatus = response.data
 
@@ -119,7 +119,7 @@
 			formdata.set('username', this.$route.params.username)
 
 
-			request.post('http://localhost:8000/','profile/request_profile_details/', formdata,
+			request.post('/profile/request_profile_details/', formdata,
 			(response) => {
 				this.userProfile = response.data
 				this.profilePic = '/'+this.userProfile.avatar
