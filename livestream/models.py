@@ -33,7 +33,7 @@ class Bid(models.Model):
 class Session(models.Model):
     auctioneer = models.OneToOneField(User,
                                       on_delete=models.CASCADE,
-                                      related_name='auctioneer')
+                                      related_name='current_auctioneer')
 
     # not sure
     attendees = models.ForeignKey(User,
