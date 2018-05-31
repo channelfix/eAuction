@@ -14,6 +14,14 @@ class Profile(models.Model):
     biography = models.CharField(max_length=100, blank=True)
     avatar = models.ImageField()
 
+    @property
+    def countSubscribers(self):
+        """Returns how many subscribers are currently subscribed to a user"""
+        # still has bug btw.
+        # auctioneer who subscribed will also have an  increment on
+        # their subscribed counter
+        return self.user.auctioneer.count() + self.user.bidder.count()
+
     def __str__(self):
         return "profile " + str(self.user.id)
 

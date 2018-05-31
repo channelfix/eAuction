@@ -24,9 +24,8 @@ class ProfileView(View):
             'avatar': user_profile.avatar.url,
             'tags': user_tags,
             'isAuctioneer': user_profile.isAuctioneer,
-            'subscribers': user_profile.subscribers,
-            'hasSubscribed': hasSubscribed,
-            'subscribers': user.profile.subscribers
+            'subscribers': user_profile.countSubscribers,
+            'hasSubscribed': hasSubscribed
         }
 
         return JsonResponse(context)
@@ -104,13 +103,11 @@ class Subscribe(View):
         if subscribed:
             subscribed.delete()
             res = 'Subscribe'
-            subscribed_user.profile.subscribers = F('subscribers') - 1
             subscribed_user.profile.save()
         else:
             Subscribed.objects.create(auctioneer=subscribed_user,
                                       bidder=current_user)
             res = 'Unsubscribe'
-            subscribed_user.profile.subscribers = F('subscribers') + 1
             subscribed_user.profile.save()
 
         return HttpResponse(res)
