@@ -5,8 +5,10 @@ from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.views import View
 
+from pprint import pprint
 
-class OpenTokCloudView(View):
+
+class OpenTokCloudView:
     opentok_cloud = OpenTok(settings.OPENTOK_API_KEY,
                             settings.OPENTOK_API_SECRET)
 
@@ -14,34 +16,26 @@ class OpenTokCloudView(View):
         return self.opentok_cloud
 
 
-class AuctioneerView(OpenTokCloudView):
+class AuctioneerView(OpenTokCloudView, View):
     session_id = ''
     token = ''
 
-    def get_auction(self):
+    def get_auction(self, auctioneer):
         """ Create an Auction Event """
-
-        opentok_cloud = super(AuctioneerView, self).get_cloud()
+        pprint(vars(self.opentok_cloud))
         session_address = "127.0.0.1"
-        session = opentok_cloud.create_session(session_address,
-                                                    media_mode=MediaModes.routed)
+        session = self.opentok_cloud.create_session(
+            session_address, media_mode=MediaModes.routed)
 
         # Store the new session id
-        Session.objects.create(session_id=session.session_id)
+        Session.objects.create(user=auctioneer, session_id=session.session_id)
         self.session_id = session.session_id
 
         return {'session_id': self.session_id}
 
-    def set_session_id(self):
-
-        # Hard coded
-        self.session_id = Session.objects.get(pk=Session.objects.count()).session_id
-
-    def get_session_id(self):
-        return self.session_id
-
     def get(self, request):
-        auction = self.get_auction()
+        auctioneer = request.user
+        auction = self.get_auction(auctioneer)
         self.session_id = auction['session_id']
         self.token = self.opentok_cloud.generate_token(self.session_id)
 
@@ -56,15 +50,13 @@ class AuctioneerView(OpenTokCloudView):
 
 # This class will generate a token from
 # the generated session id for the bidder.
-class BidderView(AuctioneerView):
+class BidderView(OpenTokCloudView, View):
     token = ''
 
     def get(self, request):
-        auctioneer_view = super(BidderView, self)
-        auctioneer_view.set_session_id()
-        session_id = auctioneer_view.get_session_id()
-        self.token = auctioneer_view.get_cloud().generate_token(session_id,
-                                                                role=Roles.subscriber)
+        session_id = request['session_id']
+        self.token = self.opentok_cloud.generate_token(session_id,
+                                                       role=Roles.subscriber)
         context = {
             'api_key': settings.OPENTOK_API_KEY,
             'session_id': session_id,

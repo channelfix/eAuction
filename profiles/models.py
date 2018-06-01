@@ -9,7 +9,6 @@ class Profile(models.Model):
         on_delete=models.CASCADE
     )
 
-    subscribers = models.PositiveIntegerField(default=0)
     isAuctioneer = models.BooleanField(default=False)
     biography = models.CharField(max_length=100, blank=True)
     avatar = models.ImageField()
