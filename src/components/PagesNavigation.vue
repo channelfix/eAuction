@@ -17,6 +17,15 @@
 			   			<v-icon>{{toolbarIcon}}</v-icon>
 			   		</v-toolbar-side-icon>
 				    <v-toolbar-title>{{currentRoute}}</v-toolbar-title>
+				    <v-spacer></v-spacer>
+		 			<v-toolbar-items class="hidden-sm-and-down">
+				      <v-btn 
+				      	flat
+						v-if="$store.getters.isAuctioneer"
+						@click="createLive"
+			      	  >Create Livestream
+			          </v-btn>
+				    </v-toolbar-items>
 			 	</v-toolbar>
 		 	</v-container>
 		 	<!-- <v-dialog v-model="warningModal" persistent max-width="290">
@@ -137,6 +146,11 @@ export default {
 			(response)=>{
 				this.$router.go(0);	
 			});			
+		},
+		createLive(){
+			this.$router.push({
+				name: 'Create-Live'
+			})
 		}
 	},
 	watch: {

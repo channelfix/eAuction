@@ -7,6 +7,7 @@ import PagesNavigation from '@/components/PagesNavigation'
 import Profile from '@/components/Profile'
 import Auction from '@/components/Auction'
 import EditProfile from '@/components/EditProfile'
+import CreateLiveStream from '@/components/CreateLiveStream'
 import store from '../store'
 
 Vue.use(Router)
@@ -38,7 +39,11 @@ export default new Router({
           path: '/auction/:id',
           name: 'Auction',
           component: Auction,
-        },
+        },{
+          path: '/create-auction',
+          name: 'Create-Live',
+          component: CreateLiveStream,
+        }
       ],
     },
     {
