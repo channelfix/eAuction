@@ -17,10 +17,7 @@ class Profile(models.Model):
     @property
     def countSubscribers(self):
         """Returns how many subscribers are currently subscribed to a user"""
-        # still has bug btw.
-        # auctioneer who subscribed will also have an  increment on
-        # their subscribed counter
-        return self.user.auctioneer.count() + self.user.bidder.count()
+        return self.user.auctioneer.count()
 
     def __str__(self):
         return "profile " + str(self.user.id)

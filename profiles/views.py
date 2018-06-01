@@ -103,7 +103,6 @@ class Subscribe(View):
         if subscribed:
             subscribed.delete()
             res = 'Subscribe'
-            subscribed_user.profile.save()
         else:
             Subscribed.objects.create(auctioneer=subscribed_user,
                                       bidder=current_user)
