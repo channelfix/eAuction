@@ -99,23 +99,22 @@
 						class="grey darken-4"
 	  					pa-4
 	  				>
-						<v-layout
-							column
-							wrap
-						>
-							<v-text-field
-							  name="log"
-							  id="log"
-							  flat
-							  :value="logMessage"
-							  disabled
-							  textarea
-							  multi-line
-							  rows="25"
-							  style="color: white;"
+	  					<p>Log</p>
+						<div class="logbox">
+							<v-layout
+								column
+								wrap
 							>
-							</v-text-field>					
-						</v-layout>
+								<v-list two-line>
+									<template v-for="act of activity">
+										<v-list-tile dark>
+											<v-list-tile-content>{{act.name}} {{act.action}} {{act.bid}} {{act.product}}</v-list-tile-content>
+										</v-list-tile>
+										<v-divider></v-divider>
+									</template>
+								</v-list>
+							</v-layout>
+						</div>
 	  				</v-flex>
   		  		</v-layout>
 	  		</v-flex>
@@ -150,7 +149,33 @@ export default {
 				},
 			],
 			status: "open", //status: open, closed, nodecline, noaccept
-			activity: [],
+			activity: [{
+				name: 'bojoluis',
+				action: 'Declined',
+				product: 'pencil',
+				bid: 0,
+			},{
+				name: 'bojoluis',
+				action: 'Accepted',
+				product: 'pencil',
+				bid: 0,
+			},{
+				name: 'bojoluis',
+				action: 'Destroy',
+				product: 'pencil',
+				bid: 0,
+			},{
+				name: 'bojoluis',
+				action: 'Increased',
+				product: 'pencil',
+				bid: 0,
+			},{
+				name: 'bojoluis',
+				action: 'Won',
+				product: 'pencil',
+				bid: 0,
+			},
+			],
 			accept: {
 				style: {
 					green: true,
@@ -302,6 +327,11 @@ export default {
 		overflow-y: hidden;
 	}
 
+	button {
+		height: 5em;
+		width: 100%;
+	}
+
 	.livestream{
 		height: 700px;
 		background-color: black;
@@ -329,8 +359,8 @@ export default {
 	    border-radius: 3px;
 	}
 
-	button {
-		height: 5em;
-		width: 100%;
+	.logbox {
+		overflow: scroll;
+		height: 800px;
 	}
 </style>
