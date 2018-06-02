@@ -1,16 +1,26 @@
-import json
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponse
 from django.views.generic import View
-from django.contrib.auth.views import LoginView
-from django.contrib.auth import authenticate
+from django.contrib import auth
+
 
 class IndexViewPost(View):
     def post(self, request):
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
-        user = authenticate(username=username, password=password)
+        user = auth.authenticate(username=username, password=password)
 
         if user is not None:
-            return HttpResponse(json.dumps({'isValid': True}))
+            auth.login(request, user)
+            isAuctioneer = user.profile.isAuctioneer
+
+            return JsonResponse({'isValid': True,
+                                 'isAuctioneer': isAuctioneer})
         else:
             return HttpResponseBadRequest()
+
+
+class LogoutUser(View):
+    def post(self, request):
+        auth.logout(request)
+        return HttpResponse("Success")

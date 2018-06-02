@@ -6,6 +6,21 @@
     <title>eAuction</title>
   </head>
   <body>
+    <script type="text/javascript">
+    
+      window.__INITIAL_STATE__ = {
+        'isAuthenticated' : false,
+        'username' : '',
+        'isAuctioneer': false
+      }
+
+      {% if user.is_authenticated %}
+        window.__INITIAL_STATE__.isAuthenticated = true;
+        window.__INITIAL_STATE__.username = "{{ user.username }}";
+        window.__INITIAL_STATE__.isAuctioneer = "{{user.profile.isAuctioneer}}"
+      {% endif %}
+    </script>
+  	{% csrf_token %}
     <div id="app"></div>
     <!-- built files will be auto injected -->
   <script type="text/javascript" src="/static/app.js"></script></body>

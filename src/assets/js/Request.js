@@ -22,7 +22,7 @@ export default class Request {
 		this.send('post',baseurl, url, data, callback);
 	}
 
-	get(baseurl, url){
+	get(baseurl, url, callback){
 		this.send('get',baseurl, url, callback);
 	}
 }
