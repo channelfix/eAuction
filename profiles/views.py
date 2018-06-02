@@ -4,7 +4,6 @@ from django.views.generic import View
 from django.http import HttpResponse
 from app.tags.models import Tags
 from profiles.models import Subscribed
-from django.db.models import F
 
 
 class ProfileView(View):
@@ -14,7 +13,8 @@ class ProfileView(View):
         user_profile = user.profile
         user_tags = list(user_profile.tags_set.all().values('name'))
 
-        hasSubscribed = Subscribed.objects.filter(auctioneer=user, bidder=request.user).exists()
+        hasSubscribed = Subscribed.objects.filter(auctioneer=user,
+                                                  bidder=request.user).exists()
         context = {
             'username': user.username,
             'email': user.email,
@@ -25,7 +25,8 @@ class ProfileView(View):
             'tags': user_tags,
             'isAuctioneer': user_profile.isAuctioneer,
             'subscribers': user_profile.countSubscribers,
-            'hasSubscribed': hasSubscribed
+            'hasSubscribed': hasSubscribed,
+            'contact_number': user.profile.contact_number
         }
 
         return JsonResponse(context)
@@ -41,11 +42,13 @@ class EditProfile(View):
         email = request.POST.get('email', '')
         biography = request.POST.get('biography', '')
         list_of_tags = request.POST.get('tags', '')
+        contact_number = request.POST.get('contact_number', '')
 
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
         user.profile.biography = biography
+        user.profile.contact_number = contact_number
         user_profile = user.profile
 
         if request.FILES:

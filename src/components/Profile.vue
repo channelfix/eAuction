@@ -50,6 +50,9 @@
 							<span class = 'body-2'>Biography:</span>
 							<p v-text="biography"></p>
 						</div>
+
+						<span class = 'body-2'>Contact number:</span>
+						<p v-text="contactNumber" />
 					</div>
 				</v-layout>
 			</div>
@@ -75,7 +78,8 @@
 				profilePic: '',
 				tags: [],
 				isAuctioneer: '',//modify isAuctioneer for auctioneer identification
-				subscriptionStatus: '' // Displays text either subscribe or unsubscribe
+				subscriptionStatus: '', // Displays text either subscribe or unsubscribe
+				contactNumber: ''
 			}
 		},
 
@@ -129,6 +133,7 @@
 				this.tags = this.userProfile.tags
 				this.isAuctioneer = this.userProfile.isAuctioneer
 				this.subscribers = this.userProfile.subscribers
+				this.contactNumber = this.userProfile.contact_number
 
 				let hasSubscribed = this.userProfile.hasSubscribed
 

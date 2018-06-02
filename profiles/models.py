@@ -12,6 +12,9 @@ class Profile(models.Model):
     isAuctioneer = models.BooleanField(default=False)
     biography = models.CharField(max_length=100, blank=True)
     avatar = models.ImageField()
+    contact_number = models.CharField(max_length=11, blank=True)
+
+    # What is property decorator?
 
     @property
     def countSubscribers(self):
@@ -19,7 +22,7 @@ class Profile(models.Model):
         return self.user.auctioneer.count()
 
     def __str__(self):
-        return "profile " + str(self.user.id)
+        return str(self.user.username)
 
 
 class Subscribed(models.Model):

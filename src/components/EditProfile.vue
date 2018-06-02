@@ -63,8 +63,12 @@
 				>.				
 				</textarea>
 			</p>
-		</div> 
+		</div>
 
+		<p class="contactNumberProperty">
+			<label>Contact #:</label></br>
+			<input type="text" id="contactNumberField" v-model="contactNumber">
+		</p>
 
 		<div v-if="isAuctioneer">
 			<p class="tagsProperty">
@@ -109,7 +113,8 @@
 				imageFile: '',
 				hasChangePic: false,
 				matchedPassword: false,
-				isAuctioneer: false
+				isAuctioneer: false,
+				contactNumber: ''
 			}
 		},
 		computed: {
@@ -155,6 +160,7 @@
 					formdata.set('email', this.email);
 					formdata.set('tags', this.subTag);
 					formdata.set('biography', this.biography);		
+					formdata.set('contact_number', this.contactNumber);
 					
 					if(this.hasChangePic)
 						formdata.append('imageFile', this.imageFile, this.imageFile.name)
