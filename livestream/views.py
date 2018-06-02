@@ -28,7 +28,9 @@ class AuctioneerView(OpenTokCloudView, View):
             session_address, media_mode=MediaModes.routed)
 
         # Store the new session id
-        Session.objects.create(user=auctioneer, session_id=session.session_id)
+        Session.objects.create(user=auctioneer,
+                               session_id=session.session_id)
+
         self.session_id = session.session_id
 
         return {'session_id': self.session_id}
