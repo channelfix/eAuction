@@ -19,6 +19,7 @@ class Product(models.Model):
     description = models.CharField(max_length=500)
     date_sold = models.DateTimeField()
     winning_bid = models.PositiveIntegerField()
+    minimum_price = models.PositiveIntegerField(default=0)
 
 
 class Credit(models.Model):
