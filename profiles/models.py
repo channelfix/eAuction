@@ -37,22 +37,25 @@ class Credit(models.Model):
     credit_amount = models.IntegerField(default=0)
     profile = models.ForeignKey(Profile,
                                 related_name='credit_profile',
-                                on_delete=models.CASCADE)
+                                on_delete=models.CASCADE,
+                                null=True)
 
 
 class Product(models.Model):
     bid = models.ForeignKey(Bid,
                             related_name='bid',
-                            on_delete=models.CASCADE)
+                            on_delete=models.CASCADE,
+                            null=True)
 
     profile = models.ForeignKey(Profile,
                                 related_name='product_profile',
-                                on_delete=models.CASCADE)
+                                on_delete=models.CASCADE,
+                                null=True)
 
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
-    date_sold = models.DateTimeField()
-    winning_bid = models.PositiveIntegerField()
+    date_sold = models.DateTimeField(null=True)
+    winning_bid = models.PositiveIntegerField(default=0)
     minimum_price = models.PositiveIntegerField(default=0)
 
 
