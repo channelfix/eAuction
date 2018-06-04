@@ -10,38 +10,12 @@ class Bid(models.Model):
     bid_amount = models.PositiveIntegerField()
 
 
-class Product(models.Model):
-    bid = models.ForeignKey(Bid,
-                            related_name='bid',
-                            on_delete=models.CASCADE)
-
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=500)
-    date_sold = models.DateTimeField()
-    winning_bid = models.PositiveIntegerField()
-    minimum_price = models.PositiveIntegerField(default=0)
-
-
-class Credit(models.Model):
-    credit_amount = models.PositiveIntegerField()
-
-
 class Profile(models.Model):
     user = models.OneToOneField(
         User,
         related_name='profile',
         on_delete=models.CASCADE
     )
-
-    credits = models.OneToOneField(Credit,
-                                   related_name='credits',
-                                   on_delete=models.CASCADE,
-                                   null=True)
-
-    products = models.ForeignKey(Product,
-                                 related_name='products',
-                                 on_delete=models.CASCADE,
-                                 null=True)
 
     isAuctioneer = models.BooleanField(default=False)
     biography = models.CharField(max_length=100, blank=True)
@@ -57,6 +31,29 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.user.username)
+
+
+class Credit(models.Model):
+    credit_amount = models.IntegerField(default=0)
+    profile = models.ForeignKey(Profile,
+                                related_name='credit_profile',
+                                on_delete=models.CASCADE)
+
+
+class Product(models.Model):
+    bid = models.ForeignKey(Bid,
+                            related_name='bid',
+                            on_delete=models.CASCADE)
+
+    profile = models.ForeignKey(Profile,
+                                related_name='product_profile',
+                                on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
+    date_sold = models.DateTimeField()
+    winning_bid = models.PositiveIntegerField()
+    minimum_price = models.PositiveIntegerField(default=0)
 
 
 class Subscribed(models.Model):
