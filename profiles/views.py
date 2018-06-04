@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.generic import View
 from django.http import HttpResponse
-from app.tags.models import Tags
+from tags.models import Tags
 from profiles.models import Subscribed
 
 
