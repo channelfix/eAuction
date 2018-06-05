@@ -19,6 +19,10 @@
 				    <v-toolbar-title>{{currentRoute}}</v-toolbar-title>
 				    <v-spacer></v-spacer>
 		 			<v-toolbar-items class="hidden-sm-and-down">
+	 				  <p> 
+	 				  	Credits: {{credits}} 
+	 				  	<v-btn flat @click="addCredits"> + </v-btn>
+	 				  </p>	
 				      <v-btn 
 				      	flat
 						v-if="$store.getters.isAuctioneer"
@@ -99,6 +103,7 @@ export default {
 			currentRoute: "",
 			toolbarIcon: "menu",
 			username: "",
+			current_credits: "",
 			pages: [
 				{
 					title: "Home",
@@ -117,6 +122,12 @@ export default {
 			],
 			warningModal: false,
 		}
+	},
+
+	computed: { 
+		credits() {
+			return this.$store.getters.getCredits
+		} 
 	},
 	methods: {
 		route(path){
@@ -151,7 +162,19 @@ export default {
 			this.$router.push({
 				name: 'Create-Live'
 			})
-		}
+		},
+		addCredits(){
+			// this.$store.commit("addCredits", 500)
+			let request = new Request();
+			let formdata = new FormData();
+
+			// formdata.set('amount', this.$store.getters.getCredits)
+			formdata.set('amount', 500)
+			request.post("/profile/update_credits/", formdata,
+			 (response)=>{
+				this.$store.commit('addCredits', response.data.total_credit.credit_amount__sum)
+			});
+		},
 	},
 	watch: {
 		'$route' (to,from) {

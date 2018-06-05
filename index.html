@@ -8,11 +8,11 @@
   </head>
   <body>
     <script type="text/javascript">
-    
       window.__INITIAL_STATE__ = {
         'isAuthenticated' : false,
         'username' : '',
-        'isAuctioneer': false
+        'isAuctioneer': false,
+        'credits': ''
       }
 
       {% if user.is_authenticated %}
@@ -20,6 +20,7 @@
         window.__INITIAL_STATE__.username = "{{ user.username }}";
         condition = "{{user.profile.isAuctioneer}}"
         window.__INITIAL_STATE__.isAuctioneer = (condition.toLowerCase() == 'true')
+        window.__INITIAL_STATE__.credits = "{{ user.profile.total_credits }}"
       {% endif %}
     </script>
   	{% csrf_token %}

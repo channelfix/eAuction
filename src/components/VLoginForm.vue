@@ -46,6 +46,7 @@
 							this.$store.commit('authenticated', true)	
 							this.$store.commit('setUsername', this.user.name)
 							this.$store.commit('asAuctioneer', response.data.isAuctioneer)				
+							this.$store.commit('addCredits', response.data.credits)
 							this.$router.push({
 								name: 'Home',
 								params: {
