@@ -24,8 +24,14 @@
 				  v-model="product.minimumPrice"
 				></v-text-field>
 			</div>
+			<button @click="addProduct">Add Product</button><br><br>
 			<button @click="createLivestream">Create</button>
 		</div>
+		<ul>
+			<li v-for="name in productNames">
+				{{name}}<br>
+			</li>
+		</ul>
 	</v-container>
 </template>
 
@@ -40,6 +46,9 @@ export default {
 
 			title: '',
 			description: '',
+			products: [],
+			productNames: [],
+			productPrices: [],
 			product: {
 				name: '',
 				minimumPrice: ''
@@ -53,8 +62,8 @@ export default {
 
 			formdata.set('title', this.title);
 			formdata.set('description', this.description);
-			formdata.set('product_name', this.product.name);
-			formdata.set('product_price', this.product.minimumPrice);
+			formdata.set('product_name', this.productNames);
+			formdata.set('product_minimum_price', this.productPrices);
 
 			request.post('/livestream/create_livestream/', formdata,
 			(response) => {
@@ -63,6 +72,12 @@ export default {
 					name: 'Home'
 				});
 			})
+		},
+
+		addProduct() {
+			this.productNames.push(this.product.name);
+			this.productPrices.push(this.product.minimumPrice);
+			alert('successfully add '+this.product.name);
 		}
 	}
 }
