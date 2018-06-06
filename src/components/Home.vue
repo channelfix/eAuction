@@ -29,7 +29,7 @@
 				<v-card 
 					color="grey darken-1"
 					:hover="true"
-					@click.native="route(livestream.id)"
+					@click.native="route(livestream.id, livestream.auctioneer)"
 				>
 					<v-card-media 
 						:src="livestream.thumbnail" 
@@ -52,6 +52,7 @@
 					<v-card-title primary-title>
 			          <div>
 			            <p class="headline mb-0">{{livestream.title}}</p>
+			            <p class="title mb-0">{{livestream.auctioneer}}</p>
 			            <div>{{livestream.description}}</div>
 			          </div>
 			        </v-card-title>
@@ -69,28 +70,16 @@ export default {
 	data(){
 		return {
 			showNav: false,
-			livestreams: [
-				{
-					id: '',
-					title: '',
-					description: '',
-					thumbnail: '',
-				}
-			],
-			pageName: ''
+			livestreams: [],
 		}
 	},
 	methods: {
-		route(id){
-			if(this.$store.getters.isAuctioneer)
-				this.pageName = 'Auctioneer'			
-			else
-				this.pageName = 'Bidder'
-
+		route(id, auctioneer){
 			this.$router.push({
-				name: this.pageName,
+				name: 'Auction',
 				params: {
-					id:id
+					id,
+					auctioneer,
 				}
 			})
 		}
