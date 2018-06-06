@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from livestream.models import Session
+from django.db.models import Sum
 
 
 class Bid(models.Model):
@@ -38,8 +39,14 @@ class Profile(models.Model):
         """Returns how many subscribers are currently subscribed to a user"""
         return self.user.auctioneer.count()
 
+    @property
+    def total_credits(self):
+        total_credits = self.credit_profile.aggregate(
+            Sum('credit_amount'))
+        return total_credits['credit_amount__sum']
+
     def __str__(self):
-        return str(self.user.username)
+        return '{}'.format(self.user.username)
 
 
 class Credit(models.Model):
@@ -50,14 +57,20 @@ class Credit(models.Model):
                                 null=True)
 
     def __str__(self):
+<<<<<<< HEAD
         return self.credit_amount
+=======
+        return '{} {}'.format(self.profile.user.username,
+                              self.credit_amount)
+>>>>>>> 32b46334c10f46a8c12cdf8955d6ac8472d99331
 
 
 class Product(models.Model):
     bid = models.ForeignKey(Bid,
                             related_name='bid',
                             on_delete=models.CASCADE,
-                            null=True)
+                            null=True,
+                            blank=True)
 
     profile = models.ForeignKey(Profile,
                                 related_name='products',

@@ -3,7 +3,8 @@ from django.http import JsonResponse
 from django.views.generic import View
 from django.http import HttpResponse
 from tags.models import Tags
-from profiles.models import Subscribed
+from profiles.models import Subscribed, Credit
+from django.db.models import Sum
 
 
 class ProfileView(View):
@@ -26,7 +27,7 @@ class ProfileView(View):
             'isAuctioneer': user_profile.isAuctioneer,
             'subscribers': user_profile.countSubscribers,
             'hasSubscribed': hasSubscribed,
-            'contact_number': user.profile.contact_number
+            'contact_number': user.profile.contact_number,
         }
 
         return JsonResponse(context)
@@ -113,3 +114,16 @@ class Subscribe(View):
             subscribed_user.profile.save()
 
         return HttpResponse(res)
+
+
+class UpdateCredits(View):
+    def post(self, request):
+        current_user = request.user
+        amount = request.POST.get('amount', '')
+        credit = Credit.objects.create(credit_amount=amount,
+                                       profile=current_user.profile)
+        total_credit = Credit.objects.filter(
+            profile=current_user.profile
+        ).aggregate(Sum('credit_amount'))
+
+        return JsonResponse({'total_credit': total_credit})

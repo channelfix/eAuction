@@ -19,6 +19,38 @@
 				    <v-toolbar-title>{{currentRoute}}</v-toolbar-title>
 				    <v-spacer></v-spacer>
 		 			<v-toolbar-items class="hidden-sm-and-down">
+	 				  <p> 
+	 				  	Credits: {{credits}} 
+	 				  </p>
+				      <v-dialog v-model="dialog" persistent max-width="500px">
+				        <v-btn slot="activator" flat>Add more credits?</v-btn>
+				        <v-form class="form">
+				        	<v-card>
+					          	<v-card-title>
+					            	<span class="headline">Purchase Credits</span>
+					          	</v-card-title>				          
+					          	<v-card-text>				          	
+					            	<v-container grid-list-md>
+					              	<v-layout wrap>
+					                	<v-flex xs12 sm12 md12>
+						                  	<v-text-field 
+						                  		label="Input amount here"
+						                  		type="number"
+						                  		v-model="add_credits"
+						                  		id="creditID"
+						                  	></v-text-field>
+					                	</v-flex>
+					              	</v-layout>
+					            </v-container>
+					          	</v-card-text>
+					          	<v-card-actions>
+						            <v-spacer></v-spacer>
+						            <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
+						            <v-btn color="blue darken-1" flat @click="addCredits">Save</v-btn>
+					          	</v-card-actions>
+					        </v-card>
+			          	</v-form>				        
+				      </v-dialog>
 				      <v-btn 
 				      	flat
 						v-if="$store.getters.isAuctioneer"
@@ -40,8 +72,8 @@
 		      </v-card>
 		    </v-dialog> -->
 		 	<router-view>
-		 	</router-view
->		</v-container>
+		 	</router-view>		
+		 </v-container>
 		<v-navigation-drawer 
 			temporary 
 			absolute 
@@ -85,6 +117,15 @@
 	    		</v-list-tile>
 	    	</v-list>
 	  	</v-navigation-drawer>
+	  	<v-snackbar
+          :timeout="alertbar.timeout"	       
+          bottom
+          right	          
+          v-model="alertbar.snackbar"
+	    >
+	        {{ alertbar.text }}
+        <v-btn flat color="amber darken-3" @click.native="alertbar.snackbar = false">Close</v-btn>
+        </v-snackbar>
 	</v-layout>
 </template>
 
@@ -95,10 +136,13 @@ export default {
 	name: 'PagesNavigation',
 	data(){
 		return {
+			dialog: false,
 			showNav: false,
 			currentRoute: "",
 			toolbarIcon: "menu",
 			username: "",
+			current_credits: "",
+			add_credits: "",
 			pages: [
 				{
 					title: "Home",
@@ -115,8 +159,21 @@ export default {
 				},
 
 			],
+			alertbar: {
+				snackbar: false,
+				y:'top',
+				x: null,
+				text: '',
+				timeout: 4000,
+			},
 			warningModal: false,
 		}
+	},
+
+	computed: { 
+		credits() {
+			return this.$store.getters.getCredits
+		} 
 	},
 	methods: {
 		route(path){
@@ -151,7 +208,21 @@ export default {
 			this.$router.push({
 				name: 'Create-Live'
 			})
-		}
+		},
+		addCredits(){
+			// this.$store.commit("addCredits", 500)
+			let request = new Request();
+			let formdata = new FormData();
+			this.dialog = !this.dialog;
+			this.alertbar.text = "Successfully added " + this.add_credits + " credits!";
+			this.alertbar.snackbar = true;
+			// formdata.set('amount', this.$store.getters.getCredits)
+			formdata.set('amount', this.add_credits)
+			request.post("/profile/update_credits/", formdata,
+			 (response)=>{
+				this.$store.commit('addCredits', response.data.total_credit.credit_amount__sum)
+			});
+		},
 	},
 	watch: {
 		'$route' (to,from) {
