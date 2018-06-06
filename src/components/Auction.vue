@@ -114,64 +114,41 @@ export default {
 				},
 			],
 			status: "open", //status: open, closed, nodecline, noaccept
-			activity: [{
-				name: 'bojoluis',
-				action: 'Declined',
-				product: 'pencil',
-				bid: 0,
-			},{
-				name: 'bojoluis',
-				action: 'Accepted',
-				product: 'pencil',
-				bid: 0,
-			},{
-				name: 'bojoluis',
-				action: 'Destroy',
-				product: 'pencil',
-				bid: 0,
-			},{
-				name: 'bojoluis',
-				action: 'Increased',
-				product: 'pencil',
-				bid: 0,
-			},{
-				name: 'bojoluis',
-				action: 'Won',
-				product: 'pencil',
-				bid: 0,
-			},
-			],
+			activity: [],
 		}
 	},
 	mounted: function(){
 		if(this.$route.params.auctioneer == this.$store.getters.getUsername){ // checks if current user is owner of auction
-			this.axios.get('/livestream/auctioneer/')
-			.then((response) => {
-				this.opentokCloud = response.data
+			let formdata = new FormData();
+			formdata.set('auction_id',this.$route.params.id);
+			formdata.set('is_auctioneer', true);
+			request.post('/livestream/initiate_auction/', formdata,
+				(response) => {
+					this.opentokCloud = response.data
 
-				this.apiKey = this.opentokCloud.api_key
-				this.sessionId = this.opentokCloud.session_id
-				this.token = this.opentokCloud.token
+					this.apiKey = this.opentokCloud.api_key
+					this.sessionId = this.opentokCloud.session_id
+					this.token = this.opentokCloud.token
 
-				let session, publisher;
-				let hasPublish = false;
-				let xhttp;
+					let session, publisher;
+					let hasPublish = false;
+					let xhttp;
 
-				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
-					session = OT.initSession(this.apiKey, this.sessionId);
+					if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
+						session = OT.initSession(this.apiKey, this.sessionId);
 
-					session.connect(this.token, function(error) { // Check if the client has successfully connected to the session.
-						if(error){
+						session.connect(this.token, function(error) { // Check if the client has successfully connected to the session.
+							if(error){
 
-						}
-						else{				
-							// Create a publisher for exposing the video to other client who is also connected to the same session.
-							publisher = OT.initPublisher('publisher', {insertMode: 'append', width: "40%", height: "100%"}); 
-						    session.publish(publisher);
-						}
-					});
-				}
-			})
+							}
+							else{				
+								// Create a publisher for exposing the video to other client who is also connected to the same session.
+								publisher = OT.initPublisher('publisher', {insertMode: 'append', width: "40%", height: "100%"}); 
+							    session.publish(publisher);
+							}
+						});
+					}
+				})
 		}else{
 			this.axios.get('/livestream/bidder/')
 			.then((response) => {
