@@ -25,7 +25,8 @@ class Profile(models.Model):
     session = models.ForeignKey(Session,
                                 related_name='attendees',
                                 on_delete=models.CASCADE,
-                                null=True)
+                                null=True,
+                                blank=True)
 
     isAuctioneer = models.BooleanField(default=False)
     biography = models.CharField(max_length=100, blank=True)
