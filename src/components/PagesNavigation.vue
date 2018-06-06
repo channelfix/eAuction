@@ -142,7 +142,7 @@ export default {
 			toolbarIcon: "menu",
 			username: "",
 			current_credits: "",
-			add_credits: "",
+			add_credits: 0,
 			pages: [
 				{
 					title: "Home",

@@ -43,7 +43,11 @@ class Profile(models.Model):
     def total_credits(self):
         total_credits = self.credit_profile.aggregate(
             Sum('credit_amount'))
-        return total_credits['credit_amount__sum']
+
+        if(total_credits['credit_amount__sum']):
+            return total_credits['credit_amount__sum']
+        else:
+            return 0
 
     def __str__(self):
         return '{}'.format(self.user.username)
