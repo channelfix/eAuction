@@ -29,7 +29,7 @@
 				<v-card 
 					color="grey darken-1"
 					:hover="true"
-					@click.native="route(livestream.id, livestream.auctioneer)"
+					@click.native="route(livestream.id, livestream.auctioneer_username)"
 				>
 					<v-card-media 
 						:src="livestream.thumbnail" 
@@ -52,7 +52,7 @@
 					<v-card-title primary-title>
 			          <div>
 			            <p class="headline mb-0">{{livestream.title}}</p>
-			            <p class="title mb-0">{{livestream.auctioneer__username}}</p>
+			            <p class="title mb-0">{{livestream.auctioneer_username}}</p>
 			            <div>{{livestream.description}}</div>
 			          </div>
 			        </v-card-title>
