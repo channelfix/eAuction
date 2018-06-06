@@ -1,125 +1,45 @@
 <template>
-	<v-container
-		fluid
-	>
-	  	<v-layout
-			row
-	  	>
-	  		<v-flex md7> <!-- left -->
-	  		  	<v-layout column>
-		  		  	<div class="box livestream" id="livestream">		  		 
-					    <div id="publisher"></div>
-					    <div id="subscriber"></div>
-		  		  	</div>
-		  		  	<v-flex md4>
-		  		  		<v-layout 
-		  		  			fill-height
-							row
-							wrap
-	  		  			>
-		  		  			<v-flex 
-								md6
-	  		  				>
-								<v-layout 
-									align-center
-									pa-3
-								>
-									<button 
-										:class="decline.style"
-										:disabled="!decline.open"
-									>
-									Start Auction
-									</button>	
-								</v-layout>
-		  		  			</v-flex>
-		  		  			<v-flex 
-								md6
-	  		  				>
-								<v-layout
-									align-center
-									pa-3
-								>
-									<button
-										:class="accept.style"
-										:disabled="!accept.open"
-										@click="accepted"
-									>
-										End Auction
-									</button>	
-								</v-layout>
-		  		  			</v-flex>
-		  		  		</v-layout> 
-		  		  	</v-flex>
-	  		  	</v-layout>
-	  		</v-flex>
-	  		<v-flex md5>  <!-- right -->
-  		  		<v-layout
-					column	
-	  			>
-	  				<v-flex 
-	  					md3
-  					>
-  						<v-layout
-							row
-							class="amber darken-2"
-
-						>
-							<v-flex 
-								md6 
-							>
-								
-							</v-flex>
-							<v-flex 
-								md6
-							>
-								<v-layout
-									pa-3
-									column
-									justify-center
-								>
-									<p class="headline">{{currentProduct.name}}</p>
-								</v-layout>
-							</v-flex>
-  						</v-layout>
-	  				</v-flex>
-	  				<v-flex 
-	  					md2
-  					>
-  						<v-layout
-							align-center
-							justify-center
-							class="amber darken-1"
-							pa-2
-						>
-							<span class="headline">Current Bid: &#8369 {{formattedBid}}</span>
-  						</v-layout>
-	  				</v-flex>
-	  				<v-flex 
-	  					md7
-						class="grey darken-4"
-	  					pa-4
-	  				>
-	  					<p>Log</p>
-						<div class="logbox">
-							<v-layout
-								column
-								wrap
-							>
-								<v-list two-line>
-									<template v-for="act of activity">
-										<v-list-tile dark>
-											<v-list-tile-content>{{act.name}} {{act.action}} {{act.bid}} {{act.product}}</v-list-tile-content>
-										</v-list-tile>
-										<v-divider></v-divider>
-									</template>
-								</v-list>
-							</v-layout>
-						</div>
-	  				</v-flex>
-  		  		</v-layout>
-	  		</v-flex>
-	  	</v-layout>
-	</v-container>
+	<v-flex 
+  		md4
+  	>
+  		<v-layout 
+  			fill-height
+		row
+		wrap
+			>
+  			<v-flex 
+			md6
+				>
+			<v-layout 
+				align-center
+				pa-3
+			>
+				<button 
+					:class="decline.style"
+					:disabled="!decline.open"
+				>
+					End Auction
+				</button>	
+			</v-layout>
+  			</v-flex>
+  			<v-flex 
+			md6
+				>
+			<v-layout
+				align-center
+				pa-3
+			>
+				<button
+					:class="accept.style"
+					:disabled="!accept.open"
+					@click="accepted"
+				>
+					Start Auction
+				</button>	
+			</v-layout>
+  			</v-flex>
+  		</v-layout> 
+  	</v-flex>
 </template>
 
 <script>

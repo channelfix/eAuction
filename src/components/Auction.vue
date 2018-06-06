@@ -11,45 +11,8 @@
 					    <div id="publisher"></div>
 					    <div id="subscriber"></div>
 		  		  	</div>
-		  		  	<v-flex md4>
-		  		  		<v-layout 
-		  		  			fill-height
-							row
-							wrap
-	  		  			>
-		  		  			<v-flex 
-								md6
-	  		  				>
-								<v-layout 
-									align-center
-									pa-3
-								>
-									<button 
-										:class="decline.style"
-										:disabled="!decline.open"
-									>
-									Decline
-									</button>	
-								</v-layout>
-		  		  			</v-flex>
-		  		  			<v-flex 
-								md6
-	  		  				>
-								<v-layout
-									align-center
-									pa-3
-								>
-									<button
-										:class="accept.style"
-										:disabled="!accept.open"
-										@click="accepted"
-									>
-										Accept
-									</button>	
-								</v-layout>
-		  		  			</v-flex>
-		  		  		</v-layout> 
-		  		  	</v-flex>
+		  		  	<Auctioneer v-if="$store.getters.getUsername == $route.params.auctioneer"></Auctioneer>
+		  		  	<Bidder v-else></Bidder>
 	  		  	</v-layout>
 	  		</v-flex>
 	  		<v-flex md5>  <!-- right -->
@@ -124,6 +87,8 @@
 
 <script>
 import Request from '../assets/js/Request.js'
+import Auctioneer from 'Auctioneer.vue'
+import Bidder from 'Bidder.vue'
 
 function formatDecimal(num) {
 	return parseFloat(Math.round(num * 100) / 100).toFixed(2)
@@ -134,13 +99,13 @@ let request = new Request();
 
 export default {
 	name: "Auction",
+
 	data(){
 		return{
 			opentokCloud: '',
 			apiKey: '',
 			sessionId: '',
 			token: '',
-			isAuctioneer: this.$store.getters.isAuctioneer,
 			currentBid: 0,
 			products: [
 				{
@@ -176,24 +141,10 @@ export default {
 				bid: 0,
 			},
 			],
-			accept: {
-				style: {
-					green: true,
-					grey: false,
-				},
-				open: true,
-			},
-			decline: {
-				style: {
-					red: true,
-					grey: false,
-				},
-				open: true,
-			}
 		}
 	},
 	mounted: function(){
-		if(this.isAuctioneer){
+		if(this.$route.params.auctioneer == this.$store.getters.getUsername){ // checks if current user is owner of auction
 			this.axios.get('/livestream/auctioneer/')
 			.then((response) => {
 				this.opentokCloud = response.data
