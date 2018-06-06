@@ -13,7 +13,7 @@ class Session(models.Model):
     title = models.CharField(max_length=100, default='')
     description = models.CharField(max_length=500, blank=True)
     session_id = models.CharField(max_length=1000)
-    is_live = False
+    is_live = models.BooleanField(default=False)
 
     def __str__(self):
         return self.session_id

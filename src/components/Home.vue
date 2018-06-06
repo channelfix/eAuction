@@ -52,7 +52,7 @@
 					<v-card-title primary-title>
 			          <div>
 			            <p class="headline mb-0">{{livestream.title}}</p>
-			            <p class="title mb-0">{{livestream.auctioneer}}</p>
+			            <p class="title mb-0">{{livestream.auctioneer__username}}</p>
 			            <div>{{livestream.description}}</div>
 			          </div>
 			        </v-card-title>

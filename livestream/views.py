@@ -108,7 +108,7 @@ class AuctionView(LivestreamView, View):
 class LivestreamListView(View):
     def get(self, request):
         sessions = list(Session.objects.all()
-                        .values('auctioneer', 'id', 'title', 'description'))
+                        .values('auctioneer__username', 'id', 'title', 'description', 'is_live'))
 
         return JsonResponse({'sessions': sessions})
 
