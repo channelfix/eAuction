@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 class Session(models.Model):
 
     auctioneer = models.OneToOneField(User,
-                                related_name='auction_owner',
-                                on_delete=models.CASCADE,
-                                null=True)
+                                      related_name='auction_event_id',
+                                      on_delete=models.CASCADE,
+                                      null=True)
 
     title = models.CharField(max_length=100, default='')
     description = models.CharField(max_length=500, blank=True)
