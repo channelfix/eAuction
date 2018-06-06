@@ -1,14 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
 # Stores newly generated session id
 class Session(models.Model):
 
-    auctioneer = models.OneToOneField(User,
-                                      related_name='auction_event_id',
-                                      on_delete=models.CASCADE,
-                                      null=True)
+    auctioneer_username = models.CharField(max_length=150, null=True)
 
     title = models.CharField(max_length=100, default='')
     description = models.CharField(max_length=500, blank=True)

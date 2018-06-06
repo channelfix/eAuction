@@ -44,7 +44,7 @@ class LivestreamView(OpenTokCloudView, View):
         length = len(product_names)
 
         # One auctioneer own one auction event
-        session = Session.objects.create(auctioneer=auctioneer,
+        session = Session.objects.create(auctioneer_username=auctioneer,
                                          title=title,
                                          description=description,
                                          session_id=self.session.session_id,
@@ -52,7 +52,6 @@ class LivestreamView(OpenTokCloudView, View):
 
         # Store the product to certain Session and Profile
         profile = auctioneer.profile
-
         profile.session = session
         profile.save()
 
@@ -108,7 +107,7 @@ class AuctionView(LivestreamView, View):
 class LivestreamListView(View):
     def get(self, request):
         sessions = list(Session.objects.all()
-                        .values('auctioneer__username', 'id', 'title', 'description', 'is_live'))
+                        .values('auctioneer_username', 'id', 'title', 'description', 'is_live'))
 
         return JsonResponse({'sessions': sessions})
 
