@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from livestream.models import Session
 
 
 class Bid(models.Model):
@@ -9,6 +10,9 @@ class Bid(models.Model):
 
     bid_amount = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.bid_amount
+
 
 class Profile(models.Model):
     user = models.OneToOneField(
@@ -16,6 +20,11 @@ class Profile(models.Model):
         related_name='profile',
         on_delete=models.CASCADE
     )
+
+    session = models.ForeignKey(Session,
+                                related_name='attendees',
+                                on_delete=models.CASCADE,
+                                null=True)
 
     isAuctioneer = models.BooleanField(default=False)
     biography = models.CharField(max_length=100, blank=True)
@@ -40,6 +49,9 @@ class Credit(models.Model):
                                 on_delete=models.CASCADE,
                                 null=True)
 
+    def __str__(self):
+        return self.credit_amount
+
 
 class Product(models.Model):
     bid = models.ForeignKey(Bid,
@@ -48,7 +60,12 @@ class Product(models.Model):
                             null=True)
 
     profile = models.ForeignKey(Profile,
-                                related_name='product_profile',
+                                related_name='products',
+                                on_delete=models.CASCADE,
+                                null=True)
+
+    session = models.ForeignKey(Session,
+                                related_name='auction_products',
                                 on_delete=models.CASCADE,
                                 null=True)
 
@@ -57,6 +74,9 @@ class Product(models.Model):
     date_sold = models.DateTimeField(null=True)
     winning_bid = models.PositiveIntegerField(default=0)
     minimum_price = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.name
 
 
 class Subscribed(models.Model):
@@ -71,3 +91,7 @@ class Subscribed(models.Model):
     bidder = models.ForeignKey(User,
                                on_delete=models.CASCADE,
                                related_name='bidder')
+
+    def __str__(self):
+        return '%s and %s' % (self.auctioneer.username,
+                              self.bidder.username)
