@@ -45,7 +45,7 @@ export default new Router({
     },
 
     {
-      path: '/auctioneer/:id',
+      path: '/auctioneer/:auctioneer/:id',
       name: 'Auctioneer',
       component: Auctioneer
     },
