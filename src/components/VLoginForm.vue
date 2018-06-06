@@ -1,5 +1,8 @@
-<template>
+<template>	
 	<v-form class="form">
+		<v-alert v-model="alert" type="error" transition="slide-y-transition" dismissible>
+	    	Incorrect username or password!
+	    </v-alert>
 		<v-text-field
 		  name="name"
 		  label="Username"
@@ -24,6 +27,7 @@
 		name: 'loginForm',
 		data() {
 			return {
+				alert: false,
 				user: {
 					name: "",
 					password:"",
@@ -41,7 +45,7 @@
 				request.post('/login/', formData, 
 					(response) => {
 						if(response instanceof Error){
-							// do error stuff
+							this.alert = true
 						}else {
 							this.$store.commit('authenticated', true)	
 							this.$store.commit('setUsername', this.user.name)
@@ -65,4 +69,5 @@
 	.form {
 		padding: 2em;
 	}
+
 </style>

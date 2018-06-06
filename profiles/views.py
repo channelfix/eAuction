@@ -126,6 +126,4 @@ class UpdateCredits(View):
             profile=current_user.profile
         ).aggregate(Sum('credit_amount'))
 
-        print(total_credit)
-
         return JsonResponse({'total_credit': total_credit})
