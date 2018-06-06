@@ -57,12 +57,8 @@ class Credit(models.Model):
                                 null=True)
 
     def __str__(self):
-<<<<<<< HEAD
-        return self.credit_amount
-=======
         return '{} {}'.format(self.profile.user.username,
                               self.credit_amount)
->>>>>>> 32b46334c10f46a8c12cdf8955d6ac8472d99331
 
 
 class Product(models.Model):
