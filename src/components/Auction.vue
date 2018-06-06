@@ -87,8 +87,8 @@
 
 <script>
 import Request from '../assets/js/Request.js'
-import Auctioneer from 'Auctioneer.vue'
-import Bidder from 'Bidder.vue'
+import Auctioneer from './Auctioneer'
+import Bidder from './Bidder'
 
 function formatDecimal(num) {
 	return parseFloat(Math.round(num * 100) / 100).toFixed(2)
@@ -99,7 +99,7 @@ let request = new Request();
 
 export default {
 	name: "Auction",
-
+	components: {Auctioneer, Bidder},
 	data(){
 		return{
 			opentokCloud: '',
