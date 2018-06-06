@@ -21,7 +21,6 @@
         condition = "{{user.profile.isAuctioneer}}"
         window.__INITIAL_STATE__.isAuctioneer = (condition.toLowerCase() == 'true')
         window.__INITIAL_STATE__.credits = {{ user.profile.total_credits }}
-        console.log(window)
       {% endif %}
 
     </script>
