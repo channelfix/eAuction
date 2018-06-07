@@ -67,10 +67,18 @@ export default {
 
 			request.post('/livestream/create_livestream/', formdata,
 			(response) => {
-				alert(response.data)
-				this.$router.push({					
-					name: 'Home'
-				});
+				let session = response.data
+				let id = session.auction_id
+				let auctioneer = session.auctioneer_username
+				alert(session.message)
+
+				this.$router.push({
+					name: 'Auction',
+					params: {
+						id,
+						auctioneer,
+					}
+				})
 			})
 		},
 
