@@ -107,18 +107,59 @@ export default {
 			sessionId: '',
 			token: '',
 			currentBid: 0,
-			products: [
-				{
-					name: "Pencil",
-					price: 0,
-				},
-			],
+			products: [{
+				name: "Pencil",
+				price: 0,
+			}],
 			status: "open", //status: open, closed, nodecline, noaccept
 			activity: [],
 		}
 	},
 	mounted: function(){
-		if(this.$route.params.auctioneer == this.$store.getters.getUsername){ // checks if current user is owner of auction
+		if(this.$route.params.auctioneer != this.$store.getters.getUsername){
+			let formdata = new FormData();
+			formdata.set('auction_id',this.$route.params.id);
+			formdata.set('is_auctioneer', true);			
+			request.post('/livestream/initiate_auction/', formdata, 
+				(response) => {
+
+					this.opentokCloud = response.data
+
+					this.apiKey = this.opentokCloud.api_key
+					this.sessionId = this.opentokCloud.session_id
+					this.token = this.opentokCloud.token
+
+					let session;
+
+					if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
+						session = OT.initSession(this.apiKey, this.sessionId);
+
+						session.connect(this.token, function(error) { // Check if this client is connected to the 
+						});
+
+						session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
+							
+							// Accept the exposed video who is connected to the same session.
+							session.subscribe(event.stream, 'subscriber', {insertMode:'append', width:'100%', height:'100%'}); 						
+						});
+
+
+						session.on("streamDestroyed", function(event) {							
+						});
+				}
+			})
+		}
+
+		//// get activity log thread
+		logThread = setInterval(
+			() => {
+				// constantly ask from the server for new log 
+			},
+			500
+		)
+	},
+	methods: {
+		startLiveStream(){
 			let formdata = new FormData();
 			formdata.set('auction_id',this.$route.params.id);
 			formdata.set('is_auctioneer', true);
@@ -149,61 +190,6 @@ export default {
 						});
 					}
 				})
-		}else{
-			this.axios.get('/livestream/bidder/')
-			.then((response) => {
-				this.opentokCloud = response.data
-
-				this.apiKey = this.opentokCloud.api_key
-				this.sessionId = this.opentokCloud.session_id
-				this.token = this.opentokCloud.token
-
-				let session;
-
-				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
-					session = OT.initSession(this.apiKey, this.sessionId);
-
-					session.connect(this.token, function(error) { // Check if this client is connected to the 
-					});
-
-					session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
-						
-						// Accept the exposed video who is connected to the same session.
-						session.subscribe(event.stream, 'subscriber', {insertMode:'append', width:'100%', height:'100%'}); 						
-					});
-
-
-					session.on("streamDestroyed", function(event) {							
-					});
-				}
-			})
-		}
-
-		//// get activity log thread
-		logThread = setInterval(
-			() => {
-				// constantly ask from the server for new log 
-			},
-			500
-		)
-	},
-	methods: {
-		accepted() {
-			this.status = "closed"
-
-			let formdata = new FormData();
-
-			let data = {
-				username: this.$store.getters.getUsername,
-				currentBid: this.currentBid,
-				product: this.currentProduct,
-			}
-
-			for(let key in data){
-				formdata.set(key, data[key]);
-			}
-
-			// send data
 		}
 	},
 	watch: {

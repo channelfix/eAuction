@@ -105,53 +105,9 @@ let request = new Request();
 
 export default {
 	name: 'Auctioneer',
-	props: {
-		status: String,
-	},
-	data(){
-		return{
-			opentokCloud: '',
-			apiKey: '',
-			sessionId: '',
-			token: '',
-			accept: {
-				open: true,
-				style: {
-					green: true,
-					grey: false,
-				}
-			}
-		}
-	},
 	methods: {
 		startAuction() {
-			this.status = "closed"
-
-			let formdata = new FormData();
-
-			let data = {
-				username: this.$store.getters.getUsername,
-				currentBid: this.currentBid,
-				product: this.currentProduct,
-			}
-
-			for(let key in data){
-				formdata.set(key, data[key]);
-			}
-
-			// send data
-		}
-	},
-	watch: {
-		status() {
-			if(this.status == "open"){
-				this.accept.open = true;
-			}else if(this.status == "closed"){
-				this.accept.open = false;
-
-			this.accept.style.green = this.accept.open;
-			this.accept.style.grey = !this.accept.open;
-			}
+			this.$parent.startLiveStream();
 		}
 	},
 }
