@@ -3,7 +3,8 @@ from .models import Session, Archive
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.views import View
-from profiles.models import Product
+from profiles.models import Product, Subscribed
+from itertools import chain
 
 # from pprint import pprint
 
@@ -44,7 +45,7 @@ class LivestreamView(OpenTokCloudView, View):
         length = len(product_names)
 
         # One auctioneer own one auction event
-        session = Session.objects.create(auctioneer_username=auctioneer,
+        session = Session.objects.create(auctioneer_username=auctioneer.username,
                                          title=title,
                                          description=description,
                                          session_id=self.session.session_id,
@@ -60,7 +61,13 @@ class LivestreamView(OpenTokCloudView, View):
                                    name=product_names[i],
                                    minimum_price=product_minimum_prices[i])
 
-        return HttpResponse('Livestream created')
+        context = {
+            'auction_id': session.id,
+            'auctioneer_username': auctioneer.username,
+            'message': 'Livestream created'
+        }
+
+        return JsonResponse(context)
 
 
 class AuctionView(LivestreamView, View):
@@ -106,8 +113,22 @@ class AuctionView(LivestreamView, View):
 
 class LivestreamListView(View):
     def get(self, request):
-        sessions = list(Session.objects.all()
-                        .values('auctioneer_username', 'id', 'title', 'description', 'is_live'))
+        bidder = request.user
+
+        auction = Subscribed.objects.all()\
+                            .filter(bidder=bidder)\
+                            .values('auctioneer__username')
+
+        sessions = Session.objects.none()
+
+        for auctioneer in auction:
+            sessions = chain(Session.objects.all()
+                             .filter(auctioneer_username=auctioneer
+                             ['auctioneer__username'])
+                             .values('auctioneer_username', 'id',
+                                     'title', 'description', 'is_live'),sessions)
+
+        sessions = list(sessions)
 
         return JsonResponse({'sessions': sessions})
 
