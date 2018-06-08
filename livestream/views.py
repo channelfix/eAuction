@@ -51,6 +51,9 @@ class LivestreamView(OpenTokCloudView, View):
                                          session_id=self.session.session_id,
                                          is_live=True)
 
+        # Add the current user to this livestream
+        profile = auctioneer.profile
+
         for i in range(length):
             Product.objects.create(session=session, profile=profile,
                                    name=product_names[i],
