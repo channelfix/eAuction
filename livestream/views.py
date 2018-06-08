@@ -157,8 +157,6 @@ class RetrievedLogView(View):
         latest_log_id = request.POST.get('log_id', '')
 
         # Initialize log with empty set
-        query_logs = Logs.objects.none()
-
         query_logs = Logs.objects.all().filter(auction_id=auction_id)\
                                        .values('message', 'time')
 
