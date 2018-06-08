@@ -38,7 +38,6 @@ export default {
 	name: "Bidder",
 	data(){
 		return {
-			status: 'open',
 			bidButton: {
 				style: {
 					green: true,
@@ -47,18 +46,6 @@ export default {
 				open: true,
 			}
 		}
-	},
-	watch: {
-		status() {
-			if(this.status == "open"){
-				this.bidButton.open = true;
-			}else if(this.status == "closed"){
-				this.bidButton.open = false;
-			}
-
-			this.bidButton.style.green = this.bidButton.open;
-			this.bidButton.style.grey = !this.bidButton.open;
-		},
 	},
 }
 </script>

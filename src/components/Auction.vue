@@ -222,15 +222,6 @@ export default {
 		formattedBid() { 
 			return formatDecimal(this.currentBid);
 		},
-		logMessage(){
-			let msg = "";
-			this.activity.forEach(
-				(current) => {
-					msg += current+"\n";
-				}
-			);
-			return msg;
-		},
 		currentProduct() {
 			let current = this.products[this.products.length-1];
 			current.price = formatDecimal(current.price); 
