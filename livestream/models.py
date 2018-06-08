@@ -15,9 +15,7 @@ class Session(models.Model):
 
 
 class Logs(models.Model):
-    session = models.ForeignKey(Session,
-                                related_name='current_logs',
-                                on_delete=models.CASCADE)
+    auction_id = models.PositiveIntegerField(default=0)
 
     message = models.CharField(max_length=150)
     time = models.CharField(max_length=9)
