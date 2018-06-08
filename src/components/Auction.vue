@@ -11,7 +11,11 @@
 					    <div id="publisher"></div>
 					    <div id="subscriber"></div>
 		  		  	</div>
-		  		  	<Auctioneer v-if="$store.getters.getUsername == $route.params.auctioneer"></Auctioneer>
+		  		  	<Auctioneer 
+		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
+						:currentProductName="currentProduct"
+	  		  		>
+		  		  	</Auctioneer>
 		  		  	<Bidder v-else></Bidder>
 	  		  	</v-layout>
 	  		</v-flex>
@@ -217,15 +221,6 @@ export default {
 	computed:{
 		formattedBid() { 
 			return formatDecimal(this.currentBid);
-		},
-		logMessage(){
-			let msg = "";
-			this.activity.forEach(
-				(current) => {
-					msg += current+"\n";
-				}
-			);
-			return msg;
 		},
 		currentProduct() {
 			let current = this.products[this.products.length-1];
