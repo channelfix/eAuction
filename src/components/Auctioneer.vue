@@ -123,9 +123,7 @@ export default {
 			formdata.set('logs', log);
 			formdata.set('time', time);
 
-			request.post('/livestream/store_logs/', formdata, 
-				(response)=> {}
-			);
+			request.post('/livestream/store_logs/', formdata, ()=>{});
 		},
 		closeCurrentItem(){
 			let log = this.currentProductName+" is closed for auction";
