@@ -51,7 +51,6 @@ class LivestreamView(OpenTokCloudView, View):
                                          session_id=self.session.session_id,
                                          is_live=True)
 
-        # Store the product to certain Session and Profile
         profile = auctioneer.profile
         profile.session = session
         profile.save()
