@@ -33,8 +33,6 @@ class Profile(models.Model):
     avatar = models.ImageField()
     contact_number = models.CharField(max_length=11, blank=True)
 
-    # What is property decorator?
-
     @property
     def countSubscribers(self):
         """Returns how many subscribers are currently subscribed to a user"""
@@ -67,12 +65,6 @@ class Credit(models.Model):
 
 
 class Product(models.Model):
-    bid = models.ForeignKey(Bid,
-                            related_name='bid',
-                            on_delete=models.CASCADE,
-                            null=True,
-                            blank=True)
-
     profile = models.ForeignKey(Profile,
                                 related_name='products',
                                 on_delete=models.CASCADE,
