@@ -156,7 +156,7 @@ class RetrievedLogView(View):
     latest auction id from certain Auciton """
 
     def post(self, request):
-        auction_id = request.POSt.get('auction_id', '')
+        auction_id = request.POST.get('auction_id', '')
         latest_log_id = request.POST.get('log_id', '')
 
         # Initialize log with empty set
@@ -164,7 +164,7 @@ class RetrievedLogView(View):
                                        .values('id', 'message', 'time')
 
         if query_logs:
-            if auction_id != -1:
+            if latest_log_id != -1:
                 query_logs = query_logs.filter(id__gt=latest_log_id)\
                                        .values('id', 'message', 'time')
 

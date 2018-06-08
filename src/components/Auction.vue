@@ -13,7 +13,7 @@
 		  		  	</div>
 		  		  	<Auctioneer 
 		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
-						:currentProductName="currentProduct"
+						:currentProductName="currentProduct.name"
 	  		  		>
 		  		  	</Auctioneer>
 		  		  	<Bidder v-else></Bidder>
@@ -73,9 +73,9 @@
 								wrap
 							>
 								<v-list two-line>
-									<template v-for="act of activity">
+									<template v-for="log of logs">
 										<v-list-tile dark>
-											<v-list-tile-content>{{act.name}} {{act.action}} {{act.bid}} {{act.product}}</v-list-tile-content>
+											<v-list-tile-content>{{log.message}}</v-list-tile-content>
 										</v-list-tile>
 										<v-divider></v-divider>
 									</template>
@@ -116,7 +116,7 @@ export default {
 				price: 0,
 			}],
 			status: "open", //status: open, closed, nodecline, noaccept
-			activity: [],
+			logs: [],
 		}
 	},
 	mounted: function(){
@@ -153,13 +153,29 @@ export default {
 				}
 			})
 		}
-
 		//// get activity log thread
 		logThread = setInterval(
 			() => {
 				// constantly ask from the server for new log 
+				let latestId = -1;
+				let auction_id = this.$route.params.id;
+
+				if(this.logs.length > 0){
+					latestId = this.logs[this.logs.length-1].id;
+				}
+
+				let formdata = new FormData();
+
+				formdata.set('auction_id', auction_id);
+				formdata.set('log_id', latestId);
+
+				request.post('/livestream/show_logs/', formdata, 
+					(response)=>{
+						console.log(response);
+					}
+				);
 			},
-			500
+			1000
 		)
 	},
 	methods: {
