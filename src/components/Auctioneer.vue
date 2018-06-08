@@ -50,6 +50,7 @@
 					>
 						<button 
 							class="red"
+							@click="closeCurrentItem"
 						>
 							Close auction for current item
 						</button>	
@@ -102,12 +103,34 @@
 import Request from '../assets/js/Request.js'
 
 let request = new Request();
+let formdata = new FormData();
 
 export default {
 	name: 'Auctioneer',
+	props: {
+		currentProductName: String,
+	},
 	methods: {
 		startAuction() {
 			this.$parent.startLiveStream();
+		},
+		sendLog(log){
+			let today = new Date();
+			let time = today.getHours()+":"+today.getMinutes()+" "+today.getMonth()+"/"+today.getDay()+"/"+today.getFullYear();
+
+			// time format hr:min month/day/year
+
+			formdata.set('auction_id', this.$route.params.id);
+			formdata.set('logs', log);
+			formdata.set('time', time);
+
+			request.post('/livestream/store_logs/', formdata, 
+				(response)=> {}
+			);
+		},
+		closeCurrentItem(){
+			let log = this.currentProductName+" is closed for auction";
+			this.sendLog(log);
 		}
 	},
 }
