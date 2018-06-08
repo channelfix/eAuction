@@ -170,7 +170,10 @@ class RetrievedLogView(View):
         # List of logs
         logs = list(query_logs)
 
-        return HttpResponse({'logs': logs})
+        if logs:
+            return HttpResponse({'logs': logs})
+        else:
+            return HttpResponse({'empty': None})
 
 
 class AuctionDestroyedView(View):
