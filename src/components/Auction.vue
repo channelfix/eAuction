@@ -157,7 +157,23 @@ export default {
 		logThread = setInterval(
 			() => {
 				// constantly ask from the server for new log 
-				
+				let latestId = -1;
+				let auction_id = this.$route.params.id;
+
+				if(this.logs.length > 0){
+					latestId = this.logs[this.logs.length-1].id;
+				}
+
+				let formdata = new FormData();
+
+				formdata.set('auction_id', auction_id);
+				formdata.set('log_id', latestId);
+
+				request.post('/livestream/show_logs/', formdata, 
+					(response)=>{
+						console.log(response);
+					}
+				);
 			},
 			1000
 		)
