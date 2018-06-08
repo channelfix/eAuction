@@ -68,7 +68,7 @@
 						>
 							
 						</v-text-field>
-						<button class="halfsize green">Increase</button>
+						<button class="halfsize green">Set minimum bid</button>
 					</v-layout>
   				</v-flex>
   				<v-flex 
