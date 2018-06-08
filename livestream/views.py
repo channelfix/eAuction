@@ -161,16 +161,19 @@ class RetrievedLogView(View):
 
         # Initialize log with empty set
         query_logs = Logs.objects.all().filter(auction_id=auction_id)\
-                                       .values('message', 'time')
+                                       .values('id', 'message', 'time')
 
-        if auction_id != -1:
-            query_logs = query_logs.filter(id__gt=latest_log_id)\
-                                   .values('message', 'time')
+        if query_logs:
+            if auction_id != -1:
+                query_logs = query_logs.filter(id__gt=latest_log_id)\
+                                       .values('id', 'message', 'time')
 
-        # List of logs
-        logs = list(query_logs)
+            # List of logs
+            logs = list(query_logs)
 
-        return HttpResponse({'logs': logs})
+            return HttpResponse({'logs': logs})
+        else:
+            return HttpResponse({'empty': None})
 
 
 class AuctionDestroyedView(View):
