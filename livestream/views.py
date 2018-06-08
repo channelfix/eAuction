@@ -156,7 +156,7 @@ class RetrievedLogView(View):
     latest auction id from certain Auciton """
 
     def post(self, request):
-        auction_id = request.POSt.get('auction_id', '')
+        auction_id = request.POST.get('auction_id', '')
         latest_log_id = request.POST.get('log_id', '')
 
         # Initialize log with empty set
