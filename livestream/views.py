@@ -1,5 +1,5 @@
 from opentok import OpenTok, MediaModes, Roles, OutputModes
-from .models import Session, Archive
+from .models import Session, Archive, Logs
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.views import View
@@ -51,10 +51,6 @@ class LivestreamView(OpenTokCloudView, View):
                                          session_id=self.session.session_id,
                                          is_live=True)
 
-        profile = auctioneer.profile
-        profile.session = session
-        profile.save()
-
         for i in range(length):
             Product.objects.create(session=session, profile=profile,
                                    name=product_names[i],
@@ -70,6 +66,8 @@ class LivestreamView(OpenTokCloudView, View):
 
 
 class AuctionView(LivestreamView, View):
+    """ Sends the user to certain livestream """
+
     token = ''
 
     def post(self, request):
@@ -111,6 +109,8 @@ class AuctionView(LivestreamView, View):
 
 
 class LivestreamListView(View):
+    """ View all the livestream for which the subcriber subscribe to """
+
     def get(self, request):
         bidder = request.user
 
@@ -125,12 +125,64 @@ class LivestreamListView(View):
                              .filter(auctioneer_username=auctioneer
                              ['auctioneer__username'])
                              .values('auctioneer_username', 'id',
-                                     'title', 'description', 'is_live'),sessions)
+                                     'title', 'description',
+                                     'is_live'), sessions)
 
         sessions = list(sessions)
 
         return JsonResponse({'sessions': sessions})
 
+
+class LogStorageView(View):
+    """ Store logs """
+
+    def post(self, request):
+        auction_id = request.POST.get('auction_id', '')
+        message = request.POST.get('logs', '')
+        time = request.POST.get('time', '')
+
+        Logs.objects.create(auction_id=auction_id,
+                            message=message,
+                            time=time)
+
+        return HttpResponse('Stored log successfully')
+
+
+class RetrievedLogView(View):
+    """ Retrieves all the logs given the\
+    latest auction id from certain Auciton """
+
+    def post(self, request):
+        auction_id = request.POSt.get('auction_id', '')
+        latest_log_id = request.POST.get('log_id', '')
+
+        # Initialize log with empty set
+        query_logs = Logs.objects.none()
+
+        query_logs = Logs.objects.all().filter(auction_id=auction_id)\
+                                       .values('message', 'time')
+
+        if auction_id != -1:
+            query_logs = query_logs.filter(id__gt=latest_log_id)\
+                                   .values('message', 'time')
+
+        # List of logs
+        logs = list(query_logs)
+
+        return HttpResponse({'logs': logs})
+
+
+class AuctionDestroyedView(View):
+    def post(self, request):
+        auction_id = request.POST.get('auction_id', '')
+
+        # Delete all the logs for certain livestream
+        Logs.objects.all().filter(auction_id=auction_id).delete()
+
+        # Delete this Livestream
+        Session.objects.get(id=auction_id).delete()
+
+        return HttpResponse('Auction close')
 
 # # start to record the video.
 # def start_archive(request):
