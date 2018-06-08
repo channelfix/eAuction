@@ -14,12 +14,15 @@
 				align-center
 				pa-3
 			>
+				<v-text-field
+				  label="Input bid"
+				></v-text-field>
 				<button
 					:class="accept.style"
 					:disabled="!accept.open"
 					@click="accepted"
 				>
-					Accept Bid
+					Bid
 				</button>	
 			</v-layout>
   			</v-flex>
