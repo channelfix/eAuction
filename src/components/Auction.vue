@@ -159,7 +159,7 @@ export default {
 				// constantly ask from the server for new log 
 				
 			},
-			500
+			1000
 		)
 	},
 	methods: {
