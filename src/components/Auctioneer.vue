@@ -6,7 +6,6 @@
   			fill-height
 			row
 			wrap
-			class="box"
 		>
   			<v-layout 
   				row 
