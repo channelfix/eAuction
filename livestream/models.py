@@ -1,8 +1,9 @@
 from django.db import models
 
 
-# Stores newly generated session id
 class Session(models.Model):
+    """ Used to store the livestream details for certain Auction"""
+
     auctioneer_username = models.CharField(max_length=150, null=True)
 
     title = models.CharField(max_length=100, default='')
@@ -15,7 +16,9 @@ class Session(models.Model):
 
 
 class Logs(models.Model):
-    auction_id = models.PositiveIntegerField(default=0)
+    """ Used to store the logs for certain Auction """
+
+    auction_id = models.IntegerField(default=0)
 
     message = models.CharField(max_length=150)
     time = models.CharField(max_length=9)
