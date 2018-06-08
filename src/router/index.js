@@ -9,6 +9,7 @@ import Auctioneer from '@/components/Auctioneer'
 import Bidder from '@/components/Bidder'
 import EditProfile from '@/components/EditProfile'
 import CreateLiveStream from '@/components/CreateLiveStream'
+import Explore from '@/components/Explore'
 import store from '../store'
 
 Vue.use(Router)
@@ -40,10 +41,13 @@ export default new Router({
           path: '/create-auction',
           name: 'Create-Live',
           component: CreateLiveStream,
-        }
+        },{
+          path: '/explore',
+          name: 'Explore',
+          component: Explore
+        },
       ],
     },
-
     {
       path: '/auctioneer/:id',
       name: 'Auctioneer',

@@ -22,6 +22,6 @@ export default class Request {
 	}
 
 	get(url, callback){
-		this.send('get',baseurl, url, callback);
+		this.send('get', url, {}, callback);
 	}
 }

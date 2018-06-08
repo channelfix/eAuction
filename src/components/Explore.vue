@@ -1,0 +1,151 @@
+<template>
+  <div class="div-container">
+      <div align-center row wrap>
+        <div>
+          <v-text-field         
+            label="Looking for someone?"
+            v-model="browseQuery"
+            id="queryID"
+            @keyup = "browse"
+            dont-fill-mask-blanks
+          ></v-text-field>
+        </div> 
+        <v-btn dark depressed @click="query_tag(tag1)"> {{ tag1 }} </v-btn>
+        <v-btn dark depressed @click="query_tag(tag2)"> {{ tag2 }} </v-btn>
+        <v-btn dark depressed @click="query_tag(tag3)"> {{ tag3 }} </v-btn>
+        <v-btn dark depressed @click="query_tag(tag4)"> {{ tag4 }} </v-btn>
+        <v-btn dark depressed @click="query_tag(tag5)"> {{ tag5 }} </v-btn>
+        <v-btn dark depressed @click="clearAll()"> Clear </v-btn>
+      <v-layout
+        v-if="results.length != 0"
+        row
+        wrap
+        style="width: inherit;"
+      >
+        <v-flex
+          v-for="result in results"
+          xs12
+          @click="goprofile(result.username)"
+        >
+            <v-card 
+              :hover="true"              
+              color="transparent"
+              style="width: 100%;"              
+            >
+              <v-layout 
+                row 
+                wrap
+                justify-end
+              ></v-layout>
+              <v-card-title primary-title>
+                <div>
+                  <p style="margin: 0px;" class="headline">{{result.username}}</p>
+                  <div>{{result.first_name}} {{result.last_name}}</div>
+                  <v-chip
+                    label
+                    outline color="secondary" 
+                    v-for="tag in result.tags"
+                    disabled
+                    style="margin-left: 0px; 
+                           font-size: 13px; 
+                           padding: 2px !important;"
+                  >
+                  <v-icon left>label</v-icon>
+                  {{tag}}
+                  </v-chip>
+                </div>
+              </v-card-title>
+            </v-card>      
+        </v-flex>
+      </v-layout>
+    </div>
+  </div>
+</template>
+
+<script>
+  import Request from '../assets/js/Request.js'
+
+  export default{
+    name: 'Explore',
+    data(){
+      return {
+        browseQuery: "",
+        browseFilter: "",
+        results: [],
+        tag1: "Collectibles",
+        tag2: "Antiques",
+        tag3: "Novel",
+        tag4: "Vehicles",
+        tag5: "Jewelry",
+        keyTimeout: null,
+      }
+    },
+    methods: {
+      goprofile(username) {
+        console.log("dskfhdlskfhsj");
+        this.$router.push({
+          name: 'Profile',
+          params: {
+            username: username
+          }
+        })
+      },
+      clearAll() {
+        this.browseQuery = "";
+        this.browseFilter = "";
+        this.results = [];
+      },
+      query_tag(tag) {
+        this.browseFilter = tag;
+        this.search();
+      },
+      browse() {
+        clearInterval(this.keyTimeout)
+        this.keyTimeout = setTimeout(()=> {
+          this.search();
+        }, 500);
+      },
+      search() {
+        console.log(this.browseFilter)
+        this.results = [];
+        let queries = this.browseQuery.trim();
+        let filter = this.browseFilter.trim();
+
+        if (!queries && !filter) {
+          return;
+        }
+
+        let request = new Request();
+        let formdata = new FormData();
+        formdata.set('browseQuery', queries);
+        formdata.set('browseFilter', filter);
+        console.log(this.browseQuery);
+        request.post('/browse/', formdata,
+          (response)=>{
+            // this.results = response.data
+            // console.log(response.data[0])              
+            for(var index in response.data){
+              console.log(response.data[index]);
+              this.results.push(response.data[index]);
+            }
+          });    
+      },
+    }
+  }
+
+</script>
+
+<style scoped>
+  .div-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+
+  #queryID{
+    width: 400px;
+  }
+</style>
+
