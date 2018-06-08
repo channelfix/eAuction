@@ -20,6 +20,7 @@
 					>
 						<button 
 							class="red"
+							@click="closeAuction"
 						>
 							End Auction
 						</button>	
@@ -112,6 +113,9 @@ export default {
 	methods: {
 		startAuction() {
 			this.$parent.startLiveStream();
+		},
+		closeAuction(){
+			this.$parent.endAuction();
 		},
 		sendLog(log){
 			let today = new Date();

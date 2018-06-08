@@ -214,7 +214,19 @@ export default {
 							}
 						});
 					}
-				})
+			})
+		},
+		endAuction(){
+			// put end livestream here
+			let formdata = new FormData();
+
+			formdata.set('auction_id', this.$route.params.id);
+
+			request.post('/livestream/end_auction/', formdata, ()=>{});
+			
+			this.$router.push({
+				name: 'Home',
+			})
 		}
 	},
 	watch: {
