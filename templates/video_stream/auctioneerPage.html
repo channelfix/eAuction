@@ -1,0 +1,16 @@
+{% load static %}
+
+<head>
+	<title>Auctoneer</title>
+	<script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+	<script type="text/javascript">
+		var apiKey = '{{api_key}}';
+		var sessionId = '{{session_id}}';
+		var token = '{{token}}';
+	</script>
+</head>
+<body>
+	<button id = "1">Start Auction</button> <!--  Use to start publishing the video and start recording -->
+	<button id = "2">End Auction</button> <!--  Use to end publishing the video and end the video record -->
+	<script type="text/javascript" src="{% static 'auctioneer.js' %}"></script>
+</body>

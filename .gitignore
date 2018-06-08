@@ -13,7 +13,8 @@ __pycache__/
 __pycache__/
 local_settings.py
 db.sqlite3
-media
+media/cache/
+local_settings.py
 
 # Dependency directories
 node_modules/
@@ -44,5 +45,6 @@ local_settings.py
 *.hot-update.json
 *.hot-update.js
 
-# assets
 assets/
+
+Downloads/
