@@ -169,9 +169,14 @@ export default {
 				formdata.set('auction_id', auction_id);
 				formdata.set('log_id', latestId);
 
+
 				request.post('/livestream/show_logs/', formdata, 
 					(response)=>{
-						console.log(response);
+						let latestLogs = response.data.logs;
+
+						for(let i = 0; i < latestLogs.length; i++){
+							this.logs.push(latestLogs[i])
+						}
 					}
 				);
 			},
