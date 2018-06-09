@@ -155,7 +155,7 @@ export default {
 			if(this.$store.getters.getUsername == this.$route.params.auctioneer){
 				role = "auctioneer";
 			}
-
+			
 			request.post('/livestream/initiate_auction/', formdata, 
 				(response) => {
 
@@ -205,19 +205,18 @@ export default {
 		endAuction(){
 			// put end livestream here
 			if(session != null){
-				
 				session.disconnect();
-
-				let formdata = new FormData();
-				formdata.set('auction_id', this.$route.params.id);
-
-				request.post('/livestream/end_auction/', formdata, 
-				(response)=>{
-					this.$router.push({
-						name: 'Home',
-					})
-				});
 			}
+		
+			let formdata = new FormData();
+			formdata.set('auction_id', this.$route.params.id);
+
+			request.post('/livestream/end_auction/', formdata, 
+			(response)=>{
+				this.$router.push({
+					name: 'Home',
+				})
+			});
 		}
 	},
 	watch: {
