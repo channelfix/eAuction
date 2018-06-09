@@ -17,8 +17,8 @@
           depressed 
           @click="query_tag(tag)"
         > 
-            {{ tag }} 
-          </v-btn>
+          {{ tag }} 
+        </v-btn>
         <v-btn dark depressed @click="clearAll()"> Clear </v-btn>
       <v-layout
         v-if="results.length != 0"
@@ -82,7 +82,6 @@
     },
     methods: {
       goprofile(username) {
-        console.log("dskfhdlskfhsj");
         this.$router.push({
           name: 'Profile',
           params: {
@@ -108,7 +107,6 @@
         }, 500);
       },
       search() {
-        console.log(this.browseFilter)
         this.results = [];
         let queries = this.browseQuery.trim();
         let filter = this.browseFilter.trim();
@@ -121,13 +119,9 @@
         let formdata = new FormData();
         formdata.set('browseQuery', queries);
         formdata.set('browseFilter', filter);
-        console.log(this.browseQuery);
         request.post('/browse/', formdata,
-          (response)=>{
-            // this.results = response.data
-            // console.log(response.data[0])              
+          (response)=>{            
             for(var index in response.data){
-              console.log(response.data[index]);
               this.results.push(response.data[index]);
             }
           });    

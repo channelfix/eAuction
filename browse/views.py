@@ -12,8 +12,6 @@ class BrowseView(View):
         query_filter = request.POST.get('browseFilter', None)
         query_set = Profile.objects.all()
 
-        print(query_name)
-        print(query_filter)
         if query_filter and not query_name:
             print("not query_filter and query_name")
             query_set = query_set.filter(
