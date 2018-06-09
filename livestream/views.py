@@ -170,8 +170,10 @@ class RetrievedLogView(View):
 
             # List of logs
             logs = list(query_logs)
-            print(logs)
+
             return JsonResponse({'logs': logs})
+        else:
+            return JsonResponse({'logs': []})
 
 
 class AuctionDestroyedView(View):
@@ -182,7 +184,9 @@ class AuctionDestroyedView(View):
         Logs.objects.all().filter(auction_id=auction_id).delete()
 
         # Delete this Livestream
-        Session.objects.get(id=auction_id).delete()
+        Session.objects.filter(id=auction_id).delete()
+
+        print('Auction ended')
 
         return HttpResponse('Auction close')
 
