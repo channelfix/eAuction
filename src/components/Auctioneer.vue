@@ -66,10 +66,16 @@
 					>
 						<v-text-field
 							label="Bid Increase"
+							v-model="bidMinimum"
 						>
 							
 						</v-text-field>
-						<button class="halfsize green">Set minimum bid</button>
+						<button 
+							class="halfsize green"
+							@click="setMinimumBid"
+						>
+							Set minimum bid
+						</button>
 					</v-layout>
   				</v-flex>
   				<v-flex 
@@ -110,6 +116,11 @@ export default {
 	props: {
 		currentProductName: String,
 	},
+	data(){
+		return {
+			bidMinimum: 0,
+		}
+	},
 	methods: {
 		startAuction() {
 			this.$parent.startLiveStream();
@@ -131,6 +142,10 @@ export default {
 		},
 		closeCurrentItem(){
 			let log = this.currentProductName+" is closed for auction";
+			this.sendLog(log);
+		},
+		setMinimumBid(){
+			let log = "Minimum bid set to "+this.bidMinimum;
 			this.sendLog(log);
 		}
 	},
