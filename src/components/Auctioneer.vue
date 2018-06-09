@@ -149,6 +149,10 @@ export default {
 			let log = "Moved to next item";
 			this.$parent.sendLog(log);
 		},
+		openAuction(){
+			let log = "Auction for "+this.currentProductName+" is open";
+			this.$parent.sendLog(log);
+		}
 	},
 }
 </script>
