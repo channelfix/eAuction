@@ -173,7 +173,7 @@ class RetrievedLogView(View):
 
             return JsonResponse({'logs': logs})
         else:
-            return JsonResponse({'empty': None})
+            return JsonResponse({'logs': []})
 
 
 class AuctionDestroyedView(View):

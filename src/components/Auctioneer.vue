@@ -20,6 +20,7 @@
 					>
 						<button 
 							class="red"
+							@click="closeAuction"
 						>
 							End Auction
 						</button>	
@@ -113,6 +114,9 @@ export default {
 		startAuction() {
 			this.$parent.startLiveStream();
 		},
+		closeAuction(){
+			this.$parent.endAuction();
+		},
 		sendLog(log){
 			let today = new Date();
 			let time = today.getHours()+":"+today.getMinutes()+" "+today.getMonth()+"/"+today.getDay()+"/"+today.getFullYear();
@@ -123,9 +127,7 @@ export default {
 			formdata.set('logs', log);
 			formdata.set('time', time);
 
-			request.post('/livestream/store_logs/', formdata, 
-				(response)=> {}
-			);
+			request.post('/livestream/store_logs/', formdata, ()=>{});
 		},
 		closeCurrentItem(){
 			let log = this.currentProductName+" is closed for auction";
