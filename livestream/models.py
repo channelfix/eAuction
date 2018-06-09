@@ -10,6 +10,8 @@ class Session(models.Model):
     description = models.CharField(max_length=500, blank=True)
     session_id = models.CharField(max_length=1000)
     is_live = models.BooleanField(default=False)
+    image = models.ImageField(null=True)
+    thumbnail = models.CharField(max_length=150, blank=True)
 
     def __str__(self):
         return self.session_id

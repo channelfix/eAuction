@@ -45,7 +45,7 @@ class LivestreamView(OpenTokCloudView, View):
         length = len(product_names)
 
         # One auctioneer own one auction event
-        session = Session.objects.create(auctioneer_username=auctioneer.username,
+        auction = Session.objects.create(auctioneer_username=auctioneer.username,
                                          title=title,
                                          description=description,
                                          session_id=self.session.session_id,
@@ -54,13 +54,19 @@ class LivestreamView(OpenTokCloudView, View):
         # Add the current user to this livestream
         profile = auctioneer.profile
 
+        if request.FILES:
+            auction.image = request.FILES['imageFile']
+            auction.thumbnail = '/'+auction.image.url
+            auction.save()
+            print(auction.thumbnail)
+
         for i in range(length):
-            Product.objects.create(session=session, profile=profile,
+            Product.objects.create(session=auction, profile=profile,
                                    name=product_names[i],
                                    minimum_price=product_minimum_prices[i])
 
         context = {
-            'auction_id': session.id,
+            'auction_id': auction.id,
             'auctioneer_username': auctioneer.username,
             'message': 'Livestream created'
         }
@@ -76,11 +82,9 @@ class AuctionView(LivestreamView, View):
     def post(self, request):
         auction_id = request.POST.get('auction_id', '')
         current_session = Session.objects.get(id=auction_id)
+
         # Get session id of this livestream
         session_id = current_session.session_id
-        # Get list of product of this livestream
-        product_list = list(current_session.auction_products.all()
-                            .values('name'))
 
         # Add the current user to this livestream
         profile = request.user.profile
@@ -104,11 +108,22 @@ class AuctionView(LivestreamView, View):
             'api_key': settings.OPENTOK_API_KEY,
             'session_id': session_id,
             'token': self.token,
-            'product_list': product_list,
             'attendees_profile': attendees_profile
         }
 
         return JsonResponse(context)
+
+
+class ProductListView(View):
+
+    def post(self, request):
+        auction_id = request.POST.get('auction_id', '')
+        current_session = Session.objects.get(id=auction_id)
+        # Get list of product of this livestream
+        product_list = list(current_session.auction_products.all()
+                            .values('name'))
+
+        return JsonResponse({'product_list': product_list})
 
 
 class LivestreamListView(View):
@@ -129,7 +144,7 @@ class LivestreamListView(View):
                              ['auctioneer__username'])
                              .values('auctioneer_username', 'id',
                                      'title', 'description',
-                                     'is_live'), sessions)
+                                     'is_live', 'thumbnail'), sessions)
 
         sessions = list(sessions)
 
