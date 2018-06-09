@@ -33,37 +33,53 @@
   						<v-layout
 							row
 							class="amber darken-2"
-
+							align-center
 						>
-							<v-flex 
-								md6 
-							>
-								
-							</v-flex>
 							<v-flex 
 								md6
 							>
 								<v-layout
 									pa-3
-									column
+									align-center
 									justify-center
 								>
-									<p class="headline">{{ products[0].name }}</p>
+									<span class="headline">{{ products[0].name }}</span>
 								</v-layout>
 							</v-flex>
+							<v-flex 
+			  					md6
+		  					>
+		  						<v-layout
+									align-center
+									justify-center
+									class="amber darken-1"
+									pa-3
+								>
+									<span class="headline">Current Bid: &#8369 {{currentBid}}</span>
+		  						</v-layout>
+		  						<v-layout
+									align-center
+									justify-center
+									class="amber darken-1"
+									pa-3
+								>
+									<span class="headline">Minimum Bid: &#8369 {{products[0].minimum_price}}</span>
+		  						</v-layout>
+			  				</v-flex>
   						</v-layout>
 	  				</v-flex>
-	  				<v-flex 
-	  					md2
-  					>
-  						<v-layout
+	  				<v-flex
+						md2
+						class="green darken-3"
+						v-if="highestBidder != ''"
+	  				>
+	  					<v-layout
 							align-center
 							justify-center
-							class="amber darken-1"
-							pa-2
-						>
-							<span class="headline">Current Bid: &#8369 {{products[0].minimum_price}}</span>
-  						</v-layout>
+							pa-1
+	  					>
+							<span class="headline">Highest Bidder: {{highestBidder}}</span>
+	  					</v-layout>
 	  				</v-flex>
 	  				<v-flex 
 	  					md7
@@ -108,6 +124,7 @@ export default {
 	data(){
 		return{
 			currentBid: 0,
+			highestBidder: '',
 			products: [{
 				name: '',
 				minimum_price: '',
@@ -123,8 +140,10 @@ export default {
 		request.post('/livestream/product_list/', formdata, 
 			(response)=>{
 				this.products = response.data.product_list;	
+				this.currentBid = this.products[0].minimum_price;
 			}
 		)
+
 		logThread = setInterval(
 			() => {
 				if(session != null){
