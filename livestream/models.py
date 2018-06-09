@@ -18,7 +18,7 @@ class Session(models.Model):
 class Logs(models.Model):
     """ Used to store the logs for certain Auction """
 
-    auction_id = models.IntegerField(default=0)
+    auction_id = models.PositiveIntegerField(default=0)
 
     message = models.CharField(max_length=150)
     time = models.CharField(max_length=9)
