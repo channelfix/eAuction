@@ -155,10 +155,14 @@ export default {
 			if(this.$store.getters.getUsername == this.$route.params.auctioneer){
 				role = "auctioneer";
 			}
-			
+
+			let formdata = new FormData();
+
+			formdata.set('auction_id', this.$route.params.id);
+			formdata.set('is_auctioneer', (role == "auctioneer")?true:false);
+
 			request.post('/livestream/initiate_auction/', formdata, 
 				(response) => {
-
 					let opentokCloud = response.data
 
 					let apiKey = opentokCloud.api_key
