@@ -100,6 +100,7 @@ function formatDecimal(num) {
 
 let logThread;
 let request = new Request();
+let session = null;
 
 export default {
 	name: "Auction",
@@ -148,37 +149,40 @@ export default {
 						});
 
 
-						session.on("streamDestroyed", function(event) {							
-						});
+						session.on("sessionDisconnected", (event)=>{
+							clearInterval(logThread)
+						})
 				}
 			})
 		}
 		//// get activity log thread
 		logThread = setInterval(
 			() => {
-				// constantly ask from the server for new log 
-				let latestId = -1;
-				let auction_id = this.$route.params.id;
+				if(session != null){
+					// constantly ask from the server for new log 
+					let latestId = -1;
+					let auction_id = this.$route.params.id;
 
-				if(this.logs.length > 0){
-					latestId = this.logs[this.logs.length-1].id;
-				}
-
-				let formdata = new FormData();
-
-				formdata.set('auction_id', auction_id);
-				formdata.set('log_id', latestId);
-
-
-				request.post('/livestream/show_logs/', formdata, 
-					(response)=>{
-						let latestLogs = response.data.logs;
-
-						for(let i = 0; i < latestLogs.length; i++){
-							this.logs.push(latestLogs[i])
-						}
+					if(this.logs.length > 0){
+						latestId = this.logs[this.logs.length-1].id;
 					}
-				);
+
+					let formdata = new FormData();
+
+					formdata.set('auction_id', auction_id);
+					formdata.set('log_id', latestId);
+
+
+					request.post('/livestream/show_logs/', formdata, 
+						(response)=>{
+							let latestLogs = response.data.logs;
+
+							for(let i = 0; i < latestLogs.length; i++){
+								this.logs.push(latestLogs[i])
+							}
+						}
+					);
+				}
 			},
 			1000
 		)
@@ -196,9 +200,8 @@ export default {
 					this.sessionId = this.opentokCloud.session_id
 					this.token = this.opentokCloud.token
 
-					let session, publisher;
+					let publisher;
 					let hasPublish = false;
-					let xhttp;
 
 					if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
 						session = OT.initSession(this.apiKey, this.sessionId);
@@ -213,12 +216,19 @@ export default {
 							    session.publish(publisher);
 							}
 						});
+
+						session.on("sessionDisconnected", (event)=>{
+							clearInterval(logThread)
+						})
 					}
 			})
 		},
 		endAuction(){
 			// put end livestream here
-			let formdata = new FormData();
+			if(session != null)
+				session.disconnect();
+
+			/*let formdata = new FormData();
 
 			formdata.set('auction_id', this.$route.params.id);
 
@@ -226,7 +236,7 @@ export default {
 			
 			this.$router.push({
 				name: 'Home',
-			})
+			})*/
 		}
 	},
 	watch: {
