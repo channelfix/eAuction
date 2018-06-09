@@ -112,10 +112,7 @@ export default {
 	data(){
 		return{
 			currentBid: 0,
-			products: [{
-				name: "Pencil",
-				price: 0,
-			}],
+			products: [{name: "Pencil", price: 0}],
 			status: "open", //status: open, closed, nodecline, noaccept
 			logs: [],
 		}
@@ -130,7 +127,7 @@ export default {
 					let auction_id = this.$route.params.id;
 
 					if(this.logs.length > 0){
-						latestId = this.logs[this.logs.length-1].id;
+						latestId = this.logs[0].id;
 					}
 
 					let formdata = new FormData();
@@ -144,7 +141,7 @@ export default {
 							let latestLogs = response.data.logs;
 
 							for(let i = 0; i < latestLogs.length; i++){
-								this.logs.push(latestLogs[i])
+								this.logs.splice(0, 0, latestLogs[i]); //insert before
 							}
 						}
 					);
