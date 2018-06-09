@@ -10,11 +10,15 @@
             dont-fill-mask-blanks
           ></v-text-field>
         </div> 
-        <v-btn dark depressed @click="query_tag(tag1)"> {{ tag1 }} </v-btn>
-        <v-btn dark depressed @click="query_tag(tag2)"> {{ tag2 }} </v-btn>
-        <v-btn dark depressed @click="query_tag(tag3)"> {{ tag3 }} </v-btn>
-        <v-btn dark depressed @click="query_tag(tag4)"> {{ tag4 }} </v-btn>
-        <v-btn dark depressed @click="query_tag(tag5)"> {{ tag5 }} </v-btn>
+        <v-btn 
+          v-for="tag of tags" 
+          :disabled="(active == tag)?true:false" 
+          dark 
+          depressed 
+          @click="query_tag(tag)"
+        > 
+            {{ tag }} 
+          </v-btn>
         <v-btn dark depressed @click="clearAll()"> Clear </v-btn>
       <v-layout
         v-if="results.length != 0"
@@ -42,13 +46,12 @@
                   <p style="margin: 0px;" class="headline">{{result.username}}</p>
                   <div>{{result.first_name}} {{result.last_name}}</div>
                   <v-chip
+                    medium
                     label
                     outline color="secondary" 
                     v-for="tag in result.tags"
                     disabled
-                    style="margin-left: 0px; 
-                           font-size: 13px; 
-                           padding: 2px !important;"
+                    style="margin-left: 0px;"
                   >
                   <v-icon left>label</v-icon>
                   {{tag}}
@@ -72,12 +75,9 @@
         browseQuery: "",
         browseFilter: "",
         results: [],
-        tag1: "Collectibles",
-        tag2: "Antiques",
-        tag3: "Novel",
-        tag4: "Vehicles",
-        tag5: "Jewelry",
+        tags: ["Collectibles", "Antiques", "Novel", "Vehicles", "Jewelry"],
         keyTimeout: null,
+        active: '',
       }
     },
     methods: {
@@ -93,11 +93,13 @@
       clearAll() {
         this.browseQuery = "";
         this.browseFilter = "";
+        this.active = ""
         this.results = [];
       },
       query_tag(tag) {
         this.browseFilter = tag;
-        this.search();
+        this.active = tag;
+        this.search();  
       },
       browse() {
         clearInterval(this.keyTimeout)
@@ -130,7 +132,7 @@
             }
           });    
       },
-    }
+    },
   }
 
 </script>
