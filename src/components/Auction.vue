@@ -14,11 +14,13 @@
 		  		  	<Auctioneer 
 		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
 						:currentProductName="products[0].name"
+						:status="status"
 	  		  		>
 		  		  	</Auctioneer>
 		  		  	<Bidder 
 		  		  		v-else
 	  		  			:currentProductName="products[0].name"
+	  		  			:status="status"
 	  		  		>
 	  		  		</Bidder>
 	  		  	</v-layout>
@@ -55,7 +57,7 @@
 									class="amber darken-1"
 									pa-3
 								>
-									<span class="headline">Current Bid: &#8369 {{currentBid}}</span>
+									<span class="headline">Standing Bid: &#8369 {{standingBid}}</span>
 		  						</v-layout>
 		  						<v-layout
 									align-center
@@ -123,13 +125,13 @@ export default {
 	components: {Auctioneer, Bidder},
 	data(){
 		return{
-			currentBid: 0,
+			standingBid: 0,
 			highestBidder: '',
 			products: [{
 				name: '',
 				minimum_price: '',
 			}],
-			status: "open", //status: open, closed, nodecline, noaccept
+			status: "notlive", 
 			logs: [],
 		}
 	},
@@ -140,7 +142,7 @@ export default {
 		request.post('/livestream/product_list/', formdata, 
 			(response)=>{
 				this.products = response.data.product_list;	
-				this.currentBid = this.products[0].minimum_price;
+				this.standingBid = this.products[0].minimum_price;
 			}
 		)
 
@@ -177,6 +179,7 @@ export default {
 	},
 	methods: {
 		startLiveStream(){
+			this.status = "current item not open";
 			let role = "bidder";
 			if(this.$store.getters.getUsername == this.$route.params.auctioneer){
 				role = "auctioneer";
@@ -215,6 +218,7 @@ export default {
 
 						session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
 							// Accept the exposed video who is connected to the same session.
+
 							if(role == "bidder"){
 								session.subscribe(event.stream, 'subscriber', 
 									{
@@ -261,28 +265,6 @@ export default {
 			formdata.set('time', time);
 
 			request.post('/livestream/store_logs/', formdata, ()=>{});
-		},
-	},
-	watch: {
-		status() {
-			if(this.status == "open"){
-				this.accept.open = true;
-				this.decline.open = true;
-			}else if(this.status == "closed"){
-				this.accept.open = false;
-				this.decline.open = false;
-			}else if(this.status == "noaccept"){
-				this.accept.open = false;
-				this.decline.open = true;
-			}else if(this.status == "nodecline"){
-				this.accept.open = true;
-				this.decline.open = false;
-			}
-
-			this.accept.style.green = this.accept.open;
-			this.accept.style.grey = !this.accept.open;
-			this.decline.style.red = this.decline.open;
-			this.decline.style.grey = !this.decline.open;
 		},
 	},
 }
