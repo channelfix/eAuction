@@ -15,5 +15,7 @@ urlpatterns = [
     # Retrieve the logs
     path('show_logs/', views.RetrievedLogView.as_view(), name='show_log'),
     # Delete logs for certain Auction
-    path('end_auction/', views.AuctionDestroyedView.as_view(), name='end_auction')
+    path('end_auction/', views.AuctionDestroyedView.as_view(), name='end_auction'),
+    # Get all the list of products
+    path('product_list/', views.ProductListView.as_view(), name='product_list')
 ]

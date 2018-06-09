@@ -82,11 +82,9 @@ class AuctionView(LivestreamView, View):
     def post(self, request):
         auction_id = request.POST.get('auction_id', '')
         current_session = Session.objects.get(id=auction_id)
+
         # Get session id of this livestream
         session_id = current_session.session_id
-        # Get list of product of this livestream
-        product_list = list(current_session.auction_products.all()
-                            .values('name'))
 
         # Add the current user to this livestream
         profile = request.user.profile
@@ -110,11 +108,22 @@ class AuctionView(LivestreamView, View):
             'api_key': settings.OPENTOK_API_KEY,
             'session_id': session_id,
             'token': self.token,
-            'product_list': product_list,
             'attendees_profile': attendees_profile
         }
 
         return JsonResponse(context)
+
+
+class ProductListView(View):
+
+    def post(self, request):
+        auction_id = request.POST.get('auction_id', '')
+        current_session = Session.objects.get(id=auction_id)
+        # Get list of product of this livestream
+        product_list = list(current_session.auction_products.all()
+                            .values('name'))
+
+        return JsonResponse({'product_list': product_list})
 
 
 class LivestreamListView(View):
