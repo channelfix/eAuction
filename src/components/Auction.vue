@@ -13,12 +13,12 @@
 		  		  	</div>
 		  		  	<Auctioneer 
 		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
-						:currentProductName="currentProduct.name"
+						:currentProductName="products[0].name"
 	  		  		>
 		  		  	</Auctioneer>
 		  		  	<Bidder 
 		  		  		v-else
-	  		  			:currentProductName="currentProduct.name"
+	  		  			:currentProductName="products[0].name"
 	  		  		>
 	  		  		</Bidder>
 	  		  	</v-layout>
@@ -48,7 +48,7 @@
 									column
 									justify-center
 								>
-									<p class="headline">{{currentProduct.name}}</p>
+									<p class="headline">{{ products[0].name }}</p>
 								</v-layout>
 							</v-flex>
   						</v-layout>
@@ -62,7 +62,7 @@
 							class="amber darken-1"
 							pa-2
 						>
-							<span class="headline">Current Bid: &#8369 {{formattedBid}}</span>
+							<span class="headline">Current Bid: &#8369 {{products[0].minimum_price}}</span>
   						</v-layout>
 	  				</v-flex>
 	  				<v-flex 
@@ -98,10 +98,6 @@ import Request from '../assets/js/Request.js'
 import Auctioneer from './Auctioneer'
 import Bidder from './Bidder'
 
-function formatDecimal(num) {
-	return parseFloat(Math.round(num * 100) / 100).toFixed(2)
-}
-
 let logThread;
 let request = new Request();
 let session = null;
@@ -112,23 +108,23 @@ export default {
 	data(){
 		return{
 			currentBid: 0,
-			products: [{name: "Pencil", price: 0}],
+			products: [{
+				name: '',
+				minimum_price: '',
+			}],
 			status: "open", //status: open, closed, nodecline, noaccept
 			logs: [],
 		}
 	},
 	mounted: function(){
-		//// get activity log thread
 		let formdata = new FormData();
 		formdata.set('auction_id', this.$route.params.id);
 
 		request.post('/livestream/product_list/', formdata, 
 			(response)=>{
-				//
+				this.products = response.data.product_list;	
 			}
 		)
-
-
 		logThread = setInterval(
 			() => {
 				if(session != null){
@@ -269,16 +265,6 @@ export default {
 			this.decline.style.red = this.decline.open;
 			this.decline.style.grey = !this.decline.open;
 		},
-	},
-	computed:{
-		formattedBid() { 
-			return formatDecimal(this.currentBid);
-		},
-		currentProduct() {
-			let current = this.products[this.products.length-1];
-			current.price = formatDecimal(current.price); 
-			return current;
-		}
 	},
 }
 </script>

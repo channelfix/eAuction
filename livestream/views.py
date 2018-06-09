@@ -121,7 +121,7 @@ class ProductListView(View):
         current_session = Session.objects.get(id=auction_id)
         # Get list of product of this livestream
         product_list = list(current_session.auction_products.all()
-                            .values('name'))
+                            .values('name', 'minimum_price'))
 
         return JsonResponse({'product_list': product_list})
 
