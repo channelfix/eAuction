@@ -16,10 +16,12 @@
 			>
 				<v-text-field
 				  label="Input bid"
+				  v-model="bid"
 				></v-text-field>
 				<button
 					:class="bidButton.style"
 					:disabled="!bidButton.open"
+					@click="placeBid"
 				>
 					Bid
 				</button>	
@@ -36,8 +38,12 @@ let request = new Request();
 
 export default {
 	name: "Bidder",
+	props: {
+		currentProductName: String,
+	},
 	data(){
 		return {
+			bid: 0,
 			bidButton: {
 				style: {
 					green: true,
@@ -49,6 +55,14 @@ export default {
 	},
 	mounted() {
 		this.$parent.startLiveStream();
+	},
+	methods: {
+		placeBid(){
+			let currentUser = this.$store.getters.getUsername;
+			let log = currentUser+" bid "+this.bid+" for "+this.currentProductName;
+
+			this.$parent.sendLog(log);
+		}
 	}
 }
 </script>

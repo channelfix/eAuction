@@ -16,7 +16,11 @@
 						:currentProductName="currentProduct.name"
 	  		  		>
 		  		  	</Auctioneer>
-		  		  	<Bidder v-else></Bidder>
+		  		  	<Bidder 
+		  		  		v-else
+	  		  			:currentProductName="currentProduct.name"
+	  		  		>
+	  		  		</Bidder>
 	  		  	</v-layout>
 	  		</v-flex>
 	  		<v-flex md5>  <!-- right -->
