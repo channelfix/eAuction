@@ -221,7 +221,21 @@ export default {
 					name: 'Home',
 				})
 			});
-		}
+		},
+		sendLog(log){
+			let today = new Date();
+			let time = today.getHours()+":"+today.getMinutes()+" "+today.getMonth()+"/"+today.getDay()+"/"+today.getFullYear();
+
+			// time format hr:min month/day/year
+
+			let formdata = new FormData();
+
+			formdata.set('auction_id', this.$route.params.id);
+			formdata.set('logs', log);
+			formdata.set('time', time);
+
+			request.post('/livestream/store_logs/', formdata, ()=>{});
+		},
 	},
 	watch: {
 		status() {

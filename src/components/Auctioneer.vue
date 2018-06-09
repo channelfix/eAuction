@@ -109,7 +109,6 @@
 import Request from '../assets/js/Request.js'
 
 let request = new Request();
-let formdata = new FormData();
 
 export default {
 	name: 'Auctioneer',
@@ -128,25 +127,13 @@ export default {
 		closeAuction(){
 			this.$parent.endAuction();
 		},
-		sendLog(log){
-			let today = new Date();
-			let time = today.getHours()+":"+today.getMinutes()+" "+today.getMonth()+"/"+today.getDay()+"/"+today.getFullYear();
-
-			// time format hr:min month/day/year
-
-			formdata.set('auction_id', this.$route.params.id);
-			formdata.set('logs', log);
-			formdata.set('time', time);
-
-			request.post('/livestream/store_logs/', formdata, ()=>{});
-		},
 		closeCurrentItem(){
 			let log = this.currentProductName+" is closed for auction";
-			this.sendLog(log);
+			this.$parent.sendLog(log);
 		},
 		setMinimumBid(){
 			let log = "Minimum bid set to "+this.bidMinimum;
-			this.sendLog(log);
+			this.$parent.sendLog(log);
 		}
 	},
 }
