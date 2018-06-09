@@ -47,6 +47,9 @@ export default {
 			}
 		}
 	},
+	mounted() {
+		this.$parent.startLiveStream();
+	}
 }
 </script>
 
