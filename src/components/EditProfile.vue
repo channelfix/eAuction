@@ -26,6 +26,13 @@
 			@click="changePassword"
 		>Change Password</v-btn>
 
+
+		<div v-if="isAuctioneer">
+			<v-btn
+				@click="viewProductLog"
+			>Product Logs</v-btn>
+		</div>
+
 		<p class='lastNameProperty'>
 			<label>Last Name:</label>
 			<input type="text" id="lastNameField" v-model="lastName">
@@ -194,6 +201,11 @@
 						}
 					)
 				}
+			},
+			viewProductLog() {
+				this.$router.push({
+					name: 'Product'
+				})
 			},
 			findTag: function(element) {
 				return element.name === this.tag.toLowerCase()

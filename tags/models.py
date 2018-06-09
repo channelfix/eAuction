@@ -5,7 +5,8 @@ from profiles.models import Profile
 class Tags(models.Model):
     """ Tag Table """
 
-    profile = models.ManyToManyField(Profile)
+    profile = models.ManyToManyField(Profile,
+                                     related_name='tags')
 
     # tag name with a maximum of 50 characters.
     name = models.CharField(max_length=50)

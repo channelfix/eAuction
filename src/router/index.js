@@ -8,6 +8,7 @@ import Profile from '@/components/Profile'
 import EditProfile from '@/components/EditProfile'
 import Auction from '@/components/Auction'
 import CreateLiveStream from '@/components/CreateLiveStream'
+import Product from '@/components/Product'
 import store from '../store'
 
 Vue.use(Router)
@@ -43,6 +44,10 @@ export default new Router({
           path: 'create-auction',
           name: 'Create-Live',
           component: CreateLiveStream,
+        },{
+          path: 'product-list',
+          name: 'Product',
+          component: Product,
         },
       ],
     },

@@ -95,6 +95,25 @@ class TagRemoval(View):
         return HttpResponse('%s not found' % sent_tag)
 
 
+class TagListView(View):
+    def get(self, request):
+        tag_list = list(Tags.objects.all().values('name'))
+
+        return JsonResponse({'tags': tag_list})
+
+
+class ProductCreatedView(View):
+    def post(self, request):
+        user = request.user
+        product_name = request.POST.get('product_name', '')
+        product_desc = request.POST.get('product_desc', '')
+
+        user_profile = user.profile
+        user_profile.products.create(name=product_name,
+                                     description=product_desc)
+        
+
+
 class Subscribe(View):
     def post(self, request):
         current_user = request.user

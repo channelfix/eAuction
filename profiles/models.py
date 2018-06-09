@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from livestream.models import Session
 from django.db.models import Sum
+from tags.models import Tags
 
 
 class Profile(models.Model):
