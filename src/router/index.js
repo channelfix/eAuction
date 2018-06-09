@@ -5,8 +5,11 @@ import Home from '@/components/Home'
 import ErrorPage from '@/components/ErrorPage'
 import PagesNavigation from '@/components/PagesNavigation'
 import Profile from '@/components/Profile'
-import Auction from '@/components/Auction'
+import Auctioneer from '@/components/Auctioneer'
+import Bidder from '@/components/Bidder'
 import EditProfile from '@/components/EditProfile'
+import CreateLiveStream from '@/components/CreateLiveStream'
+import Explore from '@/components/Explore'
 import store from '../store'
 
 Vue.use(Router)
@@ -34,12 +37,26 @@ export default new Router({
           path: 'edit-profile',
           name: 'Edit-Profile',
           component: EditProfile
-        },{ 
-          path: '/auction/:id',
-          name: 'Auction',
-          component: Auction,
+        },{
+          path: '/create-auction',
+          name: 'Create-Live',
+          component: CreateLiveStream,
+        },{
+          path: '/explore',
+          name: 'Explore',
+          component: Explore
         },
       ],
+    },
+    {
+      path: '/auctioneer/:id',
+      name: 'Auctioneer',
+      component: Auctioneer
+    },
+    {
+      path: '/bidder/:id',
+      name: 'Bidder',
+      component: Bidder
     },
     {
       path: '*',

@@ -133,7 +133,7 @@ let logThread;
 let request = new Request();
 
 export default {
-	name: "Auction",
+	name: "Bidder",
 	data(){
 		return{
 			opentokCloud: '',
@@ -193,63 +193,42 @@ export default {
 		}
 	},
 	mounted: function(){
-		if(this.isAuctioneer){
-			this.axios.get('/livestream/auctioneer/')
-			.then((response) => {
-				this.opentokCloud = response.data
+		let request = new Request();
+		let formdata = new FormData();
 
-				this.apiKey = this.opentokCloud.api_key
-				this.sessionId = this.opentokCloud.session_id
-				this.token = this.opentokCloud.token
+		formdata.set('auction_id', this.$route.params.id)
+		formdata.set('is_auctioneer', this.isAuctioneer)
 
-				let session, publisher;
-				let hasPublish = false;
-				let xhttp;
+		request.post('/livestream/initiate_auction/', formdata,
+		(response) => {
+			this.opentokCloud = response.data
 
-				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
-					session = OT.initSession(this.apiKey, this.sessionId);
+			this.apiKey = this.opentokCloud.api_key
+			this.sessionId = this.opentokCloud.session_id
+			this.token = this.opentokCloud.token
 
-					session.connect(this.token, function(error) { // Check if the client has successfully connected to the session.
-						if(error){
+			let session;
 
-						}
-						else{				
-							// Create a publisher for exposing the video to other client who is also connected to the same session.
-							publisher = OT.initPublisher('publisher', {insertMode: 'append', width: "40%", height: "100%"}); 
-						    session.publish(publisher);
-						}
-					});
-				}
-			})
-		}else{
-			this.axios.get('/livestream/bidder/')
-			.then((response) => {
-				this.opentokCloud = response.data
+			if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
+				session = OT.initSession(this.apiKey, this.sessionId);
 
-				this.apiKey = this.opentokCloud.api_key
-				this.sessionId = this.opentokCloud.session_id
-				this.token = this.opentokCloud.token
+				session.connect(this.token, function(error) { // Check if this client is connected to the session
+					console.log('Sucessfully connected to the session')
+				});
 
-				let session;
-
-				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
-					session = OT.initSession(this.apiKey, this.sessionId);
-
-					session.connect(this.token, function(error) { // Check if this client is connected to the 
-					});
-
-					session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
-						
-						// Accept the exposed video who is connected to the same session.
-						session.subscribe(event.stream, 'subscriber', {insertMode:'append', width:'100%', height:'100%'}); 						
-					});
+				session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
+					
+					// Accept the exposed video who is connected to the same session.
+					session.subscribe(event.stream, 'subscriber', {insertMode:'append', width:'100%', height:'100%'}); 						
+					console.log('Sucessfully subscribe')
+				});
 
 
-					session.on("streamDestroyed", function(event) {							
-					});
-				}
-			})
-		}
+				session.on("streamDestroyed", function(event) {			
+					console.log('Nothing to subscribe')
+				});
+			}
+		})
 
 		//// get activity log thread
 		logThread = setInterval(

@@ -63,8 +63,12 @@
 				>.				
 				</textarea>
 			</p>
-		</div> 
+		</div>
 
+		<p class="contactNumberProperty">
+			<label>Contact #:</label></br>
+			<input type="text" id="contactNumberField" v-model="contactNumber">
+		</p>
 
 		<div v-if="isAuctioneer">
 			<p class="tagsProperty">
@@ -109,7 +113,8 @@
 				imageFile: '',
 				hasChangePic: false,
 				matchedPassword: false,
-				isAuctioneer: false
+				isAuctioneer: false,
+				contactNumber: ''
 			}
 		},
 		computed: {
@@ -155,11 +160,12 @@
 					formdata.set('email', this.email);
 					formdata.set('tags', this.subTag);
 					formdata.set('biography', this.biography);		
+					formdata.set('contact_number', this.contactNumber);
 					
 					if(this.hasChangePic)
 						formdata.append('imageFile', this.imageFile, this.imageFile.name)
 
-					request.post('http://localhost:8000/', 'profile/edit_profile_details/', formdata,
+					request.post('/profile/edit_profile_details/', formdata,
 					(response) => {
 						alert(response.data)
 						this.requestProfileDetails()
@@ -180,7 +186,7 @@
 				formdata.set('new_password', this.newPassword);
 				
 				if(this.matchedPassword){
-					request.post('http://localhost:8000/', 'profile/edit_password/', formdata,
+					request.post('/profile/edit_password/', formdata,
 						(response)=>{
 							alert(response.data)
 							if(response.data == 'Changed Password: You will be redirect to the login page.')
@@ -216,7 +222,7 @@
 				formdata.set('username', this.username);
 				formdata.set('tag', this.tag.toLowerCase());
 
-				request.post('http://localhost:8000/', 'profile/remove_tag/', formdata,
+				request.post('/profile/remove_tag/', formdata,
 				(response) => { 
 					alert(response.data);
 					this.tag = ''; 							
@@ -228,7 +234,7 @@
 
 				formdata.set('username', this.username);
 
-				request.post('http://localhost:8000/', 'profile/request_profile_details/', formdata,
+				request.post('/profile/request_profile_details/', formdata,
 					(response) => {
 						this.userProfile = response.data;
 

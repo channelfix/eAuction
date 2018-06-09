@@ -4,20 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>eAuction</title>
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
   </head>
   <body>
     <script type="text/javascript">
-    
       window.__INITIAL_STATE__ = {
         'isAuthenticated' : false,
         'username' : '',
-        'isAuctioneer': false
+        'isAuctioneer': false,
+        'credits': ''
       }
 
       {% if user.is_authenticated %}
         window.__INITIAL_STATE__.isAuthenticated = true;
         window.__INITIAL_STATE__.username = "{{ user.username }}";
-        window.__INITIAL_STATE__.isAuctioneer = "{{user.profile.isAuctioneer}}"
+        condition = "{{user.profile.isAuctioneer}}"
+        window.__INITIAL_STATE__.isAuctioneer = (condition.toLowerCase() == 'true')
+        window.__INITIAL_STATE__.credits = "{{ user.profile.total_credits }}"
       {% endif %}
     </script>
   	{% csrf_token %}
