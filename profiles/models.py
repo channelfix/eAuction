@@ -4,17 +4,6 @@ from livestream.models import Session
 from django.db.models import Sum
 
 
-class Bid(models.Model):
-    user = models.OneToOneField(User,
-                                related_name='bid_owner',
-                                on_delete=models.CASCADE)
-
-    bid_amount = models.PositiveIntegerField()
-
-    def __str__(self):
-        return self.bid_amount
-
-
 class Profile(models.Model):
     user = models.OneToOneField(
         User,
