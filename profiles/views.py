@@ -2,9 +2,9 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.generic import View
 from django.http import HttpResponse
-from tags.models import Tags
-from profiles.models import Subscribed, Credit
-from django.db.models import Sum
+from app.tags.models import Tags
+from profiles.models import Subscribed
+from django.db.models import F
 
 
 class ProfileView(View):
@@ -14,8 +14,7 @@ class ProfileView(View):
         user_profile = user.profile
         user_tags = list(user_profile.tags_set.all().values('name'))
 
-        hasSubscribed = Subscribed.objects.filter(auctioneer=user,
-                                                  bidder=request.user).exists()
+        hasSubscribed = Subscribed.objects.filter(auctioneer=user, bidder=request.user).exists()
         context = {
             'username': user.username,
             'email': user.email,
@@ -25,9 +24,9 @@ class ProfileView(View):
             'avatar': user_profile.avatar.url,
             'tags': user_tags,
             'isAuctioneer': user_profile.isAuctioneer,
-            'subscribers': user_profile.countSubscribers,
+            'subscribers': user_profile.subscribers,
             'hasSubscribed': hasSubscribed,
-            'contact_number': user.profile.contact_number,
+            'subscribers': user.profile.subscribers
         }
 
         return JsonResponse(context)
@@ -43,13 +42,11 @@ class EditProfile(View):
         email = request.POST.get('email', '')
         biography = request.POST.get('biography', '')
         list_of_tags = request.POST.get('tags', '')
-        contact_number = request.POST.get('contact_number', '')
 
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
         user.profile.biography = biography
-        user.profile.contact_number = contact_number
         user_profile = user.profile
 
         if request.FILES:
@@ -107,23 +104,13 @@ class Subscribe(View):
         if subscribed:
             subscribed.delete()
             res = 'Subscribe'
+            subscribed_user.profile.subscribers = F('subscribers') - 1
+            subscribed_user.profile.save()
         else:
             Subscribed.objects.create(auctioneer=subscribed_user,
                                       bidder=current_user)
             res = 'Unsubscribe'
+            subscribed_user.profile.subscribers = F('subscribers') + 1
             subscribed_user.profile.save()
 
         return HttpResponse(res)
-
-
-class UpdateCredits(View):
-    def post(self, request):
-        current_user = request.user
-        amount = request.POST.get('amount', '')
-        credit = Credit.objects.create(credit_amount=amount,
-                                       profile=current_user.profile)
-        total_credit = Credit.objects.filter(
-            profile=current_user.profile
-        ).aggregate(Sum('credit_amount'))
-
-        return JsonResponse({'total_credit': total_credit})

@@ -1,8 +1,5 @@
-<template>	
+<template>
 	<v-form class="form">
-		<v-alert v-model="alert" type="error" transition="slide-y-transition" dismissible>
-	    	Incorrect username or password!
-	    </v-alert>
 		<v-text-field
 		  name="name"
 		  label="Username"
@@ -27,7 +24,6 @@
 		name: 'loginForm',
 		data() {
 			return {
-				alert: false,
 				user: {
 					name: "",
 					password:"",
@@ -42,15 +38,14 @@
 
 				formData.set('username', this.user.name);
 				formData.set('password', this.user.password);
-				request.post('/login/', formData, 
+				request.post('http://localhost:8000/','login/', formData, 
 					(response) => {
 						if(response instanceof Error){
-							this.alert = true
+							// do error stuff
 						}else {
 							this.$store.commit('authenticated', true)	
 							this.$store.commit('setUsername', this.user.name)
 							this.$store.commit('asAuctioneer', response.data.isAuctioneer)				
-							this.$store.commit('addCredits', response.data.credits)
 							this.$router.push({
 								name: 'Home',
 								params: {
@@ -69,5 +64,4 @@
 	.form {
 		padding: 2em;
 	}
-
 </style>

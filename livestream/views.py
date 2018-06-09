@@ -1,84 +1,70 @@
+from django.shortcuts import render
 from opentok import OpenTok, MediaModes, Roles, OutputModes
 from .models import Session, Archive
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.views import View
 
-from pprint import pprint
+
+class IndexView(View):
+    def get(self, request):
+        return render(request, 'video_stream/selection.html')
 
 
-class OpenTokCloudView:
+class AuctioneerView(View):
     opentok_cloud = OpenTok(settings.OPENTOK_API_KEY,
                             settings.OPENTOK_API_SECRET)
-
-
-class LivestreamView(OpenTokCloudView, View):
-    session = ''
-
-    def post(self, request):
-        auctioneer = request.user
-
-        # Title of the Livestream
-        title = request.POST.get('title', '')
-        description = request.POST.get('description', '')
-
-        # Name and the minimum price of the product for the bid
-        product_name = request.POST.get('product_name', '')
-        product_price = request.POST.get('product_price', '')
-
-        # Server IP address
-        session_address = "127.0.0.1"
-
-        # Create a Session
-        self.session = self.opentok_cloud.create_session(
-            session_address, media_mode=MediaModes.routed)
-
-        auctioneer_profile_products = auctioneer.profile.products
-        auctioneer_profile_products.name = product_name
-        auctioneer_profile_products.minimum_price = product_price
-        auctioneer_profile_products.save()
-
-        # Store the new session id
-        Session.objects.create(user=auctioneer,
-                               products=auctioneer_profile_products,
-                               title=title,
-                               description=description,
-                               session_id=self.session.session_id
-                               )
-
-        return HttpResponse('Livestream created')
-
-
-class AuctionView(LivestreamView, View):
+    session_id = ''
     token = ''
 
-    def post(self, request):
-        auction_id = request.POST.get('auction_id', '')
-        session_id = Session.objects.get(id=auction_id).session_id
-        is_auctioneer = request.POST.get('is_auctioneer', '')
+    def getAuction(self):
+        session_address = "127.0.0.1"
+        session = self.opentok_cloud.create_session(session_address,
+                                                    media_mode=MediaModes.routed)
 
-        # Check if the user is an auctioneer
-        if(is_auctioneer):
-            self.token = self.opentok_cloud.generate_token(session_id)
-        else:
-            self.token = self.opentok_cloud.generate_token(session_id,
-                                                          role=Roles.subscriber)
+        # Store the new session id
+        Session.objects.create(session_id=session.session_id)
+        self.session_id = session.session_id
+
+        return {'session_id': self.session_id}
+
+    def getCloud(self):
+        return self.opentok_cloud
+
+    def get(self, request):
+        auction = self.getAuction()
+        self.session_id = auction['session_id']
+        print(self.session_id)
+        self.token = self.opentok_cloud.generate_token(self.session_id)
 
         context = {
             'api_key': settings.OPENTOK_API_KEY,
-            'session_id': session_id,
+            'session_id': self.session_id,
             'token': self.token,
         }
 
         return JsonResponse(context)
 
 
-class LivestreamListView(View):
-    def get(self, request):
-        sessions = list(Session.objects.all().values('id', 'products', 'title',
-                                                     'description', 'session_id'))
+# This class will generate a token from
+# the generated session id for the bidder.
+# class BidderView(AuctioneerView):
 
-        return JsonResponse({'sessions':sessions})
+#     token = None
+#     context = {}
+
+#     def get(self, request):
+#         self.token = super(BidderView,
+#                            self).getCloud().generate_token(self.session_id,
+#                                                            role=Roles.subscriber)
+#         self.context = {
+#             'api_key': settings.OPENTOK_API_KEY,
+#             'session_id': self.session_id,
+#             'token': self.token,
+#         }
+#         return render('Bidder View')
+
+
 # # start to record the video.
 # def start_archive(request):
 #     sessionId = Session.objects.get(pk=1).session_id
@@ -104,4 +90,4 @@ class LivestreamListView(View):
 
 #     return HttpResponse('Stop recording')
 
-# Create your views here
+# Create your views here.

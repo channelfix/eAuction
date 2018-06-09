@@ -75,7 +75,7 @@
 				formData.set('firstname', this.user.fname);
 				formData.set('lastname', this.user.lname);
 
-				request.post('/register/', formData, 
+				request.post('http://localhost:8000/','register/', formData, 
 					function(response) {
 						// process response from server
 					}
