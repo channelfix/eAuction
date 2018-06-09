@@ -86,7 +86,12 @@
 						justify-center
 						pa-3
 					>
-						<button class="green">Move to next item</button>
+						<button 
+							class="green"
+							@click="moveToNextItem"
+						>
+							Move to next item
+						</button>
 					</v-layout>
   				</v-flex>
   				<v-flex 
@@ -97,7 +102,12 @@
 						justify-center
 						pa-3
 					>
-						<button class="green">Open auction current item</button>
+						<button 
+							class="green"
+							@click="openAuction"
+						>
+							Open auction current item
+						</button>
 					</v-layout>
   				</v-flex>
 	  		</v-layout>
@@ -134,7 +144,11 @@ export default {
 		setMinimumBid(){
 			let log = "Minimum bid set to "+this.bidMinimum;
 			this.$parent.sendLog(log);
-		}
+		},
+		moveToNextItem(){
+			let log = "Moved to next item";
+			this.$parent.sendLog(log);
+		},
 	},
 }
 </script>
