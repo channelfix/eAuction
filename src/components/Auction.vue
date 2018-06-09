@@ -8,8 +8,8 @@
 	  		<v-flex md7> <!-- left -->
 	  		  	<v-layout column>
 		  		  	<div class="box livestream" id="livestream">		  		 
-					    <div id="publisher"></div>
-					    <div id="subscriber"></div>
+					    <div class="screen" id="publisher"></div>
+					    <div class="screen" id="subscriber"></div>
 		  		  	</div>
 		  		  	<Auctioneer 
 		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
@@ -273,26 +273,8 @@ export default {
 		background-color: black;
 	}
 
-	.publisher {
-	    position: absolute;
-	    width: 360px;
-	    height: 240px;
-	    bottom: 10px;
-	    left: 10px;
-	    z-index: 100;
-	    border: 3px solid white;
-	    border-radius: 3px;
-	}
-
-	.subscriber {
-	    position: absolute;
-	    width: 360px;
-	    height: 240px;
-	    bottom: 10px;
-	    left: 10px;
-	    z-index: 100;
-	    border: 3px solid white;
-	    border-radius: 3px;
+	.screen{
+		height: 100%;
 	}
 
 	.logbox {
