@@ -14,8 +14,7 @@ export default new Vuex.Store({
     firstname: '',
     avatar: '',
     tags: '',
-    isAuctioneer: false,
-    credits: 100
+    isAuctioneer: false
   },
 
   mutations: {
@@ -27,8 +26,7 @@ export default new Vuex.Store({
     setFirstName: (state, firstname) => state.firstname = firstname,
     setProfilePic: (state, image) => state.avatar = image,
     setTags: (state, tags) => state.tags = tags,
-    asAuctioneer: (state, asAuct) => state.isAuctioneer = asAuct,
-    addCredits: (state, amount) => state.credits = parseInt(amount)
+    asAuctioneer: (state, asAuct) => state.isAuctioneer = asAuct
   },
 
   actions: {
@@ -53,7 +51,6 @@ export default new Vuex.Store({
         context.commit('setProfilePic', userDetails.avatar)
         context.commit('setTags', userDetails.tags)
         context.commit('asAuctioneer', userDetails.isAuctioneer)
-        context.commit('addCredits', userDetails.credit_amount)
       },);
     },
     setUsername: (context, username) => {
@@ -69,8 +66,7 @@ export default new Vuex.Store({
     getFirstName: (state) => { return state.firstname },
     getProfilePic: (state) => { return state.avatar },
     getTags: (state) => { return state.tags },
-    isAuctioneer: (state) => { return state.isAuctioneer },
-    getCredits: (state) => { return state.credits }
+    isAuctioneer: (state) => { return state.isAuctioneer }
   }
 
 })

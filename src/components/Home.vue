@@ -62,8 +62,6 @@
 </template>
 
 <script>
-import Request from '../assets/js/Request.js'
-
 export default {
 	name: 'Home',
 	data(){
@@ -71,38 +69,23 @@ export default {
 			showNav: false,
 			livestreams: [
 				{
-					id: '',
-					title: '',
-					description: '',
-					thumbnail: '',
+					id: 1,
+					title: "eAuction",
+					description: "eAuction",
+					thumbnail: "http://lheventures.com/wp-content/uploads/sites/7/2017/10/Cooke-Auction-Property-pic.png",
 				}
 			],
-			pageName: ''
 		}
 	},
 	methods: {
 		route(id){
-			if(this.$store.getters.isAuctioneer)
-				this.pageName = 'Auctioneer'			
-			else
-				this.pageName = 'Bidder'
-
 			this.$router.push({
-				name: this.pageName,
+				name: 'Auction',
 				params: {
 					id:id
 				}
 			})
 		}
-	},
-	mounted: function() {
-		let request = new Request();
-		let formdata = new FormData();
-
-		this.axios.get('/livestream/auction_events/')
-		.then((response) => {
-			this.livestreams = response.data.sessions
-		})
 	}
 }
 </script>

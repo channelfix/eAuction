@@ -50,9 +50,6 @@
 							<span class = 'body-2'>Biography:</span>
 							<p v-text="biography"></p>
 						</div>
-
-						<span class = 'body-2'>Contact number:</span>
-						<p v-text="contactNumber" />
 					</div>
 				</v-layout>
 			</div>
@@ -78,8 +75,7 @@
 				profilePic: '',
 				tags: [],
 				isAuctioneer: '',//modify isAuctioneer for auctioneer identification
-				subscriptionStatus: '', // Displays text either subscribe or unsubscribe
-				contactNumber: ''
+				subscriptionStatus: '' // Displays text either subscribe or unsubscribe
 			}
 		},
 
@@ -97,7 +93,7 @@
 
 				formdata.set('username', this.$route.params.username)
 
-				request.post('/profile/subscribe/', formdata,
+				request.post('http://localhost:8000/', 'profile/subscribe/', formdata,
 				(response) => {
 					this.subscriptionStatus = response.data
 
@@ -123,7 +119,7 @@
 			formdata.set('username', this.$route.params.username)
 
 
-			request.post('/profile/request_profile_details/', formdata,
+			request.post('http://localhost:8000/','profile/request_profile_details/', formdata,
 			(response) => {
 				this.userProfile = response.data
 				this.profilePic = '/'+this.userProfile.avatar
@@ -133,7 +129,6 @@
 				this.tags = this.userProfile.tags
 				this.isAuctioneer = this.userProfile.isAuctioneer
 				this.subscribers = this.userProfile.subscribers
-				this.contactNumber = this.userProfile.contact_number
 
 				let hasSubscribed = this.userProfile.hasSubscribed
 
