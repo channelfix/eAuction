@@ -119,6 +119,16 @@ export default {
 	},
 	mounted: function(){
 		//// get activity log thread
+		let formdata = new FormData();
+		formdata.set('auction_id', this.$route.params.id);
+
+		request.post('/livestream/product_list/', formdata, 
+			(response)=>{
+				//
+			}
+		)
+
+
 		logThread = setInterval(
 			() => {
 				if(session != null){
