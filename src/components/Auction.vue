@@ -225,18 +225,20 @@ export default {
 		},
 		endAuction(){
 			// put end livestream here
-			if(session != null)
+			if(session != null){
+				
 				session.disconnect();
 
-			/*let formdata = new FormData();
+				let formdata = new FormData();
+				formdata.set('auction_id', this.$route.params.id);
 
-			formdata.set('auction_id', this.$route.params.id);
-
-			request.post('/livestream/end_auction/', formdata, ()=>{});
-			
-			this.$router.push({
-				name: 'Home',
-			})*/
+				request.post('/livestream/end_auction/', formdata, 
+				(response)=>{
+					this.$router.push({
+						name: 'Home',
+					})
+				});
+			}
 		}
 	},
 	watch: {
