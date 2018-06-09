@@ -228,7 +228,7 @@ export default {
 			if(session != null)
 				session.disconnect();
 
-			/*let formdata = new FormData();
+			let formdata = new FormData();
 
 			formdata.set('auction_id', this.$route.params.id);
 
@@ -236,7 +236,7 @@ export default {
 			
 			this.$router.push({
 				name: 'Home',
-			})*/
+			})
 		}
 	},
 	watch: {
