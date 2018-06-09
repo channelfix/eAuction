@@ -13,7 +13,7 @@ class Profile(models.Model):
 
     session = models.ForeignKey(Session,
                                 related_name='attendees',
-                                on_delete=models.CASCADE,
+                                on_delete=models.SET_NULL,
                                 null=True,
                                 blank=True)
 
