@@ -7,6 +7,9 @@
 		  name="name"
 		  label="Username"
 		  v-model="user.name"
+		  required
+		  :counter="20"
+		  :rules="unameRules"
 		></v-text-field>
 		<v-text-field
 		  name="name"
@@ -15,8 +18,11 @@
 		  :append-icon="visible ? 'visibility_off': 'visibility'"
           :append-icon-cb="() => (visible = !visible)"
           :type="visible ? 'text': 'password' "
+          required
+          hint="At least 8 characters"
+		  min="8"
 		></v-text-field>
-		<v-btn @click="login">Submit</v-btn>
+		<v-btn :disabled="err" @click="login">Submit</v-btn>
 	</v-form>
 </template>
 
@@ -33,6 +39,11 @@
 					password:"",
 				},
 				visible: false,
+				unameRules: [
+					v => !!v || 'Last name is required',
+      				v => (v && v.length <= 15) || 'Last name must be less than 15 characters',
+      				v => /^\w+/.test(v) || "Field shouldn't start with symbols"
+				],
 			}
 		},
 		methods: {
@@ -61,6 +72,15 @@
 					}
 				);	
 			}
+		},
+		computed:{
+			err(){
+				if(this.user.name == "" || this.user.password == ""){
+					return true;
+				} else {
+					return false;
+				}
+			},
 		}
 	}
 </script>
