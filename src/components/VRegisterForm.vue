@@ -10,7 +10,6 @@
 				  id="fn"
 				  v-model="user.fname"
 				  required
-				  :counter="15"
 				  :rules="fnameRules"
 				></v-text-field>
 			</v-flex>
@@ -20,7 +19,6 @@
 				  id="ln"
 				  v-model="user.lname"
 				  required
-				  :counter="15"
 				  :rules="lnameRules"
 				></v-text-field>
 			</v-flex>
@@ -31,7 +29,6 @@
 		  id="un"
 		  v-model="user.name"
 		  required
-		  :counter="20"
 		  :rules="unameRules"
 		></v-text-field>
 		<v-text-field
@@ -87,22 +84,19 @@
 				},
 				visible: false,
 				valid: false,
-				iconVis: false,
+				iconVis: true,
 				alert: false,
 				checkVar: true,
 				fnameRules: [
 					v => !!v || 'First name is required',
-      				v => (v && v.length <= 15) || 'First name must be less than 15 characters',
       				v => /^\w+/.test(v) || "Field shouldn't start with symbols"
 				],
 				lnameRules: [
 					v => !!v || 'Last name is required',
-      				v => (v && v.length <= 15) || 'Last name must be less than 15 characters',
       				v => /^\w+/.test(v) || "Field shouldn't start with symbols"
 				],
 				unameRules: [
 					v => !!v || 'Username is required',
-      				v => (v && v.length <= 20) || 'Username must be less than 20 characters',
       				v => /^\w+/.test(v) || "Field shouldn't start with symbols"
 				],
 				emailRules: [
