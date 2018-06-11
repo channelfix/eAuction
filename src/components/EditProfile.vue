@@ -77,15 +77,6 @@
 			<input type="text" id="contactNumberField" v-model="contactNumber">
 		</p>
 
-		<div v-if="isAuctioneer">
-			<p class="tagsProperty">
-				<label>Tags:</label>
-				<input type="text" v-model="tag" placeholder="Tags here" size="10" v-on:keyup.enter="addTag">	
-				<button @click.prevent="addTag">+</button>
-				<button @click.prevent="removeTag">-</button>
-			</p>
-		</div>
-
 		<input type="button" id="changeButton" value="Change" v-on:click="changeProfile">
 
 	</form>
@@ -111,8 +102,6 @@
 				firstName: '',
 				email: '',
 				biography: '',
-				tags: [],
-				subTag: [],
 				tag: '',
 				oldPassword: '',
 				newPassword: '',				
@@ -165,7 +154,6 @@
 					formdata.set('last_name', this.lastName);
 					formdata.set('first_name', this.firstName);
 					formdata.set('email', this.email);
-					formdata.set('tags', this.subTag);
 					formdata.set('biography', this.biography);		
 					formdata.set('contact_number', this.contactNumber);
 					
@@ -210,36 +198,6 @@
 			findTag: function(element) {
 				return element.name === this.tag.toLowerCase()
 			},
-			addTag: function() {
-				if (this.tag != ''){
-					let newTags = this.tags.map(item=>item)
-					if(newTags.find(this.findTag))
-						alert('You already have this tag.')
-					else{					
-						let tag = this.tag.toLowerCase()	
-						newTags.push(tag);
-						this.subTag.push(tag);
-						this.tags = newTags
-						alert(this.tag+' added')
-						this.tag = ''						
-					}
-				}			
-				else
-					alert('Please insert a text.')	
-			},
-			removeTag: function(){
-				let request = new Request();
-				let formdata = new FormData();
-
-				formdata.set('username', this.username);
-				formdata.set('tag', this.tag.toLowerCase());
-
-				request.post('/profile/remove_tag/', formdata,
-				(response) => { 
-					alert(response.data);
-					this.tag = ''; 							
-				});
-			},
 			requestProfileDetails() {				
 				let request = new Request();
 				let formdata = new FormData();
@@ -256,7 +214,6 @@
 						this.email = this.userProfile.email;
 						this.biography = this.userProfile.biography;
 						this.isAuctioneer = this.userProfile.isAuctioneer;
-						this.tags = this.userProfile.tags;
 					}
 				);
 			}	
