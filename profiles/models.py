@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from livestream.models import Session
 from django.db.models import Sum
-from tags.models import Tags
 
 
 class Profile(models.Model):
@@ -42,6 +41,22 @@ class Profile(models.Model):
         return '{}'.format(self.user.username)
 
 
+class Tags(models.Model):
+    """ Tag Table """
+
+    profile = models.ManyToManyField(Profile)
+
+
+    # tag name with a maximum of 50 characters.
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        """ Return tag name """
+
+        return self.name
+
+
+
 class Credit(models.Model):
     credit_amount = models.IntegerField(default=0)
     profile = models.ForeignKey(Profile,
@@ -55,18 +70,17 @@ class Credit(models.Model):
 
 
 class Product(models.Model):
-    profile = models.ForeignKey(Profile,
-                                related_name='products',
-                                on_delete=models.CASCADE,
-                                null=True)
-
     session = models.ForeignKey(Session,
                                 related_name='auction_products',
                                 on_delete=models.CASCADE,
                                 null=True)
 
+    tag = models.ForeignKey(Tags,
+                            related_name='products',
+                            on_delete=models.CASCADE,
+                            null=True)
+
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=500)
     date_sold = models.DateTimeField(null=True)
     winning_bid = models.PositiveIntegerField(default=0)
     minimum_price = models.PositiveIntegerField(default=0)
