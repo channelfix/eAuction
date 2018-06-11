@@ -10,5 +10,6 @@ urlpatterns = [
     path('subscribe/', views.Subscribe.as_view()),
     path('update_credits/', views.UpdateCredits.as_view()),
     path('tag_list/', views.TagListView.as_view()),
-    path('create_product/', views.ProductCreatedView.as_view())
+    path('create_product/', views.ProductCreatedView.as_view()),
+    path('retrieve_product/', views.RetrieveProductView.as_view())
 ]
