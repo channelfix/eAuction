@@ -2,8 +2,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.generic import View
 from django.http import HttpResponse
-from tags.models import Tags
-from profiles.models import Subscribed, Credit
+from profiles.models import Subscribed, Credit, Tags
 from django.db.models import Sum
 
 
@@ -41,8 +40,7 @@ class EditProfile(View):
         first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
         email = request.POST.get('email', '')
-        biography = request.POST.get('biography', '')
-        list_of_tags = request.POST.get('tags', '')
+        biography = request.POST.get('biography', '')        
         contact_number = request.POST.get('contact_number', '')
 
         user.first_name = first_name
@@ -57,12 +55,6 @@ class EditProfile(View):
 
         user_profile.save()
         user.save()
-
-        if list_of_tags != '':
-            tags = list_of_tags.split(',')
-            for tag in tags:
-                t, created = Tags.objects.get_or_create(name=tag)
-                user_profile.tags_set.add(t)
 
         return HttpResponse('Successfully Changed Profile.')
 
@@ -97,7 +89,7 @@ class TagRemoval(View):
 
 class TagListView(View):
     def get(self, request):
-        tag_list = list(Tags.objects.all().values('name'))
+        tag_list = list(Tags.objects.all().values('name').distinct())
 
         return JsonResponse({'tags': tag_list})
 
@@ -105,13 +97,28 @@ class TagListView(View):
 class ProductCreatedView(View):
     def post(self, request):
         user = request.user
-        product_name = request.POST.get('product_name', '')
-        product_desc = request.POST.get('product_desc', '')
+        product_name = request.POST.get('name', '')        
+        product_tag = request.POST.get('tag','')
 
         user_profile = user.profile
-        user_profile.products.create(name=product_name,
-                                     description=product_desc)
-        
+
+        # Set a new tag, if it does not exist on this profile.
+        tag, created = user_profile.tags_set.get_or_create(name=product_tag)
+        tag.products.create(name=product_name)
+
+
+        return HttpResponse('Product created')
+
+
+class RetrieveProductView(View):
+    def get(self, request):
+        # product name, tag and date sold
+        user_profile = request.user.profile
+        product_list = list(user_profile.tags_set.all().values('products__name',
+                                                               'name','products__date_sold')
+                                                       .order_by('name'))
+
+        return JsonResponse({'products': product_list})        
 
 
 class Subscribe(View):
