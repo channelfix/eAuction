@@ -64,13 +64,17 @@ import Request from '../assets/js/Request.js';
 				let request = new Request();
 				let formdata = new FormData();
 
-				formdata.set('tag', this.selectedTag)
-				formdata.set('name', this.product.name)
+				// Check if all fields are filled.
+				if((this.selectedTag && this.product.name) != "")
+				{
+					formdata.set('tag', this.selectedTag)
+					formdata.set('name', this.product.name)
 
-				request.post('/profile/create_product/', formdata,
-				(response) => {
-					alert(response.data)
-				})
+					request.post('/profile/create_product/', formdata,
+					(response) => {
+						alert(response.data)
+					})
+				}					
 			}
 		},
 		mounted() {
