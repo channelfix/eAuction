@@ -23,11 +23,11 @@
 		<p>Products</p>
 		<div>
 			<div>
-				<v-text-field
-				  label="Name"
-				  solo
-				  v-model="product.name"
-				></v-text-field>
+				<select v-model="selectedProduct">
+					<option v-for="product in products">
+						{{product.products__name}}
+					</option>
+				</select>
 				<v-text-field
 				  label="Price"
 				  solo
@@ -62,10 +62,10 @@ export default {
 			products: [],
 			productNames: [],
 			productPrices: [],
-			product: {
-				name: '',
+			product: {				
 				minimumPrice: ''
 			},
+			selectedProduct: ''
 		}
 	},
 	methods: {
@@ -100,9 +100,9 @@ export default {
 		},
 
 		addProduct() {
-			this.productNames.push(this.product.name);
+			this.productNames.push(this.selectedProduct);
 			this.productPrices.push(this.product.minimumPrice);
-			alert('successfully add '+this.product.name);
+			alert('successfully add '+this.selectedProduct);
 		},
 		isValidImageFormat: function(selectedFile) {
 				if(selectedFile.type === 'image/jpg' || selectedFile.type === 'image/png' || selectedFile.type === 'image/jpeg')
@@ -123,6 +123,14 @@ export default {
 					alert('Cannot import this file. Use only this following format (.jpg, .jpeg, or .png).');
 			}
 		},
+	},
+	mounted() {
+		let request = new Request();
+
+		request.get('/profile/retrieve_product/',
+		(response) => {
+			this.products = response.data.products
+		})
 	}
 }
 
