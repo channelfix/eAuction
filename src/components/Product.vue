@@ -12,15 +12,6 @@
 		</p>
 		
 		<p>
-			<label>Description</label>
-			<input type="text" 
-				   id="productDescField"
-				   v-model="product.description"
-			>
-		</p>
-
-
-		<p>
 			<label>Tags: </label>
 			<select v-model="selectedTag">				
 				<option v-for="tag in tagList">
@@ -34,6 +25,21 @@
 		<div>
 			<label>My Records</label>
 		</div>
+
+		<div>
+			<ul>
+				<label>Name      Tags         Date Sold</label>
+				<li v-for="product in products">
+					{{product.products__name}} {{product.name}} 
+					<div v-if="product.products__date_sold === null">
+						unsold
+					</div>
+					<div v-else>
+						{{product.products__date_sold}}
+					</div>
+				</li>
+			</ul>
+		</div>
 			
 	</div>
 </template>
@@ -46,25 +52,40 @@ import Request from '../assets/js/Request.js';
 		data() {
 			return {
 				product: {
-					name: '',
-					description: '',
+					name: '',					
 				},
 				tagList: [],
 				selectedTag: '',
+				products: []
 			}
 		},
 		methods: {
 			createProduct() {
-				alert('Product created')
+				let request = new Request();
+				let formdata = new FormData();
+
+				formdata.set('tag', this.selectedTag)
+				formdata.set('name', this.product.name)
+
+				request.post('/profile/create_product/', formdata,
+				(response) => {
+					alert(response.data)
+				})
 			}
 		},
 		mounted() {
 			let request = new Request();
 
+			// used to retrieve the tags in combo box
 			request.get('/profile/tag_list/', 
-			(response) => {
-				console.log(response)
+			(response) => {				
 				this.tagList = response.data.tags
+			})
+
+			// used to retrieve the product details (name, tag name, and date sold)
+			request.get('/profile/retrieve_product/',
+			(response) => {				
+				this.products = response.data.products
 			})
 		}
 	}
