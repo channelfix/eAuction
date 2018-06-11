@@ -48,8 +48,7 @@ class LivestreamView(OpenTokCloudView, View):
         auction = Session.objects.create(auctioneer_username=auctioneer.username,
                                          title=title,
                                          description=description,
-                                         session_id=self.session.session_id,
-                                         is_live=True)
+                                         session_id=self.session.session_id)
 
         # Add the current user to this livestream
         profile = auctioneer.profile
@@ -58,12 +57,13 @@ class LivestreamView(OpenTokCloudView, View):
             auction.image = request.FILES['imageFile']
             auction.thumbnail = '/'+auction.image.url
             auction.save()
-            print(auction.thumbnail)
+
 
         for i in range(length):
-            Product.objects.create(session=auction, profile=profile,
+            Product.objects.create(session=auction,
                                    name=product_names[i],
                                    minimum_price=product_minimum_prices[i])
+
 
         context = {
             'auction_id': auction.id,
@@ -200,8 +200,6 @@ class AuctionDestroyedView(View):
 
         # Delete this Livestream
         Session.objects.filter(id=auction_id).delete()
-
-        print('Auction ended')
 
         return HttpResponse('Auction close')
 
