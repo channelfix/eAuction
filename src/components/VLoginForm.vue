@@ -7,8 +7,10 @@
 		  name="name"
 		  label="Username"
 		  v-model="user.name"
+		  @keyup.enter="login"
 		></v-text-field>
 		<v-text-field
+		  @keyup.enter="login"
 		  name="name"
 		  label="Password"
 		  v-model="user.password"
