@@ -1,8 +1,11 @@
 <template>
-	<v-form class="form" ref="form" v-model="valid" lazy-validation>
+	<v-form class="form" ref="form" lazy-validation>
 		<v-alert v-model="alert" type="error" transition="slide-y-transition" dismissible>
-		    	Please fill in form promptly
-		    </v-alert>
+		    	There was a problem in the server
+	    </v-alert>
+	    <v-alert v-model="success" type="success" transition="slide-y-transition" dismissible>
+		    	Registered Successfully! Redirecting you to Sign In
+	    </v-alert>
 		<v-layout row wrap justify-space-between>
 			<v-flex lg5>
 				<v-text-field
@@ -63,7 +66,11 @@
 		  min="8"
 		  id="cps"
 		></v-text-field>
-		<v-btn :disabled="!valid" @click="register">Submit</v-btn>
+		<v-btn 
+			:disabled="!valid" 
+			@click="register"
+			:loading="submitLoading"
+		>Submit</v-btn>
 		<v-btn @click="clear()">clear</v-btn>
 	</v-form>
 </template>
@@ -80,7 +87,7 @@
 						text: "",
 						valid: false,
 						rules: [
-							v => this.user.name.valid = !!v || 'Username is required',
+							v => this.user.name.valid = (v!='') || 'Username is required',
       						v => this.user.name.valid = /^\w+/.test(v) || "Field shouldn't start with symbols"
 						]
 					},
@@ -88,7 +95,7 @@
 						text: "",
 						valid: false,
 						rules: [
-							v => this.user.password.valid = !!v || 'Password is required',
+							v => this.user.password.valid = (v!='') || 'Password is required',
       						v => this.user.password.valid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || "Minimum eight characters, at least one letter and one number"
 						]
 					},
@@ -96,15 +103,15 @@
 						text: "",
 						valid: false,
 						rules: [
-							v => this.user.cpassword.valid = !!v || 'Confirm Password is required',
-      						v => this.user.cpassword.valid = (this.user.cpassword.text == this.user.password.text) || "Minimum eight characters, at least one letter and one number"
+							v => this.user.cpassword.valid = (v!='') || 'Confirm Password is required',
+      						v => this.user.cpassword.valid = (v!='' && v == this.user.password.text) || "Password doesn't match"
 						]	
 					},
 					fname: {
 						text: "",
 						valid: false,
 						rules: [
-							v => this.user.fname.valid = !!v || 'First name is required',
+							v => this.user.fname.valid = (v!='') || 'First name is required',
       						v => this.user.fname.valid = /([A-Z][a-z]*)([\\s\\\'-][A-Z][a-z]*)*/.test(v) || "First name can only contain alphabetical characters and ,.`- Must start with capital letter"
 						]
 					},
@@ -112,7 +119,7 @@
 						text: "",
 						valid: false,
 						rules: [
-							v => this.user.lname.valid = !!v || 'Last name is required',
+							v => this.user.lname.valid = (v!='') || 'Last name is required',
       						v => this.user.lname.valid = /([A-Z][a-z]*)([\\s\\\'-][A-Z][a-z]*)*/.test(v) || "Last name can only contain alphabetical characters and ,.`- Must start with capital letter"
 						],
 					},
@@ -120,7 +127,7 @@
 						text: "",
 						valid: false,
 						rules: [
-							v => this.user.email.valid = !!v || 'Email is required',
+							v => this.user.email.valid = (v!='') || 'Email is required',
       						v => this.user.email.valid = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid. e.g user@example.com'
 						],	
 					},
@@ -129,40 +136,50 @@
 				iconVis: true,
 				alert: false,
 				checkVar: true,
+				submitLoading: false,
+				success: false,
 			}
 		},
 		methods: {
 			register(){
+				this.submitLoading = true;
+
+
 				let request = new Request();
 				let formData = new FormData();
 
-				formData.set('username', this.user.name);
-				formData.set('password', this.user.password);
-				formData.set('email', this.user.email);
-				formData.set('firstname', this.user.fname);
-				formData.set('lastname', this.user.lname);
-
-				for(let data of formData.values()){
-					if(data == ""){
-						this.alert = true;
-						return
-					}
-				}
+				formData.set('username', this.user.name.text);
+				formData.set('password', this.user.password.text);
+				formData.set('email', this.user.email.text);
+				formData.set('firstname', this.user.fname.text);
+				formData.set('lastname', this.user.lname.text);
 
 				request.post('/register/', formData, 
 					(response)=> {
 						// process response from server
+						this.submitLoading = false;
+						if(response instanceof Error){
+							this.alert = true;
+						}else{
+							this.success = true;
+							let thread = setTimeout(()=>{
+								this.$parent.activeForm = 'VLoginForm';
+							}, 2000)
+
+						}
 					}
 				);	
+
+
+
 			},
 			clear() {
-				this.user.name = "";
-				this.user.password = "";
-				this.user.cpassword = "";
-				this.user.fname = "";
-				this.user.lname = "";
-				this.user.email = "";
-				this.valid = false;
+				this.user.name.text = "";
+				this.user.password.text = "";
+				this.user.cpassword.text = "";
+				this.user.fname.text = "";
+				this.user.lname.text = "";
+				this.user.email.text = "";
 			},
 		},
 		computed:{
@@ -188,4 +205,5 @@
 	.form {
 		padding: 2em;
 	}
+
 </style>
