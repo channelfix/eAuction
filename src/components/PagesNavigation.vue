@@ -23,12 +23,12 @@
 	 				  	align-center
 	 				  	justify-center
 	 				  >
-	 				  	  <v-flex md5>
+	 				  	  <v-flex md4>
 	 				  	  	<span> 
 		 				  		Credits: {{credits}} 
 		 				  	</span>
 		 				  </v-flex>
-		 				  <v-flex md7 fill-height>
+		 				  <v-flex md8 fill-height>
 		 				  	<v-btn block slot="activator" flat @click="()=>dialog=true">Add more credits?</v-btn>
 		 			  	  	<v-dialog v-model="dialog" max-width="500px">				        
 						        <v-form class="form">
