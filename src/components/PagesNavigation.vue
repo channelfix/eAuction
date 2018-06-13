@@ -18,39 +18,49 @@
 			   		</v-toolbar-side-icon>
 				    <v-toolbar-title>{{currentRoute}}</v-toolbar-title>
 				    <v-spacer></v-spacer>
-		 			<v-toolbar-items class="hidden-sm-and-down">
-	 				  <p> 
-	 				  	Credits: {{credits}} 
-	 				  </p>
-				      <v-dialog v-model="dialog" persistent max-width="500px">
-				        <v-btn slot="activator" flat>Add more credits?</v-btn>
-				        <v-form class="form">
-				        	<v-card>
-					          	<v-card-title>
-					            	<span class="headline">Purchase Credits</span>
-					          	</v-card-title>				          
-					          	<v-card-text>				          	
-					            	<v-container grid-list-md>
-					              	<v-layout wrap>
-					                	<v-flex xs12 sm12 md12>
-						                  	<v-text-field 
-						                  		label="Input amount here"
-						                  		type="number"
-						                  		v-model="add_credits"
-						                  		id="creditID"
-						                  	></v-text-field>
-					                	</v-flex>
-					              	</v-layout>
-					            </v-container>
-					          	</v-card-text>
-					          	<v-card-actions>
-						            <v-spacer></v-spacer>
-						            <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
-						            <v-btn color="blue darken-1" flat @click="addCredits">Save</v-btn>
-					          	</v-card-actions>
-					        </v-card>
-			          	</v-form>				        
-				      </v-dialog>
+		 			<v-toolbar-items>
+	 				  <v-layout
+	 				  	align-center
+	 				  	justify-center
+	 				  >
+	 				  	  <v-flex md5>
+	 				  	  	<span> 
+		 				  		Credits: {{credits}} 
+		 				  	</span>
+		 				  </v-flex>
+		 				  <v-flex md7 fill-height>
+		 				  	<v-btn block slot="activator" flat @click="()=>dialog=true">Add more credits?</v-btn>
+		 			  	  	<v-dialog v-model="dialog" max-width="500px">				        
+						        <v-form class="form">
+						        	<v-card>
+							          	<v-card-title>
+							            	<span class="headline">Purchase Credits</span>
+							          	</v-card-title>				          
+							          	<v-card-text>				          	
+							            	<v-container grid-list-md>
+							              	<v-layout wrap>
+							                	<v-flex xs12 sm12 md12>
+								                  	<v-text-field 
+								                  		label="Input amount here"
+								                  		type="number"
+								                  		v-model="add_credits"
+								                  		id="creditID"
+								                  	></v-text-field>
+							                	</v-flex>
+							              	</v-layout>
+							            </v-container>
+							          	</v-card-text>
+							          	<v-card-actions>
+								            <v-spacer></v-spacer>
+								            <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
+								            <v-btn color="blue darken-1" flat @click="addCredits">Save</v-btn>
+							          	</v-card-actions>
+							        </v-card>
+					          	</v-form>				        
+			      			</v-dialog>
+		 			  	  </v-flex>
+		 			  </v-layout>
+				      
 				      <v-btn 
 				      	flat
 						v-if="$store.getters.isAuctioneer"
