@@ -9,6 +9,7 @@
 		<v-layout row wrap justify-space-between>
 			<v-flex lg5>
 				<v-text-field
+				  @keyup.enter="register"
 				  label="Firstname"
 				  id="fn"
 				  v-model="user.fname.text"
@@ -18,6 +19,7 @@
 			</v-flex>
 			<v-flex lg5>
 				<v-text-field
+				 @keyup.enter="register"
 				  label="Last Name"
 				  id="ln"
 				  v-model="user.lname.text"
@@ -26,8 +28,8 @@
 				></v-text-field>
 			</v-flex>
 		</v-layout>
-
 		<v-text-field
+		  @keyup.enter="register"
 		  label="Username"
 		  id="un"
 		  v-model="user.name.text"
@@ -35,6 +37,7 @@
 		  :rules="user.name.rules"
 		></v-text-field>
 		<v-text-field
+	      @keyup.enter="register"
 		  label="Email"
 		  id="em"
 		  v-model="user.email.text"
@@ -42,6 +45,7 @@
 		  :rules="user.email.rules"
 		></v-text-field>
 		<v-text-field
+		  @keyup.enter="register"
 		  required
 		  name="pass"
 		  label="Password"
@@ -55,6 +59,7 @@
 		  min="8"
 		></v-text-field>
 		<v-text-field
+		  @keyup.enter="register"
 		  :rules="user.cpassword.rules"
 		  required
 		  v-model="user.cpassword.text"
