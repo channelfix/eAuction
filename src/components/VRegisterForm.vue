@@ -8,18 +8,18 @@
 				<v-text-field
 				  label="Firstname"
 				  id="fn"
-				  v-model="user.fname"
+				  v-model="user.fname.text"
 				  required
-				  :rules="fnameRules"
+				  :rules="user.fname.rules"
 				></v-text-field>
 			</v-flex>
 			<v-flex lg5>
 				<v-text-field
 				  label="Last Name"
 				  id="ln"
-				  v-model="user.lname"
+				  v-model="user.lname.text"
 				  required
-				  :rules="lnameRules"
+				  :rules="user.lname.rules"
 				></v-text-field>
 			</v-flex>
 		</v-layout>
@@ -27,16 +27,16 @@
 		<v-text-field
 		  label="Username"
 		  id="un"
-		  v-model="user.name"
+		  v-model="user.name.text"
 		  required
-		  :rules="unameRules"
+		  :rules="user.name.rules"
 		></v-text-field>
 		<v-text-field
 		  label="Email"
 		  id="em"
-		  v-model="user.email"
+		  v-model="user.email.text"
 		  required
-		  :rules="emailRules"
+		  :rules="user.email.rules"
 		></v-text-field>
 		<v-text-field
 		  required
@@ -44,16 +44,17 @@
 		  label="Password"
 		  id="ps"
 		  hint="At least 8 characters"
-		  v-model="user.password"
+		  :rules="user.password.rules"
+		  v-model="user.password.text"
 		  :append-icon="iconVis ? 'visibility' : 'visibility_off'"
 		  :append-icon-cb="() => (iconVis = !iconVis)"
 		  :type="iconVis ? 'password': 'text'"
 		  min="8"
 		></v-text-field>
 		<v-text-field
-		  :error="err"
+		  :rules="user.cpassword.rules"
 		  required
-		  v-model="user.cpassword"
+		  v-model="user.cpassword.text"
 		  name="confirmpass"
 		  label="Confirm Password"
 		  :append-icon="iconVis ? 'visibility' : 'visibility_off'"
@@ -75,34 +76,59 @@
 		data() {
 			return {
 				user: {
-					name: "",
-					password:"",
-					cpassword:"",
-					fname:"",
-					lname:"",
-					email:"",
+					name: {
+						text: "",
+						valid: false,
+						rules: [
+							v => this.user.name.valid = !!v || 'Username is required',
+      						v => this.user.name.valid = /^\w+/.test(v) || "Field shouldn't start with symbols"
+						]
+					},
+					password: {
+						text: "",
+						valid: false,
+						rules: [
+							v => this.user.password.valid = !!v || 'Password is required',
+      						v => this.user.password.valid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || "Minimum eight characters, at least one letter and one number"
+						]
+					},
+					cpassword: {
+						text: "",
+						valid: false,
+						rules: [
+							v => this.user.cpassword.valid = !!v || 'Confirm Password is required',
+      						v => this.user.cpassword.valid = (this.user.cpassword.text == this.user.password.text) || "Minimum eight characters, at least one letter and one number"
+						]	
+					},
+					fname: {
+						text: "",
+						valid: false,
+						rules: [
+							v => this.user.fname.valid = !!v || 'First name is required',
+      						v => this.user.fname.valid = /([A-Z][a-z]*)([\\s\\\'-][A-Z][a-z]*)*/.test(v) || "First name can only contain alphabetical characters and ,.`- Must start with capital letter"
+						]
+					},
+					lname: {
+						text: "",
+						valid: false,
+						rules: [
+							v => this.user.lname.valid = !!v || 'Last name is required',
+      						v => this.user.lname.valid = /([A-Z][a-z]*)([\\s\\\'-][A-Z][a-z]*)*/.test(v) || "Last name can only contain alphabetical characters and ,.`- Must start with capital letter"
+						],
+					},
+					email: {
+						text: "",
+						valid: false,
+						rules: [
+							v => this.user.email.valid = !!v || 'Email is required',
+      						v => this.user.email.valid = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid. e.g user@example.com'
+						],	
+					},
 				},
 				visible: false,
-				valid: false,
 				iconVis: true,
 				alert: false,
 				checkVar: true,
-				fnameRules: [
-					v => !!v || 'First name is required',
-      				v => /^\w+/.test(v) || "Field shouldn't start with symbols"
-				],
-				lnameRules: [
-					v => !!v || 'Last name is required',
-      				v => /^\w+/.test(v) || "Field shouldn't start with symbols"
-				],
-				unameRules: [
-					v => !!v || 'Username is required',
-      				v => /^\w+/.test(v) || "Field shouldn't start with symbols"
-				],
-				emailRules: [
-			      	v => !!v || 'E-mail is required',
-			      	v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-			    ],
 			}
 		},
 		methods: {
@@ -140,12 +166,18 @@
 			},
 		},
 		computed:{
-			err(){
-				if(this.user.password == this.user.cpassword){
-					return false;
-				} else {
-					this.valid = false;
+			valid(){
+				if(
+					this.user.name.valid == true && 
+					this.user.fname.valid == true &&
+					this.user.lname.valid == true &&
+					this.user.email.valid == true &&
+					this.user.password.valid == true &&
+					this.user.cpassword.valid == true 
+				){
 					return true;
+				} else {
+					return false;
 				}
 			},
 		}
