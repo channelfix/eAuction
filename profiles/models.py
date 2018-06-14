@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from livestream.models import Session
 from django.db.models import Sum
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Profile(models.Model):
@@ -20,7 +21,7 @@ class Profile(models.Model):
     isAuctioneer = models.BooleanField(default=False)
     biography = models.CharField(max_length=100, blank=True)
     avatar = models.ImageField()
-    contact_number = models.CharField(max_length=11, blank=True)
+    phone_number = PhoneNumberField()
 
     @property
     def countSubscribers(self):
@@ -72,7 +73,7 @@ class Credit(models.Model):
 class Product(models.Model):
     session = models.ForeignKey(Session,
                                 related_name='auction_products',
-                                on_delete=models.CASCADE,
+                                on_delete=models.SET_NULL,
                                 null=True)
 
     tag = models.ForeignKey(Tags,
