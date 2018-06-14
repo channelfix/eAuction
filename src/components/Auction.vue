@@ -131,7 +131,7 @@ export default {
 				name: '',
 				minimum_price: '',
 			}],
-			status: "notlive", // notlive, item hold, open item:starting,
+			status: "notlive", // notlive, item hold, open bidding, hold bidding, no bid, item closed
 			logs: [],
 		}
 	},
@@ -269,6 +269,7 @@ export default {
 				let msg = latestLogs[i].message;
 
 				if(msg.match("^(.*)\\sis\\sclosed\\sfor\\sauction$")){
+					this.status = "open item";
 					style.backgroundColor = "red";
 				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
 					style.backgroundColor = "orange";
