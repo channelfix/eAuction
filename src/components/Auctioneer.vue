@@ -215,6 +215,13 @@ export default {
 				this.minimumBidSetter.open = false;
 				this.moveNext.open = false;
 				this.openItem.open = true;
+			}else if(this.status == "open item:starting"){
+				this.endAuction.open = true;
+				this.startAuction.open = false;
+				this.closeItem.open = true;
+				this.minimumBidSetter.open = false;
+				this.moveNext.open = false;
+				this.openItem.open = false;
 			}
 
 			this.endAuction.style.red = this.endAuction.open;

@@ -131,7 +131,7 @@ export default {
 				name: '',
 				minimum_price: '',
 			}],
-			status: "notlive", // notlive, item hold,
+			status: "notlive", // notlive, item hold, open item:starting,
 			logs: [],
 		}
 	},
@@ -275,6 +275,7 @@ export default {
 				}else if(msg.match("Moved\\sto\\snext\\sitem")){
 					style.backgroundColor = "brown";
 				}else if(msg.match("Auction\\sfor\\s(.*)\\sis\\sopen")){
+					this.status = "open item:starting"
 					style.backgroundColor = "green";		
 				}
 
