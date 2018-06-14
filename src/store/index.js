@@ -15,7 +15,7 @@ export default new Vuex.Store({
     avatar: '',
     tags: '',
     isAuctioneer: false,
-    credits: 100
+    credits: 0
   },
 
   mutations: {

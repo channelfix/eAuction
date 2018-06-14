@@ -20,8 +20,9 @@
         window.__INITIAL_STATE__.username = "{{ user.username }}";
         condition = "{{user.profile.isAuctioneer}}"
         window.__INITIAL_STATE__.isAuctioneer = (condition.toLowerCase() == 'true')
-        window.__INITIAL_STATE__.credits = "{{ user.profile.total_credits }}"
+        window.__INITIAL_STATE__.credits = {{ user.profile.total_credits }}
       {% endif %}
+
     </script>
   	{% csrf_token %}
     <div id="app"></div>

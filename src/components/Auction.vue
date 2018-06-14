@@ -8,48 +8,21 @@
 	  		<v-flex md7> <!-- left -->
 	  		  	<v-layout column>
 		  		  	<div class="box livestream" id="livestream">		  		 
-					    <div id="publisher"></div>
-					    <div id="subscriber"></div>
+					    <div class="screen" id="publisher"></div>
+					    <div class="screen" id="subscriber"></div>
 		  		  	</div>
-		  		  	<v-flex md4>
-		  		  		<v-layout 
-		  		  			fill-height
-							row
-							wrap
-	  		  			>
-		  		  			<v-flex 
-								md6
-	  		  				>
-								<v-layout 
-									align-center
-									pa-3
-								>
-									<button 
-										:class="decline.style"
-										:disabled="!decline.open"
-									>
-									Decline
-									</button>	
-								</v-layout>
-		  		  			</v-flex>
-		  		  			<v-flex 
-								md6
-	  		  				>
-								<v-layout
-									align-center
-									pa-3
-								>
-									<button
-										:class="accept.style"
-										:disabled="!accept.open"
-										@click="accepted"
-									>
-										Accept
-									</button>	
-								</v-layout>
-		  		  			</v-flex>
-		  		  		</v-layout> 
-		  		  	</v-flex>
+		  		  	<Auctioneer 
+		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
+						:currentProductName="products[0].name"
+						:status="status"
+	  		  		>
+		  		  	</Auctioneer>
+		  		  	<Bidder 
+		  		  		v-else
+	  		  			:currentProductName="products[0].name"
+	  		  			:status="status"
+	  		  		>
+	  		  		</Bidder>
 	  		  	</v-layout>
 	  		</v-flex>
 	  		<v-flex md5>  <!-- right -->
@@ -62,37 +35,53 @@
   						<v-layout
 							row
 							class="amber darken-2"
-
+							align-center
 						>
-							<v-flex 
-								md6 
-							>
-								
-							</v-flex>
 							<v-flex 
 								md6
 							>
 								<v-layout
 									pa-3
-									column
+									align-center
 									justify-center
 								>
-									<p class="headline">{{currentProduct.name}}</p>
+									<span class="headline">{{ products[0].name }}</span>
 								</v-layout>
 							</v-flex>
+							<v-flex 
+			  					md6
+		  					>
+		  						<v-layout
+									align-center
+									justify-center
+									class="amber darken-1"
+									pa-3
+								>
+									<span class="headline">Standing Bid: &#8369 {{standingBid}}</span>
+		  						</v-layout>
+		  						<v-layout
+									align-center
+									justify-center
+									class="amber darken-1"
+									pa-3
+								>
+									<span class="headline">Minimum Bid: &#8369 {{products[0].minimum_price}}</span>
+		  						</v-layout>
+			  				</v-flex>
   						</v-layout>
 	  				</v-flex>
-	  				<v-flex 
-	  					md2
-  					>
-  						<v-layout
+	  				<v-flex
+						md2
+						class="green darken-3"
+						v-if="highestBidder != ''"
+	  				>
+	  					<v-layout
 							align-center
 							justify-center
-							class="amber darken-1"
-							pa-2
-						>
-							<span class="headline">Current Bid: &#8369 {{formattedBid}}</span>
-  						</v-layout>
+							pa-1
+	  					>
+							<span class="headline">Highest Bidder: {{highestBidder}}</span>
+	  					</v-layout>
 	  				</v-flex>
 	  				<v-flex 
 	  					md7
@@ -106,9 +95,9 @@
 								wrap
 							>
 								<v-list two-line>
-									<template v-for="act of activity">
+									<template v-for="log of logs">
 										<v-list-tile dark>
-											<v-list-tile-content>{{act.name}} {{act.action}} {{act.bid}} {{act.product}}</v-list-tile-content>
+											<v-list-tile-content>{{log.message}}</v-list-tile-content>
 										</v-list-tile>
 										<v-divider></v-divider>
 									</template>
@@ -124,200 +113,159 @@
 
 <script>
 import Request from '../assets/js/Request.js'
-
-function formatDecimal(num) {
-	return parseFloat(Math.round(num * 100) / 100).toFixed(2)
-}
+import Auctioneer from './Auctioneer'
+import Bidder from './Bidder'
 
 let logThread;
 let request = new Request();
+let session = null;
 
 export default {
 	name: "Auction",
+	components: {Auctioneer, Bidder},
 	data(){
 		return{
-			opentokCloud: '',
-			apiKey: '',
-			sessionId: '',
-			token: '',
-			isAuctioneer: this.$store.getters.isAuctioneer,
-			currentBid: 0,
-			products: [
-				{
-					name: "Pencil",
-					price: 0,
-				},
-			],
-			status: "open", //status: open, closed, nodecline, noaccept
-			activity: [{
-				name: 'bojoluis',
-				action: 'Declined',
-				product: 'pencil',
-				bid: 0,
-			},{
-				name: 'bojoluis',
-				action: 'Accepted',
-				product: 'pencil',
-				bid: 0,
-			},{
-				name: 'bojoluis',
-				action: 'Destroy',
-				product: 'pencil',
-				bid: 0,
-			},{
-				name: 'bojoluis',
-				action: 'Increased',
-				product: 'pencil',
-				bid: 0,
-			},{
-				name: 'bojoluis',
-				action: 'Won',
-				product: 'pencil',
-				bid: 0,
-			},
-			],
-			accept: {
-				style: {
-					green: true,
-					grey: false,
-				},
-				open: true,
-			},
-			decline: {
-				style: {
-					red: true,
-					grey: false,
-				},
-				open: true,
-			}
+			standingBid: 0,
+			highestBidder: '',
+			products: [{
+				name: '',
+				minimum_price: '',
+			}],
+			status: "notlive", 
+			logs: [],
 		}
 	},
 	mounted: function(){
-		if(this.isAuctioneer){
-			this.axios.get('/livestream/auctioneer/')
-			.then((response) => {
-				this.opentokCloud = response.data
+		let formdata = new FormData();
+		formdata.set('auction_id', this.$route.params.id);
 
-				this.apiKey = this.opentokCloud.api_key
-				this.sessionId = this.opentokCloud.session_id
-				this.token = this.opentokCloud.token
+		request.post('/livestream/product_list/', formdata, 
+			(response)=>{
+				this.products = response.data.product_list;	
+				this.standingBid = this.products[0].minimum_price;
+			}
+		)
 
-				let session, publisher;
-				let hasPublish = false;
-				let xhttp;
-
-				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
-					session = OT.initSession(this.apiKey, this.sessionId);
-
-					session.connect(this.token, function(error) { // Check if the client has successfully connected to the session.
-						if(error){
-
-						}
-						else{				
-							// Create a publisher for exposing the video to other client who is also connected to the same session.
-							publisher = OT.initPublisher('publisher', {insertMode: 'append', width: "40%", height: "100%"}); 
-						    session.publish(publisher);
-						}
-					});
-				}
-			})
-		}else{
-			this.axios.get('/livestream/bidder/')
-			.then((response) => {
-				this.opentokCloud = response.data
-
-				this.apiKey = this.opentokCloud.api_key
-				this.sessionId = this.opentokCloud.session_id
-				this.token = this.opentokCloud.token
-
-				let session;
-
-				if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
-					session = OT.initSession(this.apiKey, this.sessionId);
-
-					session.connect(this.token, function(error) { // Check if this client is connected to the 
-					});
-
-					session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
-						
-						// Accept the exposed video who is connected to the same session.
-						session.subscribe(event.stream, 'subscriber', {insertMode:'append', width:'100%', height:'100%'}); 						
-					});
-
-
-					session.on("streamDestroyed", function(event) {							
-					});
-				}
-			})
-		}
-
-		//// get activity log thread
 		logThread = setInterval(
 			() => {
-				// constantly ask from the server for new log 
+				if(session != null){
+					// constantly ask from the server for new log 
+					let latestId = -1;
+					let auction_id = this.$route.params.id;
+
+					if(this.logs.length > 0){
+						latestId = this.logs[0].id;
+					}
+
+					let formdata = new FormData();
+
+					formdata.set('auction_id', auction_id);
+					formdata.set('log_id', latestId);
+
+
+					request.post('/livestream/show_logs/', formdata, 
+						(response)=>{
+							let latestLogs = response.data.logs;
+
+							for(let i = 0; i < latestLogs.length; i++){
+								this.logs.splice(0, 0, latestLogs[i]); //insert before
+							}
+						}
+					);
+				}
 			},
-			500
+			1000
 		)
 	},
 	methods: {
-		accepted() {
-			this.status = "closed"
+		startLiveStream(){
+			this.status = "current item not open";
+			let role = "bidder";
+			if(this.$store.getters.getUsername == this.$route.params.auctioneer){
+				role = "auctioneer";
+			}
 
 			let formdata = new FormData();
 
-			let data = {
-				username: this.$store.getters.getUsername,
-				currentBid: this.currentBid,
-				product: this.currentProduct,
-			}
+			formdata.set('auction_id', this.$route.params.id);
+			formdata.set('is_auctioneer', (role == "auctioneer")?true:false);
 
-			for(let key in data){
-				formdata.set(key, data[key]);
-			}
+			request.post('/livestream/initiate_auction/', formdata, 
+				(response) => {
+					let opentokCloud = response.data
 
-			// send data
-		}
-	},
-	watch: {
-		status() {
-			if(this.status == "open"){
-				this.accept.open = true;
-				this.decline.open = true;
-			}else if(this.status == "closed"){
-				this.accept.open = false;
-				this.decline.open = false;
-			}else if(this.status == "noaccept"){
-				this.accept.open = false;
-				this.decline.open = true;
-			}else if(this.status == "nodecline"){
-				this.accept.open = true;
-				this.decline.open = false;
-			}
+					let apiKey = opentokCloud.api_key
+					let sessionId = opentokCloud.session_id
+					let token = opentokCloud.token
 
-			this.accept.style.green = this.accept.open;
-			this.accept.style.grey = !this.accept.open;
-			this.decline.style.red = this.decline.open;
-			this.decline.style.grey = !this.decline.open;
-		},
-	},
-	computed:{
-		formattedBid() { 
-			return formatDecimal(this.currentBid);
-		},
-		logMessage(){
-			let msg = "";
-			this.activity.forEach(
-				(current) => {
-					msg += current+"\n";
+					let publisher;
+
+					if(OT.checkSystemRequirements() == 1){ // Check if this browser supports WebRTC.
+						session = OT.initSession(apiKey, sessionId);
+
+						session.connect(token, function(error){
+							if(role == "auctioneer"){
+								publisher = OT.initPublisher('publisher', 
+									{
+										insertMode: 'append', 
+										width: "100%", 
+										height: "100%"
+									});
+
+							    session.publish(publisher);
+							}
+						});
+
+						session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
+							// Accept the exposed video who is connected to the same session.
+
+							if(role == "bidder"){
+								session.subscribe(event.stream, 'subscriber', 
+									{
+										insertMode:'append', 
+										width:'100%', 
+										height:'100%'
+									}); 				
+							}		
+						});
+
+
+						session.on("sessionDisconnected", (event)=>{
+							clearInterval(logThread)
+						})
 				}
-			);
-			return msg;
+			})
 		},
-		currentProduct() {
-			let current = this.products[this.products.length-1];
-			current.price = formatDecimal(current.price); 
-			return current;
-		}
+		endAuction(){
+			// put end livestream here
+			if(session != null){
+				session.disconnect();
+			}
+		
+			let formdata = new FormData();
+			formdata.set('auction_id', this.$route.params.id);
+
+			request.post('/livestream/end_auction/', formdata, 
+			(response)=>{
+				this.$router.push({
+					name: 'Home',
+				})
+			});
+		},
+		sendLog(log){
+			let today = new Date();
+			let time = today.getHours()+":"+today.getMinutes()+" "+today.getMonth()+"/"+today.getDay()+"/"+today.getFullYear();
+
+			// time format hr:min month/day/year
+
+			let formdata = new FormData();
+
+			formdata.set('auction_id', this.$route.params.id);
+			formdata.set('logs', log);
+			formdata.set('time', time);
+
+			request.post('/livestream/store_logs/', formdata, ()=>{});
+		},
 	},
 }
 </script>
@@ -337,26 +285,8 @@ export default {
 		background-color: black;
 	}
 
-	.publisher {
-	    position: absolute;
-	    width: 360px;
-	    height: 240px;
-	    bottom: 10px;
-	    left: 10px;
-	    z-index: 100;
-	    border: 3px solid white;
-	    border-radius: 3px;
-	}
-
-	.subscriber {
-	    position: absolute;
-	    width: 360px;
-	    height: 240px;
-	    bottom: 10px;
-	    left: 10px;
-	    z-index: 100;
-	    border: 3px solid white;
-	    border-radius: 3px;
+	.screen{
+		height: 100%;
 	}
 
 	.logbox {

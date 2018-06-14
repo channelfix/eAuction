@@ -1,26 +1,32 @@
 from django.db import models
-from django.contrib.auth.models import User
-from profiles.models import Product
 
 
-# Stores newly generated session id
 class Session(models.Model):
-    user = models.ForeignKey(User,
-                             related_name='auctioneer_session',
-                             on_delete=models.CASCADE)
+    """ Used to store the livestream details for certain Auction"""
 
-    products = models.ForeignKey(Product,
-                                 related_name='auction_products',
-                                 on_delete=models.CASCADE,
-                                 null=True)
+    auctioneer_username = models.CharField(max_length=150, null=True)
 
     title = models.CharField(max_length=100, default='')
     description = models.CharField(max_length=500, blank=True)
     session_id = models.CharField(max_length=1000)
-    is_live = False
+    is_live = models.BooleanField(default=False)
+    image = models.ImageField(null=True)
+    thumbnail = models.CharField(max_length=150, blank=True)
 
     def __str__(self):
         return self.session_id
+
+
+class Logs(models.Model):
+    """ Used to store the logs for certain Auction """
+
+    auction_id = models.PositiveIntegerField(default=0)
+
+    message = models.CharField(max_length=150)
+    time = models.CharField(max_length=9)
+
+    def __str__(self):
+        return self.message
 
 
 # Stores newly generated arhive id

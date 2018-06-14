@@ -1,10 +1,12 @@
 from opentok import OpenTok, MediaModes, Roles, OutputModes
-from .models import Session, Archive
+from .models import Session, Archive, Logs
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.views import View
+from profiles.models import Product, Subscribed
+from itertools import chain
 
-from pprint import pprint
+# from pprint import pprint
 
 
 class OpenTokCloudView:
@@ -18,14 +20,6 @@ class LivestreamView(OpenTokCloudView, View):
     def post(self, request):
         auctioneer = request.user
 
-        # Title of the Livestream
-        title = request.POST.get('title', '')
-        description = request.POST.get('description', '')
-
-        # Name and the minimum price of the product for the bid
-        product_name = request.POST.get('product_name', '')
-        product_price = request.POST.get('product_price', '')
-
         # Server IP address
         session_address = "127.0.0.1"
 
@@ -33,28 +27,70 @@ class LivestreamView(OpenTokCloudView, View):
         self.session = self.opentok_cloud.create_session(
             session_address, media_mode=MediaModes.routed)
 
-        auctioneer_profile_products = auctioneer.profile.products
-        auctioneer_profile_products.name = product_name
-        auctioneer_profile_products.minimum_price = product_price
-        auctioneer_profile_products.save()
+        # Title of the Livestream
+        title = request.POST.get('title', '')
 
-        # Store the new session id
-        Session.objects.create(user=auctioneer,
-                               products=auctioneer_profile_products,
-                               title=title,
-                               description=description,
-                               session_id=self.session.session_id
-                               )
+        # Description of the Livestream
+        description = request.POST.get('description', '')
 
-        return HttpResponse('Livestream created')
+        # Product name
+        list_of_product_names = request.POST.get('product_name', '')
+
+        # Product minimum price
+        list_of_product_minimum_prices = request.POST.get('product_minimum_price','')
+
+        product_names = list_of_product_names.split(',')
+        product_minimum_prices = list_of_product_minimum_prices.split(',')
+
+        length = len(product_names)
+
+        # One auctioneer own one auction event
+        auction = Session.objects.create(auctioneer_username=auctioneer.username,
+                                         title=title,
+                                         description=description,
+                                         session_id=self.session.session_id,
+                                         is_live=True)
+
+        # Add the current user to this livestream
+        profile = auctioneer.profile
+
+        if request.FILES:
+            auction.image = request.FILES['imageFile']
+            auction.thumbnail = '/'+auction.image.url
+            auction.save()
+            print(auction.thumbnail)
+
+        for i in range(length):
+            Product.objects.create(session=auction, profile=profile,
+                                   name=product_names[i],
+                                   minimum_price=product_minimum_prices[i])
+
+        context = {
+            'auction_id': auction.id,
+            'auctioneer_username': auctioneer.username,
+            'message': 'Livestream created'
+        }
+
+        return JsonResponse(context)
 
 
 class AuctionView(LivestreamView, View):
+    """ Sends the user to certain livestream """
+
     token = ''
 
     def post(self, request):
         auction_id = request.POST.get('auction_id', '')
-        session_id = Session.objects.get(id=auction_id).session_id
+        current_session = Session.objects.get(id=auction_id)
+
+        # Get session id of this livestream
+        session_id = current_session.session_id
+
+        # Add the current user to this livestream
+        profile = request.user.profile
+        profile.session = current_session
+        profile.save()
+
         is_auctioneer = request.POST.get('is_auctioneer', '')
 
         # Check if the user is an auctioneer
@@ -62,23 +98,113 @@ class AuctionView(LivestreamView, View):
             self.token = self.opentok_cloud.generate_token(session_id)
         else:
             self.token = self.opentok_cloud.generate_token(session_id,
-                                                          role=Roles.subscriber)
+                                                           role=Roles
+                                                           .subscriber)
+        # Get list of username from User via profile
+        attendees_profile = list(current_session.attendees.all()
+                                 .values('user__username'))
 
         context = {
             'api_key': settings.OPENTOK_API_KEY,
             'session_id': session_id,
             'token': self.token,
+            'attendees_profile': attendees_profile
         }
 
         return JsonResponse(context)
 
 
-class LivestreamListView(View):
-    def get(self, request):
-        sessions = list(Session.objects.all().values('id', 'products', 'title',
-                                                     'description', 'session_id'))
+class ProductListView(View):
 
-        return JsonResponse({'sessions':sessions})
+    def post(self, request):
+        auction_id = request.POST.get('auction_id', '')
+        current_session = Session.objects.get(id=auction_id)
+        # Get list of product of this livestream
+        product_list = list(current_session.auction_products.all()
+                            .values('name', 'minimum_price'))
+
+        return JsonResponse({'product_list': product_list})
+
+
+class LivestreamListView(View):
+    """ View all the livestream for which the subcriber subscribe to """
+
+    def get(self, request):
+        bidder = request.user
+
+        auction = Subscribed.objects.all()\
+                            .filter(bidder=bidder)\
+                            .values('auctioneer__username')
+
+        sessions = Session.objects.none()
+
+        for auctioneer in auction:
+            sessions = chain(Session.objects.all()
+                             .filter(auctioneer_username=auctioneer
+                             ['auctioneer__username'])
+                             .values('auctioneer_username', 'id',
+                                     'title', 'description',
+                                     'is_live', 'thumbnail'), sessions)
+
+        sessions = list(sessions)
+
+        return JsonResponse({'sessions': sessions})
+
+
+class LogStorageView(View):
+    """ Store logs """
+
+    def post(self, request):
+        auction_id = request.POST.get('auction_id', '')
+        message = request.POST.get('logs', '')
+        time = request.POST.get('time', '')
+
+        Logs.objects.create(auction_id=auction_id,
+                            message=message,
+                            time=time)
+
+        return HttpResponse('Stored log successfully')
+
+
+class RetrievedLogView(View):
+    """ Retrieves all the logs given the\
+    latest auction id from certain Auciton """
+
+    def post(self, request):
+        auction_id = request.POST.get('auction_id', '')
+        latest_log_id = request.POST.get('log_id', '')
+
+        # Initialize log with empty set
+        query_logs = Logs.objects.all().filter(auction_id=auction_id)\
+                                       .values('id', 'message', 'time')
+
+        if query_logs:
+            if latest_log_id != -1:
+                query_logs = query_logs.filter(id__gt=latest_log_id)\
+                                       .values('id', 'message', 'time')
+
+            # List of logs
+            logs = list(query_logs)
+
+            return JsonResponse({'logs': logs})
+        else:
+            return JsonResponse({'logs': []})
+
+
+class AuctionDestroyedView(View):
+    def post(self, request):
+        auction_id = request.POST.get('auction_id', '')
+
+        # Delete all the logs for certain livestream
+        Logs.objects.all().filter(auction_id=auction_id).delete()
+
+        # Delete this Livestream
+        Session.objects.filter(id=auction_id).delete()
+
+        print('Auction ended')
+
+        return HttpResponse('Auction close')
+
 # # start to record the video.
 # def start_archive(request):
 #     sessionId = Session.objects.get(pk=1).session_id

@@ -5,9 +5,8 @@ import Home from '@/components/Home'
 import ErrorPage from '@/components/ErrorPage'
 import PagesNavigation from '@/components/PagesNavigation'
 import Profile from '@/components/Profile'
-import Auctioneer from '@/components/Auctioneer'
-import Bidder from '@/components/Bidder'
 import EditProfile from '@/components/EditProfile'
+import Auction from '@/components/Auction'
 import CreateLiveStream from '@/components/CreateLiveStream'
 import Explore from '@/components/Explore'
 import store from '../store'
@@ -22,7 +21,7 @@ export default new Router({
         name: 'LogIn',
         component: LogIn
     },{
-    	path: '/menu',
+    	path: '/menu/',
     	component: PagesNavigation,
       children: [
         {
@@ -38,7 +37,11 @@ export default new Router({
           name: 'Edit-Profile',
           component: EditProfile
         },{
-          path: '/create-auction',
+          path:'auction/:auctioneer/:id',
+          name: 'Auction',
+          component: Auction,
+        },{
+          path: 'create-auction',
           name: 'Create-Live',
           component: CreateLiveStream,
         },{
