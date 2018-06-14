@@ -1,61 +1,104 @@
 <template>
-	<v-container fluid>
-		<v-layout row justify-center align-center mt-5>
-			<div>				
-				<div id='profile' v-if="hasProfilePic">
-					<v-avatar 					
-						size = 400>
+	<v-container fluid id="profile">
+		<v-layout justify-center align-start mt-5 row>
 
-						<img :src="profilePic"/>
-					</v-avatar>
-				</div>
-				<v-layout row justify-center>
-					<div class = 'mx-auto' align='center'>
-						<v-btn
-							v-if="$route.params.username == $store.getters.getUsername"
-							@click="moveToEdit"
-						>
-							Edit Profile
-						</v-btn>
-						<v-btn
-							v-if="
-								$route.params.username != $store.getters.getUsername && isAuctioneer
-							"
-							@click="subscribe"
+				<v-flex offset-x5 xs3>
+					<div id='profile' v-if="hasProfilePic">
+						<v-avatar
+							tile 					
+							size = 400>
 
-							v-text="subscriptionStatus"
-						>
-						</v-btn>
-						<span class = 'body-2'>Name:</span>
-						<p v-text="name" class="title"></p>
-						
-						<div v-if="isAuctioneer">
-							<span class = 'body-2'>Subscribers:</span>
-							<p class="title">{{subscribers}}</p>
-						</div>
-						
-						<span class = 'body-2'>Email:</span>
-						<p v-text="email"></p>
-
-						<div v-if="isAuctioneer == true">
-							<!-- Tags -->
-							<span class = 'body-2'>Tags:</span>
-							<ul>
-								<!-- Display all tags for current User. -->
-								<li v-for="tag in tags">
-									{{tag.name}} &nbsp
-								</li>
-							</ul>
-							<!-- Biography -->
-							<span class = 'body-2'>Biography:</span>
-							<p v-text="biography"></p>
-						</div>
-
-						<span class = 'body-2'>Contact number:</span>
-						<p v-text="contactNumber" />
+							<img :src="profilePic"/>
+						</v-avatar>
 					</div>
-				</v-layout>
-			</div>
+
+					<v-btn
+						v-if="$route.params.username == $store.getters.getUsername"
+						@click="moveToEdit"
+					>
+						Edit Profile
+					</v-btn>
+					<v-btn
+						v-if="
+							$route.params.username != $store.getters.getUsername && isAuctioneer
+						"
+						@click="subscribe"
+
+						v-text="subscriptionStatus"
+					>
+					</v-btn>
+				</v-flex>
+
+				<!-- Profile content -->
+				<v-flex xs4>
+					<v-layout row>
+						<v-flex xs12>
+							<span class = "">Name surname</span>
+							<p 
+								v-text="name" 
+								class="title" 
+								style="margin-top: -5px !important;"
+							></p>
+						</v-flex>					
+					</v-layout>
+
+					<v-layout row>
+						<v-flex xs4>
+							<span class = "">Email address</span>
+							<p v-text="email" class="title" style="margin-top: -5px;"></p>     
+						</v-flex>
+						<v-flex xs3>
+							<span class = "">Contact number</span>
+							<p 
+								v-text="contactNumber" 
+								class="title" 
+								style="margin-top: -5px !important;"
+							></p>
+						</v-flex>	
+						<v-flex xs3>
+							<div style="text-align: center;">
+				                <span class = "body-2">Subscribers</span>
+				                <div class="title">
+				                    <p style="display:inline;"> {{subscribers}} </p>
+				                </div>
+				            </div>
+						</v-flex>															
+					</v-layout>
+
+					<v-layout row v-if="isAuctioneer == true">
+						<v-chip
+			                large	     
+			                label
+			                outline color="secondary" 
+			                v-for="tag in tags"
+			                disabled
+			            >                 
+			            <v-icon left>label</v-icon>
+			                {{tag.name}}
+			            </v-chip>
+					</v-layout>
+
+					<v-layout 
+						row 
+						v-if="isAuctioneer == true"
+						mt-3
+					>
+						<v-flex xs12>
+							Biography
+							<div style="
+								height: 195px; 
+								overflow-y: auto;">
+								<p 
+									class="subheading"
+									v-text="biography"
+								></p>
+							</div>							
+						</v-flex>
+					</v-layout>
+
+				</v-flex>
+			
+
 		</v-layout>
 	</v-container>
 </template>
@@ -72,6 +115,8 @@
 			return {
 				userProfile: '',
 				name:'',
+				lastname: '',
+				firstname: '',
 				email:'',
 				subscribers: '',
 				biography: '',
@@ -127,7 +172,9 @@
 			(response) => {
 				this.userProfile = response.data
 				this.profilePic = '/'+this.userProfile.avatar
-				this.name = this.userProfile.last_name + ', ' + this.userProfile.first_name
+				this.name = this.userProfile.first_name + ' ' + this.userProfile.last_name
+				this.lastname = this.userProfile.last_name
+				this.firstname = this.userProfile.first_name
 				this.email = this.userProfile.email
 				this.biography = this.userProfile.biography
 				this.tags = this.userProfile.tags
@@ -152,6 +199,7 @@
 		list-style-type: none;
 		margin: 0;
 		padding: 0;
+		padding-bottom: 10px;
 		overflow: hidden;
 	}
 
@@ -167,4 +215,11 @@
 		box-shadow: 0px 2px 10px #000000;
 	}
 
+	#profile < p{
+		margin-top: -5px;
+	}
+
+	#description{
+		word-wrap: break-word;
+	}
 </style>

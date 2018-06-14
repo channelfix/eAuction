@@ -52,16 +52,6 @@ export default new Router({
       ],
     },
     {
-      path: '/auctioneer/:id',
-      name: 'Auctioneer',
-      component: Auctioneer
-    },
-    {
-      path: '/bidder/:id',
-      name: 'Bidder',
-      component: Bidder
-    },
-    {
       path: '*',
       name: '404',
       component: ErrorPage,
