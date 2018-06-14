@@ -190,6 +190,7 @@ export default {
 			}
 
 			if(role == "auctioneer"){
+				this.sendLog("Auction session has started");
 				this.status = "item hold";
 			}
 
@@ -262,9 +263,6 @@ export default {
 
 			request.post('/livestream/end_auction/', formdata, 
 			(response)=>{
-				if(role == "auctioneer"){
-					this.sendLog("Auction session has started");
-				}
 				this.$router.push({
 					name: 'Home',
 				})
