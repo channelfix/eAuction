@@ -278,11 +278,13 @@ export default {
 					this.status = "item closed";
 					style.backgroundColor = "red";
 				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
-					this.minimumBid = parseInt(msg.split("\\s")[4]);
+					this.minimumBid = parseInt(msg.substring(msg.charAt("to")+3, msg.length));
 					this.status = "open bidding";
 					style.backgroundColor = "orange";
 				}else if(msg.match("Moved\\sto\\snext\\sitem")){
 					this.currentProductIdx++;
+					this.minimumBid = this.products[this.currentProductIdx].minimum_price;
+					this.standingBid = this.minimumBid;
 					this.status = "item hold";
 					style.backgroundColor = "brown";
 				}else if(msg.match("Auction\\sfor\\s(.*)\\sis\\sopen")){
@@ -291,6 +293,9 @@ export default {
 				}else if(msg.match("Start\\sAuction\\sSession")){
 					this.status = "item hold"
 				}else if(msg.match("^(.*)\\sbid\\s(.*)\\sfor\\s(.*)$")){
+					this.highestBidder = msg.substring(0, msg.indexOf(bid)-1);
+					this.standingBid = parseInt(msg.substring(msg.charAt("bid")+4, msg.substring(msg.charAt("for")-1)));
+					this.minimumBid = this.standingBid;
 					this.status = "hold bidding"
 				}
 
