@@ -126,6 +126,7 @@ export default {
 	data(){
 		return{
 			standingBid: 0,
+			minimumBid: 0,
 			highestBidder: '',
 			products: [{
 				name: '',
@@ -144,6 +145,7 @@ export default {
 			(response)=>{
 				this.products = response.data.product_list;	
 				this.standingBid = this.products[0].minimum_price;
+				this.minimumBid = this.products[0].minimum_price;
 			}
 		)
 
@@ -276,6 +278,7 @@ export default {
 					this.status = "item closed";
 					style.backgroundColor = "red";
 				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
+					this.minimumBid = parseInt(msg.split("\\s")[4]);
 					this.status = "open bidding";
 					style.backgroundColor = "orange";
 				}else if(msg.match("Moved\\sto\\snext\\sitem")){
