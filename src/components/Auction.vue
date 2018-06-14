@@ -216,12 +216,13 @@ export default {
 									});
 
 							    session.publish(publisher);
+								this.sendLog("Auction session has started");
 							}
 						});
 
 						session.on("streamCreated", (event) => { // Check if the stream has created in a certain session.
 							// Accept the exposed video who is connected to the same session.
-							this.sendLog("Auction session has started");
+
 							if(role == "bidder"){
 								session.subscribe(event.stream, 'screenView', 
 									{
@@ -231,7 +232,7 @@ export default {
 									}); 				
 							}		
 						});
-						
+
 						if(role == "bidder"){
 							session.on("streamDestroyed", ()=>{
 								clearInterval(logThread);
@@ -305,6 +306,8 @@ export default {
 					this.minimumBid = this.standingBid;
 					this.status = "hold bidding"
 					style.backgroundColor = "green";
+				}else if(msg.match("Auction\\ssession\\shas\\sended")){
+					clearInterval(logThread);
 				}
 
 				this.logs.splice(0, 0, Object.assign(latestLogs[i], {style})); //insert before
