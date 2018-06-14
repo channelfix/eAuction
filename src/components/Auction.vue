@@ -8,8 +8,7 @@
 	  		<v-flex md7> <!-- left -->
 	  		  	<v-layout column>
 		  		  	<div class="box livestream" id="livestream">		  		 
-					    <div class="screen" id="publisher"></div>
-					    <div class="screen" id="subscriber"></div>
+					    <div class="screen" id="screenView"></div>
 		  		  	</div>
 		  		  	<Auctioneer 
 		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
@@ -65,7 +64,7 @@
 									class="amber darken-1"
 									pa-3
 								>
-									<span class="headline">Minimum Bid: &#8369 {minimumBid}</span>
+									<span class="headline">Minimum Bid: &#8369 {{minimumBid}}</span>
 		  						</v-layout>
 			  				</v-flex>
   						</v-layout>
@@ -167,6 +166,7 @@ export default {
 
 					request.post('/livestream/show_logs/', formdata, 
 						(response)=>{
+							console.log(response.data.logs);
 							this.handleLogs(response.data.logs);
 						}
 					);
@@ -206,7 +206,7 @@ export default {
 
 						session.connect(token, function(error){
 							if(role == "auctioneer"){
-								publisher = OT.initPublisher('publisher', 
+								publisher = OT.initPublisher('screenView', 
 									{
 										insertMode: 'append', 
 										width: "100%", 
@@ -221,7 +221,7 @@ export default {
 							// Accept the exposed video who is connected to the same session.
 							this.sendLog("Start Auction Session");
 							if(role == "bidder"){
-								session.subscribe(event.stream, 'subscriber', 
+								session.subscribe(event.stream, 'screenView', 
 									{
 										insertMode:'append', 
 										width:'100%', 
@@ -278,7 +278,7 @@ export default {
 					this.status = "item closed";
 					style.backgroundColor = "red";
 				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
-					this.minimumBid = parseInt(msg.substring(msg.charAt("to")+3, msg.length));
+					this.minimumBid = parseInt(msg.substring(msg.indexOf("to")+3, msg.length));
 					this.status = "open bidding";
 					style.backgroundColor = "orange";
 				}else if(msg.match("Moved\\sto\\snext\\sitem")){
@@ -292,11 +292,13 @@ export default {
 					style.backgroundColor = "green";
 				}else if(msg.match("Start\\sAuction\\sSession")){
 					this.status = "item hold"
+					style.backgroundColor = "orange";
 				}else if(msg.match("^(.*)\\sbid\\s(.*)\\sfor\\s(.*)$")){
-					this.highestBidder = msg.substring(0, msg.indexOf(bid)-1);
-					this.standingBid = parseInt(msg.substring(msg.charAt("bid")+4, msg.substring(msg.charAt("for")-1)));
+					this.highestBidder = msg.substring(0, msg.indexOf("bid")-1);
+					this.standingBid = parseInt(msg.substring(msg.indexOf(" bid ")+5, msg.indexOf(" for ")));
 					this.minimumBid = this.standingBid;
 					this.status = "hold bidding"
+					style.backgroundColor = "green";
 				}
 
 				this.logs.splice(0, 0, Object.assign(latestLogs[i], {style})); //insert before
