@@ -13,13 +13,13 @@
 		  		  	</div>
 		  		  	<Auctioneer 
 		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
-						:currentProductName="products[0].name"
+						:currentProductName="products[currentProductIdx].name"
 						:status="status"
 	  		  		>
 		  		  	</Auctioneer>
 		  		  	<Bidder 
 		  		  		v-else
-	  		  			:currentProductName="products[0].name"
+	  		  			:currentProductName="products[currentProductIdx].name"
 	  		  			:status="status"
 	  		  		>
 	  		  		</Bidder>
@@ -45,7 +45,7 @@
 									align-center
 									justify-center
 								>
-									<span class="headline">{{ products[0].name }}</span>
+									<span class="headline">{{ products[currentProductIdx].name }}</span>
 								</v-layout>
 							</v-flex>
 							<v-flex 
@@ -65,7 +65,7 @@
 									class="amber darken-1"
 									pa-3
 								>
-									<span class="headline">Minimum Bid: &#8369 {{products[0].minimum_price}}</span>
+									<span class="headline">Minimum Bid: &#8369 {{products[currentProductIdx].minimum_price}}</span>
 		  						</v-layout>
 			  				</v-flex>
   						</v-layout>
@@ -131,7 +131,8 @@ export default {
 				name: '',
 				minimum_price: '',
 			}],
-			status: "notlive", // notlive, item hold, open bidding, hold bidding, no bid, item closed
+			currentProductIdx: 0,
+			status: "not live", // not live, item hold, open bidding, hold bidding, no bid, item closed
 			logs: [],
 		}
 	},
@@ -173,10 +174,13 @@ export default {
 	},
 	methods: {
 		startLiveStream(){
-			this.status = "item hold";
 			let role = "bidder";
 			if(this.$store.getters.getUsername == this.$route.params.auctioneer){
 				role = "auctioneer";
+			}
+
+			if(role == "auctioneer"){
+				this.status = "item hold";
 			}
 
 			let formdata = new FormData();
@@ -212,7 +216,7 @@ export default {
 
 						session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
 							// Accept the exposed video who is connected to the same session.
-
+							this.sendLog("Start Auction Session");
 							if(role == "bidder"){
 								session.subscribe(event.stream, 'subscriber', 
 									{
@@ -269,15 +273,22 @@ export default {
 				let msg = latestLogs[i].message;
 
 				if(msg.match("^(.*)\\sis\\sclosed\\sfor\\sauction$")){
-					this.status = "open item";
+					this.status = "item closed";
 					style.backgroundColor = "red";
 				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
+					this.status = "open bidding";
 					style.backgroundColor = "orange";
 				}else if(msg.match("Moved\\sto\\snext\\sitem")){
+					this.currentProductIdx++;
+					this.status = "item hold";
 					style.backgroundColor = "brown";
 				}else if(msg.match("Auction\\sfor\\s(.*)\\sis\\sopen")){
-					this.status = "open item:starting"
-					style.backgroundColor = "green";		
+					this.status = "open bidding"
+					style.backgroundColor = "green";
+				}else if(msg.match("Start\\sAuction\\sSession")){
+					this.status = "item hold"
+				}else if(msg.match("^(.*)\\sbid\\s(.*)\\sfor\\s(.*)$")){
+					this.status = "hold bidding"
 				}
 
 				this.logs.splice(0, 0, Object.assign(latestLogs[i], {style})); //insert before
