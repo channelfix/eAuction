@@ -17,6 +17,7 @@
 				<v-text-field
 				  label="Input bid"
 				  v-model="bid"
+				  :disabled="!bidButton.open"
 				></v-text-field>
 				<button
 					:class="bidButton.style"
@@ -40,16 +41,14 @@ export default {
 	name: "Bidder",
 	props: {
 		currentProductName: String,
+		status: String,
 	},
 	data(){
 		return {
 			bid: 0,
 			bidButton: {
-				style: {
-					green: true,
-					grey: false,
-				},
-				open: true,
+				style: 'grey',
+				open: false,
 			}
 		}
 	},
@@ -62,6 +61,13 @@ export default {
 			let log = currentUser+" bid "+this.bid+" for "+this.currentProductName;
 
 			this.$parent.sendLog(log);
+		}
+	},
+	watch:{
+		status(){
+			this.bidButton.open = (this.status == "open bidding");
+
+			this.bidButton.style = (this.bidButton.open)?"green":"grey";
 		}
 	}
 }
