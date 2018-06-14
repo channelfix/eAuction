@@ -70,17 +70,6 @@
 				    </v-toolbar-items>
 			 	</v-toolbar>
 		 	</v-container>
-		 	<!-- <v-dialog v-model="warningModal" persistent max-width="290">
-		      <v-card>
-		        <v-card-title class="headline">Auction Seesion Warning</v-card-title>
-		        <v-card-text>You are leaving your auction session. All your progress will be lost.</v-card-text>
-		        <v-card-actions>
-		          <v-spacer></v-spacer>
-		          <v-btn color="primary" flat @click.native="warningModal = false">Leave</v-btn>
-		          <v-btn color="primary" flat @click.native="warningModal = false">Return</v-btn>
-		        </v-card-actions>
-		      </v-card>
-		    </v-dialog> -->
 		 	<router-view>
 		 	</router-view>		
 		 </v-container>
@@ -233,20 +222,6 @@ export default {
 				this.$store.commit('addCredits', response.data.total_credit.credit_amount__sum)
 			});
 		},
-	},
-	watch: {
-		'$route' (to,from) {
-			/*if(from.name == "Auction")
-				this.warningModal = true;
-			*/
-			this.currentRoute = this.$route.name;
-			if(this.currentRoute == "Auction"
-			){
-				this.toolbarIcon = "arrow_back";
-			}else{
-				this.toolbarIcon = "menu";
-			}
-		}
 	},
 	mounted() {
 		this.currentRoute = this.$route.name;
