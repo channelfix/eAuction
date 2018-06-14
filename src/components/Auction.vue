@@ -115,7 +115,7 @@ import Request from '../assets/js/Request.js'
 import Auctioneer from './Auctioneer'
 import Bidder from './Bidder'
 
-let logThread;
+let logThread = null;
 let request = new Request();
 let session = null;
 
@@ -230,9 +230,11 @@ export default {
 							}		
 						});
 
-						session.on("sessionDisconnected", (event)=>{
-							clearInterval(logThread)
-						})
+						if(role == "bidder"){
+							session.on("streamDestroyed", ()=>{
+								clearInterval(logThread);
+							})
+						}
 				}
 			})
 		},
@@ -241,7 +243,8 @@ export default {
 			if(session != null){
 				session.disconnect();
 			}
-		
+			clearInterval(logThread);
+			
 			let formdata = new FormData();
 			formdata.set('auction_id', this.$route.params.id);
 
