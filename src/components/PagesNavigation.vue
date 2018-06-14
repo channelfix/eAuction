@@ -101,22 +101,6 @@
 	    			  </v-list-tile-title>
 	    			</v-list-tile-content>
 	    		</v-list-tile>
-
-	    		<v-list-tile
-	    			@click="browse()"
-	    		>
-	    			<v-list-tile-action>
-	    				<v-icon>
-	    					search
-	    				</v-icon>
-	    			</v-list-tile-action >
-	    			<v-list-tile-content>
-	    			  <v-list-tile-title>
-	    			  	<p class="subheading">Browse</p>
-	    			  </v-list-tile-title>
-	    			</v-list-tile-content>
-	    		</v-list-tile>
-
 	    		<v-list-tile
 	    			@click="signOut"
 	    		>
@@ -166,14 +150,14 @@ export default {
 					path: {
 						name: 'Home'
 					},
-				},
-				{
+				},{
 					title: "Profile",
 					icon: "account_box",
 					path: {
 						name: 'Profile',
 					},
 				},
+
 			],
 			alertbar: {
 				snackbar: false,
@@ -192,46 +176,40 @@ export default {
 		} 
 	},
 	methods: {
-		browse() {
-			this.$router.push({
-	          name: 'Explore'
-	        })
-		},
-		route(path) {
+		route(path){
 			let currentRoute = this.$route.name
 
-			if (path.name == "Profile") {
+			if(path.name == "Profile"){
 				path.params = {
 					username: this.username,
 				}
 			}
 			
-			if (path.name == currentRoute) {
+			if(path.name == currentRoute)
 				this.showNav = false;
-			} else {
+			else
 				this.$router.push(path);
-			}
 		},
-		navigate() {
+		navigate(){
 			if (this.toolbarIcon == "arrow_back"){
 				this.$router.go(-1);
-			} else {
+			}else {
 				this.showNav = true;
 			}
 		},
-		signOut() {
+		signOut(){
 			let request = new Request();
 			request.post("/login/logout/", {}, 
 			(response)=>{
 				this.$router.go(0);	
 			});			
 		},
-		createLive() {
+		createLive(){
 			this.$router.push({
 				name: 'Create-Live'
 			})
 		},
-		addCredits() {
+		addCredits(){
 			// this.$store.commit("addCredits", 500)
 			let request = new Request();
 			let formdata = new FormData();
