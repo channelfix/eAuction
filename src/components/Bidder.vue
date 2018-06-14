@@ -21,6 +21,7 @@
 						  label="Input bid"
 						  v-model="bid.value"
 						  type="number"
+						  :disabled="!bid.open"
 						  :rules="bid.rules"
 						></v-text-field>
 					</v-flex>
@@ -58,6 +59,7 @@ export default {
 		return {
 			bid: {
 				value: 0,
+				open: false,
 				rules: [
 					v=> {
 						if(this.status == "open bidding"){
@@ -98,8 +100,8 @@ export default {
 	},
 	watch:{
 		status(){
-			console.log(this.status);
 			this.bidButton.open = (this.status == "open bidding");
+			this.bid.open = (this.status == "open bidding");
 			this.bid.value = (this.status == "open bidding")?this.minimumBid:0;
 			this.bidButton.style = (this.bidButton.open)?"green":"grey";
 		},

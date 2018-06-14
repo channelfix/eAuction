@@ -68,9 +68,11 @@
 						pa-3
 					>
 						<v-text-field
-							:disabled="!minimumBidSetter.open"
+							:disabled="!bidMinimum.open"
 							label="Bid Increase"
-							v-model="bidMinimum"
+							type="number"
+							v-model="bidMinimum.value"
+							:rules="bidMinimum.rules"
 						>
 							
 						</v-text-field>
@@ -133,10 +135,34 @@ export default {
 	props: {
 		currentProductName: String,
 		status: String,
+		minimumBid: Number,
 	},
 	data(){
 		return {
-			bidMinimum: 0,
+			bidMinimum: {
+				value: 0,
+				open: false,
+				rules: [
+					v=>{
+						if(this.status == "hold bidding"){
+							let ret;
+							if(v >= this.minimumBid){
+								this.minimumBidSetter.open = true;
+								ret = true;
+							}else{
+								this.minimumBidSetter.open = false;
+								ret = "Must be higher than standing bid";
+							}
+
+							this.minimumBidSetter.style = (this.minimumBidSetter.open)?'green':'grey';
+
+							return ret;
+						}else{
+							return "Can not set minimum bid yet"
+						}
+					}
+				],
+			},
 			endAuction: {
 				style: 'red',
 				open: true,
@@ -175,7 +201,7 @@ export default {
 			this.$parent.sendLog(log);
 		},
 		setMinimumBid(){
-			let log = "Minimum bid set to "+this.bidMinimum;
+			let log = "Minimum bid set to "+this.bidMinimum.value;
 			this.$parent.sendLog(log);
 		},
 		moveToNextItem(){
@@ -194,6 +220,10 @@ export default {
 			this.closeItem.open = (this.status == "no bid");
 
 			this.minimumBidSetter.open = (this.status == "hold bidding");
+
+			this.bidMinimum.open = (this.status == "hold bidding");
+
+			this.bidMinimum.value = (this.status == "hold bidding")?this.minimumBid:0;
 
 			this.moveNext.open = (this.status == "item closed");
 

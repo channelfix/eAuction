@@ -14,6 +14,7 @@
 		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
 						:currentProductName="products[currentProductIdx].name"
 						:status="status"
+	  		  			:minimumBid="minimumBid"
 	  		  		>
 		  		  	</Auctioneer>
 		  		  	<Bidder 
