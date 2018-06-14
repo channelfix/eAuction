@@ -340,7 +340,7 @@ export default {
 					clearInterval(logThread);
 					return;
 				
-				}else if(msg.match("(.*)\\sis\\ssold\\sto\\s(.*)")){
+				}else if(msg == "Item skipped (No bids)" || msg.match("(.*)\\sis\\ssold\\sto\\s(.*)")){
 					style.backgroundColor = "green";
 				}
 
