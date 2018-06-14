@@ -240,10 +240,10 @@ export default {
 		},
 		endAuction(){
 			// put end livestream here
+			clearInterval(logThread);
 			if(session != null){
 				session.disconnect();
 			}
-			clearInterval(logThread);
 			
 			let formdata = new FormData();
 			formdata.set('auction_id', this.$route.params.id);
