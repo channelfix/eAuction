@@ -208,7 +208,7 @@ export default {
 	watch: {
 		status() {
 			console.log(this.status)
-			if(this.status == "current item not open"){
+			if(this.status == "item hold"){
 				this.endAuction.open = true;
 				this.startAuction.open = false;
 				this.closeItem.open = false;

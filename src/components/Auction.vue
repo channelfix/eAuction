@@ -96,7 +96,7 @@
 							>
 								<v-list two-line>
 									<template v-for="log of logs">
-										<v-list-tile dark>
+										<v-list-tile dark :style="log.style">
 											<v-list-tile-content>{{log.message}}</v-list-tile-content>
 										</v-list-tile>
 										<v-divider></v-divider>
@@ -131,7 +131,7 @@ export default {
 				name: '',
 				minimum_price: '',
 			}],
-			status: "notlive", 
+			status: "notlive", // notlive, item hold,
 			logs: [],
 		}
 	},
@@ -162,24 +162,18 @@ export default {
 					formdata.set('auction_id', auction_id);
 					formdata.set('log_id', latestId);
 
-
 					request.post('/livestream/show_logs/', formdata, 
 						(response)=>{
-							let latestLogs = response.data.logs;
-
-							for(let i = 0; i < latestLogs.length; i++){
-								this.logs.splice(0, 0, latestLogs[i]); //insert before
-							}
+							this.handleLogs(response.data.logs);
 						}
 					);
 				}
 			},
-			1000
-		)
+			1000);
 	},
 	methods: {
 		startLiveStream(){
-			this.status = "current item not open";
+			this.status = "item hold";
 			let role = "bidder";
 			if(this.$store.getters.getUsername == this.$route.params.auctioneer){
 				role = "auctioneer";
@@ -266,6 +260,27 @@ export default {
 
 			request.post('/livestream/store_logs/', formdata, ()=>{});
 		},
+		handleLogs(latestLogs){
+			for(let i = 0; i < latestLogs.length; i++){
+				let style = {
+					backgroundColor: "black",
+				};
+				
+				let msg = latestLogs[i].message;
+
+				if(msg.match("^(.*)\\sis\\sclosed\\sfor\\sauction$")){
+					style.backgroundColor = "red";
+				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
+					style.backgroundColor = "orange";
+				}else if(msg.match("Moved\\sto\\snext\\sitem")){
+					style.backgroundColor = "brown";
+				}else if(msg.match("Auction\\sfor\\s(.*)\\sis\\sopen")){
+					style.backgroundColor = "green";		
+				}
+
+				this.logs.splice(0, 0, Object.assign(latestLogs[i], {style})); //insert before
+			}
+		}
 	},
 }
 </script>
