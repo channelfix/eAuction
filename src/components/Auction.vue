@@ -18,7 +18,9 @@
 		  		  	</Auctioneer>
 		  		  	<Bidder 
 		  		  		v-else
-	  		  			:currentProductName="products[currentProductIdx].name"
+	  		  			:minimumBid="minimumBid"
+	  		  			:currentProductName="products[
+	  		  			currentProductIdx].name"
 	  		  			:status="status"
 	  		  		>
 	  		  		</Bidder>
@@ -219,7 +221,7 @@ export default {
 
 						session.on("streamCreated", (event) => { // Check if the stream has created in a certain session.
 							// Accept the exposed video who is connected to the same session.
-							this.sendLog("Start Auction Session");
+							this.sendLog("Auction session has started");
 							if(role == "bidder"){
 								session.subscribe(event.stream, 'screenView', 
 									{
@@ -229,7 +231,7 @@ export default {
 									}); 				
 							}		
 						});
-
+						
 						if(role == "bidder"){
 							session.on("streamDestroyed", ()=>{
 								clearInterval(logThread);
@@ -250,6 +252,7 @@ export default {
 
 			request.post('/livestream/end_auction/', formdata, 
 			(response)=>{
+				this.sendLog("Auction session has ended");
 				this.$router.push({
 					name: 'Home',
 				})
@@ -293,7 +296,7 @@ export default {
 				}else if(msg.match("Auction\\sfor\\s(.*)\\sis\\sopen")){
 					this.status = "open bidding"
 					style.backgroundColor = "green";
-				}else if(msg.match("Start\\sAuction\\sSession")){
+				}else if(msg.match("Auction\\ssession\\shas\\sstarted")){
 					this.status = "item hold"
 					style.backgroundColor = "orange";
 				}else if(msg.match("^(.*)\\sbid\\s(.*)\\sfor\\s(.*)$")){
