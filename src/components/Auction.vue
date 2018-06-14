@@ -280,6 +280,8 @@ export default {
 			request.post('/livestream/store_logs/', formdata, ()=>{});
 		},
 		handleLogs(latestLogs){
+			let hasStarted = false;
+
 			for(let i = 0; i < latestLogs.length; i++){
 				let style = {
 					backgroundColor: "black",
@@ -293,6 +295,7 @@ export default {
 					style.backgroundColor = "red";
 
 				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
+					
 					this.minimumBid = parseInt(msg.substring(msg.indexOf("to")+3, msg.length));
 					this.status = "open bidding";
 					style.backgroundColor = "orange";
@@ -311,7 +314,10 @@ export default {
 					style.backgroundColor = "green";
 				
 				}else if(msg.match("Auction\\ssession\\shas\\sstarted")){
-				
+					if(hasStarted){
+						continue;
+					}
+					hasStarted = true;
 					this.status = "item hold"
 					style.backgroundColor = "orange";
 				
