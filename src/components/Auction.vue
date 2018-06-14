@@ -15,6 +15,7 @@
 						:currentProductName="products[currentProductIdx].name"
 						:status="status"
 	  		  			:minimumBid="minimumBid"
+	  		  			:highestBidder="highestBidder"
 	  		  		>
 		  		  	</Auctioneer>
 		  		  	<Bidder 
@@ -179,13 +180,13 @@ export default {
 	},
 	methods: {
 		startLiveStream(){			
-			this.sendLog("Auction session has started");
 			let role = "bidder";
 			if(this.$store.getters.getUsername == this.$route.params.auctioneer){
 				role = "auctioneer";
 			}
 
 			if(role == "auctioneer"){
+				this.sendLog("Auction session has started");
 				this.status = "item hold";
 			}
 
@@ -236,6 +237,10 @@ export default {
 
 						if(role == "bidder"){
 							session.on("streamDestroyed", ()=>{
+								this.logs.splice(0, 0, Object.assign(
+									{
+										message: "Auction session has ended"
+									}, {style}));
 								clearInterval(logThread);
 							})
 						}
@@ -244,7 +249,6 @@ export default {
 		},
 		endAuction(){
 			// put end livestream here
-			this.sendLog("Auction session has ended");
 			clearInterval(logThread);
 
 			if(session != null){
@@ -287,7 +291,6 @@ export default {
 					
 					this.status = "item closed";
 					style.backgroundColor = "red";
-					this.sendLog(this.products[this.currentProductIdx]+" is sold to "+this.highestBidder);
 
 				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
 					this.minimumBid = parseInt(msg.substring(msg.indexOf("to")+3, msg.length));
@@ -321,10 +324,12 @@ export default {
 					style.backgroundColor = "green";
 				
 				}else if(msg.match("Auction\\ssession\\shas\\sended")){
+					
 					style.backgroundColor = "red";
 					this.logs.splice(0, 0, Object.assign(latestLogs[i], {style}));
 					clearInterval(logThread);
 					return;
+				
 				}else if(msg.match("(.*)\\sis\\ssold\\sto\\s(.*)")){
 					style.backgroundColor = "green";
 				}
