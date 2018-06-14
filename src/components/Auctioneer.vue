@@ -207,43 +207,15 @@ export default {
 	},
 	watch: {
 		status() {
-			console.log(this.status)
-			if(this.status == "item hold"){
-				this.endAuction.open = true;
-				this.startAuction.open = false;
-				this.closeItem.open = false;
-				this.minimumBidSetter.open = false;
-				this.moveNext.open = false;
-				this.openItem.open = true;
-			}else if(this.status == "open bidding"){
-				this.endAuction.open = true;
-				this.startAuction.open = false;
-				this.closeItem.open = false;
-				this.minimumBidSetter.open = false;
-				this.moveNext.open = false;
-				this.openItem.open = false;
-			}else if(this.status == "hold bidding"){
-				this.endAuction.open = true;
-				this.startAuction.open = false;
-				this.closeItem.open = false;
-				this.minimumBidSetter.open = true;
-				this.moveNext.open = false;
-				this.openItem.open = false;
-			}else if(this.status == "open bidding:no bid"){
-				this.endAuction.open = true;
-				this.startAuction.open = false;
-				this.closeItem.open = true;
-				this.minimumBidSetter.open = false;
-				this.moveNext.open = false;
-				this.openItem.open = false;
-			}else if(this.status == "item closed"){
-				this.endAuction.open = true;
-				this.startAuction.open = false;
-				this.closeItem.open = false;
-				this.minimumBidSetter.open = false;
-				this.moveNext.open = true;
-				this.openItem.open = false;
-			}
+			this.startAuction.open = (this.status == "notlive");
+
+			this.closeItem.open = (this.status == "no bid");
+
+			this.minimumBidSetter.open = (this.status == "hold bidding");
+
+			this.moveNext.open = (this.status == "item closed");
+
+			this.openItem.open = (this.status == "item hold");
 
 			this.endAuction.style.red = this.endAuction.open;
 			this.endAuction.style.grey = !this.endAuction.open;
