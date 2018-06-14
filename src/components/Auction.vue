@@ -65,7 +65,7 @@
 									class="amber darken-1"
 									pa-3
 								>
-									<span class="headline">Minimum Bid: &#8369 {{products[currentProductIdx].minimum_price}}</span>
+									<span class="headline">Minimum Bid: &#8369 {minimumBid}</span>
 		  						</v-layout>
 			  				</v-flex>
   						</v-layout>
@@ -192,6 +192,7 @@ export default {
 
 			request.post('/livestream/initiate_auction/', formdata, 
 				(response) => {
+					console.log(response);
 					let opentokCloud = response.data
 
 					let apiKey = opentokCloud.api_key
@@ -216,7 +217,7 @@ export default {
 							}
 						});
 
-						session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
+						session.on("streamCreated", (event) => { // Check if the stream has created in a certain session.
 							// Accept the exposed video who is connected to the same session.
 							this.sendLog("Start Auction Session");
 							if(role == "bidder"){
@@ -228,7 +229,6 @@ export default {
 									}); 				
 							}		
 						});
-
 
 						session.on("sessionDisconnected", (event)=>{
 							clearInterval(logThread)
