@@ -138,45 +138,27 @@ export default {
 		return {
 			bidMinimum: 0,
 			endAuction: {
-				style: {
-					red: true,
-					grey: false,
-				},
+				style: 'red',
 				open: true,
 			},
 			startAuction: {
-				style: {
-					green:true,
-					grey: false,
-				},
+				style: 'green',
 				open: true,
 			},
 			closeItem: {
-				style: {
-					red: false,
-					grey: true,
-				},
+				style: 'grey',
 				open: false,
 			},
 			minimumBidSetter: {
-				style: {
-					green: false,
-					grey: true,
-				},
+				style: 'grey',
 				open: false,
 			},
 			moveNext: {
-				style: {
-					green: false,
-					grey: true,
-				},
+				style: 'grey',
 				open: false,
 			},
 			openItem: {
-				style: {
-					green: false,
-					grey: true,
-				},
+				style: 'grey',
 				open: false,
 			},
 		}
@@ -217,23 +199,17 @@ export default {
 
 			this.openItem.open = (this.status == "item hold");
 
-			this.endAuction.style.red = this.endAuction.open;
-			this.endAuction.style.grey = !this.endAuction.open;
+			this.endAuction.style = (this.endAuction.open)?"red":"grey";
 
-			this.startAuction.style.green = this.startAuction.open;
-			this.startAuction.style.grey = !this.startAuction.open;
+			this.startAuction.style = (this.startAuction.open)?"green":"grey";
 
-			this.closeItem.style.red = this.closeItem.open;
-			this.closeItem.style.grey = !this.closeItem.open;
+			this.closeItem.style = (this.closeItem.open)?"red":"grey";
 
-			this.minimumBidSetter.style.green = this.minimumBidSetter.open;
-			this.minimumBidSetter.style.grey = !this.minimumBidSetter.open;
+			this.minimumBidSetter.style = (this.minimumBidSetter.open)?"green":"grey";
 
-			this.moveNext.style.green = this.moveNext.open;
-			this.moveNext.style.grey = !this.moveNext.open;
+			this.moveNext.style = (this.moveNext.open)?"yellow":"grey";
 
-			this.openItem.style.green = this.openItem.open;
-			this.openItem.style.grey = !this.openItem.open;
+			this.openItem.style = (this.openItem.open)?"green":"grey";
 		},
 	}
 }
