@@ -122,6 +122,7 @@ import Bidder from './Bidder'
 let logThread = null;
 let request = new Request();
 let session = null;
+let hasStarted = false;
 
 export default {
 	name: "Auction",
@@ -178,6 +179,9 @@ export default {
 			},
 			1000);
 	},
+	beforeDestroy(){
+		clearInterval(logThread);
+	},
 	methods: {
 		startLiveStream(){			
 			let role = "bidder";
@@ -186,7 +190,6 @@ export default {
 			}
 
 			if(role == "auctioneer"){
-				this.sendLog("Auction session has started");
 				this.status = "item hold";
 			}
 
@@ -197,7 +200,6 @@ export default {
 
 			request.post('/livestream/initiate_auction/', formdata, 
 				(response) => {
-
 					let opentokCloud = response.data
 
 					let apiKey = opentokCloud.api_key
@@ -260,6 +262,9 @@ export default {
 
 			request.post('/livestream/end_auction/', formdata, 
 			(response)=>{
+				if(role == "auctioneer"){
+					this.sendLog("Auction session has started");
+				}
 				this.$router.push({
 					name: 'Home',
 				})
@@ -280,8 +285,6 @@ export default {
 			request.post('/livestream/store_logs/', formdata, ()=>{});
 		},
 		handleLogs(latestLogs){
-			let hasStarted = false;
-
 			for(let i = 0; i < latestLogs.length; i++){
 				let style = {
 					backgroundColor: "black",
@@ -314,9 +317,12 @@ export default {
 					style.backgroundColor = "green";
 				
 				}else if(msg.match("Auction\\ssession\\shas\\sstarted")){
+					console.log("Has started: "+hasStarted);
+					
 					if(hasStarted){
-						continue;
+						latestLogs[i].message = "Auctioneer rejoined session";
 					}
+					
 					hasStarted = true;
 					this.status = "item hold"
 					style.backgroundColor = "orange";
