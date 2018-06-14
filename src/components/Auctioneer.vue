@@ -189,7 +189,7 @@ export default {
 	},
 	watch: {
 		status() {
-			this.startAuction.open = (this.status == "notlive");
+			this.startAuction.open = (this.status == "not live");
 
 			this.closeItem.open = (this.status == "no bid");
 
