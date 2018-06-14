@@ -164,8 +164,8 @@ export default {
 				],
 			},
 			endAuction: {
-				style: 'red',
-				open: true,
+				style: 'grey',
+				open: false,
 			},
 			startAuction: {
 				style: 'green',
@@ -217,7 +217,9 @@ export default {
 		status() {
 			this.startAuction.open = (this.status == "not live");
 
-			this.closeItem.open = (this.status == "no bid");
+			this.endAuction.open = (this.status != "not live");
+
+			this.closeItem.open = (this.status == "open bidding");
 
 			this.minimumBidSetter.open = (this.status == "hold bidding");
 

@@ -178,7 +178,8 @@ export default {
 			1000);
 	},
 	methods: {
-		startLiveStream(){
+		startLiveStream(){			
+			this.sendLog("Auction session has started");
 			let role = "bidder";
 			if(this.$store.getters.getUsername == this.$route.params.auctioneer){
 				role = "auctioneer";
@@ -195,7 +196,7 @@ export default {
 
 			request.post('/livestream/initiate_auction/', formdata, 
 				(response) => {
-					console.log(response);
+
 					let opentokCloud = response.data
 
 					let apiKey = opentokCloud.api_key
@@ -217,7 +218,6 @@ export default {
 									});
 
 							    session.publish(publisher);
-								this.sendLog("Auction session has started");
 							}
 						});
 
@@ -244,7 +244,9 @@ export default {
 		},
 		endAuction(){
 			// put end livestream here
+			this.sendLog("Auction session has ended");
 			clearInterval(logThread);
+
 			if(session != null){
 				session.disconnect();
 			}
@@ -254,7 +256,6 @@ export default {
 
 			request.post('/livestream/end_auction/', formdata, 
 			(response)=>{
-				this.sendLog("Auction session has ended");
 				this.$router.push({
 					name: 'Home',
 				})
@@ -283,32 +284,49 @@ export default {
 				let msg = latestLogs[i].message;
 
 				if(msg.match("^(.*)\\sis\\sclosed\\sfor\\sauction$")){
+					
 					this.status = "item closed";
 					style.backgroundColor = "red";
+					this.sendLog(this.products[this.currentProductIdx]+" is sold to "+this.highestBidder);
+
 				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
 					this.minimumBid = parseInt(msg.substring(msg.indexOf("to")+3, msg.length));
 					this.status = "open bidding";
 					style.backgroundColor = "orange";
+				
 				}else if(msg.match("Moved\\sto\\snext\\sitem")){
+				
 					this.currentProductIdx++;
 					this.minimumBid = this.products[this.currentProductIdx].minimum_price;
 					this.standingBid = this.minimumBid;
 					this.status = "item hold";
 					style.backgroundColor = "brown";
+				
 				}else if(msg.match("Auction\\sfor\\s(.*)\\sis\\sopen")){
+				
 					this.status = "open bidding"
 					style.backgroundColor = "green";
+				
 				}else if(msg.match("Auction\\ssession\\shas\\sstarted")){
+				
 					this.status = "item hold"
 					style.backgroundColor = "orange";
+				
 				}else if(msg.match("^(.*)\\sbid\\s(.*)\\sfor\\s(.*)$")){
+				
 					this.highestBidder = msg.substring(0, msg.indexOf("bid")-1);
 					this.standingBid = parseInt(msg.substring(msg.indexOf(" bid ")+5, msg.indexOf(" for ")));
 					this.minimumBid = this.standingBid;
 					this.status = "hold bidding"
 					style.backgroundColor = "green";
+				
 				}else if(msg.match("Auction\\ssession\\shas\\sended")){
+					style.backgroundColor = "red";
+					this.logs.splice(0, 0, Object.assign(latestLogs[i], {style}));
 					clearInterval(logThread);
+					return;
+				}else if(msg.match("(.*)\\sis\\ssold\\sto\\s(.*)")){
+					style.backgroundColor = "green";
 				}
 
 				this.logs.splice(0, 0, Object.assign(latestLogs[i], {style})); //insert before
