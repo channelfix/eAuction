@@ -15,6 +15,7 @@ class ProfileView(View):
 
         hasSubscribed = Subscribed.objects.filter(auctioneer=user,
                                                   bidder=request.user).exists()
+        phone_number = user.profile.phone_number
         context = {
             'username': user.username,
             'email': user.email,
@@ -25,9 +26,11 @@ class ProfileView(View):
             'tags': user_tags,
             'isAuctioneer': user_profile.isAuctioneer,
             'subscribers': user_profile.countSubscribers,
-            'hasSubscribed': hasSubscribed,
-            'contact_number': user.profile.contact_number,
+            'hasSubscribed': hasSubscribed            
         }
+
+        if phone_number != '':
+            context['contact_number'] = '+'+str(phone_number.country_code)+str(phone_number.national_number)
 
         return JsonResponse(context)
 
@@ -42,12 +45,14 @@ class EditProfile(View):
         email = request.POST.get('email', '')
         biography = request.POST.get('biography', '')        
         contact_number = request.POST.get('contact_number', '')
+        print(contact_number)
+
 
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
         user.profile.biography = biography
-        user.profile.contact_number = contact_number
+        user.profile.phone_number = contact_number
         user_profile = user.profile
 
         if request.FILES:
