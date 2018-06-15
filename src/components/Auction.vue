@@ -111,9 +111,9 @@
 							<v-layout
 								column
 							>
-								<v-list class="grey lighten-2">
+								<v-list two-line class="grey darken-3">
 									<template v-for="log of logs">
-										<v-list-tile dark :style="log.style">
+										<v-list-tile pa-2 dark :style="log.style">
 											<v-list-tile-content>
 												<span class="headline">{{log.message}}</span>
 												<span class="caption">{{log.time}}</span>
@@ -396,9 +396,9 @@ export default {
 	}
 
 	.logbox {
-		background-color: #E0E0E0;
+		background-color: #424242;
 		overflow: scroll;
-		height: 300px;
+		height: 600px;
 	}
 
 	.productTitle {
