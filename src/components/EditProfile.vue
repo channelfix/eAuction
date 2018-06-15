@@ -30,6 +30,7 @@
 								></v-select>	
 								<v-btn @click.prevent="addTag">Add Tag</v-btn>
 								<v-btn @click.prevent="removeTag">Remove Tag</v-btn>
+								<v-btn @click.prevent="viewProductLog">Product Logs</v-btn>
 							</p>
 						</div>
 					</form>
