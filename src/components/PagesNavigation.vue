@@ -23,9 +23,9 @@
 	 				  	align-center
 	 				  	justify-center
 	 				  >
-	 				  	  <v-flex md12 fill-height pa-2>
-	 				  	  	<v-btn @click="()=>dialog=true" flat block> 
-		 				  		<span class="title">Credits: {{credits}} </span>
+	 				  	  <v-flex md12 fill-height ma-2>
+	 				  	  	<v-btn class="yellow darken-2" @click="()=>dialog=true" block> 
+		 				  		<span class="subheading">Credits: {{credits}} </span>
 		 				  	</v-btn>
 		 				  </v-flex>
 	 			  	  	<v-dialog v-model="dialog" max-width="500px">				        
