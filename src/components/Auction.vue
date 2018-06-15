@@ -4,10 +4,13 @@
 	>
 	  	<v-layout
 			row
+			pa-5
 	  	>
-	  		<v-flex md7> <!-- left -->
+	  		<v-flex md7
+	  			pr-4
+	  		> <!-- left -->
 	  		  	<v-layout column>
-		  		  	<div class="box livestream" id="livestream">		  		 
+		  		  	<div class="livestream" id="livestream">		  		 
 					    <div class="screen" id="screenView"></div>
 		  		  	</div>
 		  		  	<Auctioneer 
@@ -32,50 +35,63 @@
   		  		<v-layout
 					column	
 	  			>
-	  				<v-flex 
-	  					md3
-  					>
-  						<v-layout
-							row
-							class="amber darken-2"
-							align-center
-						>
-							<v-flex 
-								md6
+	  				<v-layout
+	  					row
+	  					class="amber darken-4"
+	  					pa-3
+	  				>
+	  					<v-flex>
+	  						<v-layout
+								align-center
+								justify-center
 							>
-								<v-layout
-									pa-3
-									align-center
-									justify-center
-								>
-									<span class="headline">{{ products[currentProductIdx].name }}</span>
-								</v-layout>
-							</v-flex>
-							<v-flex 
-			  					md6
-		  					>
-		  						<v-layout
-									align-center
-									justify-center
-									class="amber darken-1"
-									pa-3
-								>
-									<span class="headline">Standing Bid: &#8369 {{standingBid}}</span>
-		  						</v-layout>
-		  						<v-layout
-									align-center
-									justify-center
-									class="amber darken-1"
-									pa-3
-								>
-									<span class="headline">Minimum Bid: &#8369 {{minimumBid}}</span>
-		  						</v-layout>
-			  				</v-flex>
-  						</v-layout>
-	  				</v-flex>
+								<span class="productTitle"><b>{{ products[currentProductIdx].name }}</b></span>
+							</v-layout>
+	  					</v-flex>
+	  				</v-layout>
+	  				<v-layout>
+	  					<v-flex 
+		  					md6
+		  					class="amber darken-3"
+	  						pa-2
+	  					>
+	  						<v-layout column align-center justify-center fill-height>
+								<span class="text-lg-center bids"><b>Standing Bid:</b></span>
+							</v-layout>
+	  					</v-flex>
+	  					<v-flex 
+		  					md6
+		  					class="amber darken-3"
+		  					pa-2
+	  					>
+	  						<v-layout column align-center justify-center fill-height>
+								<span class="text-lg-center bids"><b>Minimum Bid:</b></span>
+							</v-layout>
+	  					</v-flex>
+	  				</v-layout>
+	  				<v-layout>
+	  					<v-flex 
+		  					md6
+		  					class="amber darken-2"
+	  						pa-2
+	  					>
+	  						<v-layout column align-center justify-center fill-height>
+								<span class="text-lg-center bids">&#8369 {{standingBid}}</span>
+							</v-layout>
+	  					</v-flex>
+	  					<v-flex 
+		  					md6
+		  					class="amber darken-2"
+	  						pa-2
+	  					>
+	  						<v-layout column align-center justify-center fill-height>
+								<span class="text-lg-center bids">&#8369 {{minimumBid}}</span>
+							</v-layout>
+	  					</v-flex>
+	  				</v-layout>
 	  				<v-flex
 						md2
-						class="green darken-3"
+						class="light-green darken-1"
 						v-if="highestBidder != ''"
 	  				>
 	  					<v-layout
@@ -83,11 +99,10 @@
 							justify-center
 							pa-1
 	  					>
-							<span class="headline">Highest Bidder: {{highestBidder}}</span>
+							<span class="light-green darken-1 highBidder">Highest Bidder: {{highestBidder}}</span>
 	  					</v-layout>
 	  				</v-flex>
-	  				<v-flex 
-	  					md7
+	  				<v-flex
 						class="grey darken-4"
 	  					pa-4
 	  				>
@@ -95,9 +110,8 @@
 						<div class="logbox">
 							<v-layout
 								column
-								wrap
 							>
-								<v-list two-line>
+								<v-list class="grey lighten-2">
 									<template v-for="log of logs">
 										<v-list-tile dark :style="log.style">
 											<v-list-tile-content>
@@ -373,7 +387,7 @@ export default {
 	}
 
 	.livestream{
-		height: 700px;
+		height: 500px;
 		background-color: black;
 	}
 
@@ -382,7 +396,21 @@ export default {
 	}
 
 	.logbox {
+		background-color: #E0E0E0;
 		overflow: scroll;
-		height: 800px;
+		height: 300px;
+	}
+
+	.productTitle {
+		font-size: 50px;
+	}
+
+	.bids {
+		font-size: 25px;
+	}
+
+	.highBidder {
+		font-size: 25px;
+		font-weight: lighter;
 	}
 </style>
