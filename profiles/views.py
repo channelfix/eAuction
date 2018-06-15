@@ -2,8 +2,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.generic import View
 from django.http import HttpResponse
-from tags.models import Tags
-from profiles.models import Subscribed, Credit
+from profiles.models import Subscribed, Credit, Tags
 from django.db.models import Sum
 
 
@@ -27,7 +26,7 @@ class ProfileView(View):
             'isAuctioneer': user_profile.isAuctioneer,
             'subscribers': user_profile.countSubscribers,
             'hasSubscribed': hasSubscribed,
-            'contact_number': user.profile.contact_number,
+            'contact_number': user_profile.phone_number
         }
 
         return JsonResponse(context)
@@ -42,14 +41,13 @@ class EditProfile(View):
         last_name = request.POST.get('last_name', '')
         email = request.POST.get('email', '')
         biography = request.POST.get('biography', '')
-        list_of_tags = request.POST.get('tags', '')
         contact_number = request.POST.get('contact_number', '')
 
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
         user.profile.biography = biography
-        user.profile.contact_number = contact_number
+        user.profile.phone_number = contact_number
         user_profile = user.profile
 
         if request.FILES:
@@ -57,12 +55,6 @@ class EditProfile(View):
 
         user_profile.save()
         user.save()
-
-        if list_of_tags != '':
-            tags = list_of_tags.split(',')
-            for tag in tags:
-                t, created = Tags.objects.get_or_create(name=tag)
-                user_profile.tags_set.add(t)
 
         return HttpResponse('Successfully Changed Profile.')
 
@@ -95,6 +87,49 @@ class TagRemoval(View):
         return HttpResponse('%s not found' % sent_tag)
 
 
+class TagListView(View):
+    def get(self, request):
+        tag_list = list(Tags.objects.all().values('name').distinct())
+
+        return JsonResponse({'tags': tag_list})
+
+
+class ProductCreatedView(View):
+    def post(self, request):
+        user = request.user
+        product_name = request.POST.get('name', '')
+        product_tag = request.POST.get('tag', '')
+
+        user_profile = user.profile
+
+        # Set a new tag, if it does not exist on this profile.
+        tag, created = user_profile.tags_set.get_or_create(name=product_tag)
+        tag.products.create(name=product_name)
+
+        return HttpResponse('Product created')
+
+
+class RetrieveProductView(View):
+    def get(self, request):
+        # product name, tag and date sold
+        user_profile = request.user.profile
+        product_list = list(user_profile.tags_set.all()
+                                                 .values('products__name',
+                                                         'name',
+                                                         'products__date_sold')
+                                                 .order_by('name'))
+
+        return JsonResponse({'products': product_list})
+
+
+class ProductRecordsView(View):
+    def get(self, request):
+        user_profile = request.user.profile
+        product_records = user_profile.products.all().values('records')
+
+        return JsonResponse({'product_records': product_records})
+
+
 class Subscribe(View):
     def post(self, request):
         current_user = request.user
@@ -120,8 +155,9 @@ class UpdateCredits(View):
     def post(self, request):
         current_user = request.user
         amount = request.POST.get('amount', '')
-        credit = Credit.objects.create(credit_amount=amount,
-                                       profile=current_user.profile)
+        Credit.objects.create(credit_amount=amount,
+                              profile=current_user.profile)
+
         total_credit = Credit.objects.filter(
             profile=current_user.profile
         ).aggregate(Sum('credit_amount'))

@@ -97,6 +97,8 @@
 					</v-layout>
 
 				</v-flex>
+
+				<button @click="showProduct">Products bought</button>
 			
 
 		</v-layout>
@@ -151,6 +153,9 @@
 					else
 						this.subscribers--;
 				})
+			},
+			showProduct() {
+				
 			}
 		},
 
