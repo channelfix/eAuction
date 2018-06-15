@@ -68,9 +68,11 @@
 						pa-3
 					>
 						<v-text-field
-							:disabled="!minimumBidSetter.open"
+							:disabled="!bidMinimum.open"
 							label="Bid Increase"
-							v-model="bidMinimum"
+							type="number"
+							v-model="bidMinimum.value"
+							:rules="bidMinimum.rules"
 						>
 							
 						</v-text-field>
@@ -133,50 +135,57 @@ export default {
 	props: {
 		currentProductName: String,
 		status: String,
+		minimumBid: Number,
+		highestBidder: String,
 	},
 	data(){
 		return {
-			bidMinimum: 0,
+			bidMinimum: {
+				value: 0,
+				open: false,
+				rules: [
+					v=>{
+						if(this.status == "hold bidding"){
+							let ret;
+							if(v >= this.minimumBid){
+								this.minimumBidSetter.open = true;
+								ret = true;
+							}else{
+								this.minimumBidSetter.open = false;
+								ret = "Must be higher than standing bid";
+							}
+
+							this.minimumBidSetter.style = (this.minimumBidSetter.open)?'green':'grey';
+
+							return ret;
+						}else{
+							return "Can not set minimum bid yet"
+						}
+					}
+				],
+			},
 			endAuction: {
-				style: {
-					red: true,
-					grey: false,
-				},
-				open: true,
+				style: 'grey',
+				open: false,
 			},
 			startAuction: {
-				style: {
-					green:true,
-					grey: false,
-				},
+				style: 'green',
 				open: true,
 			},
 			closeItem: {
-				style: {
-					red: false,
-					grey: true,
-				},
+				style: 'grey',
 				open: false,
 			},
 			minimumBidSetter: {
-				style: {
-					green: false,
-					grey: true,
-				},
+				style: 'grey',
 				open: false,
 			},
 			moveNext: {
-				style: {
-					green: false,
-					grey: true,
-				},
+				style: 'grey',
 				open: false,
 			},
 			openItem: {
-				style: {
-					green: false,
-					grey: true,
-				},
+				style: 'grey',
 				open: false,
 			},
 		}
@@ -191,9 +200,14 @@ export default {
 		closeCurrentItem(){
 			let log = this.currentProductName+" is closed for auction";
 			this.$parent.sendLog(log);
+			if(this.highestBidder != ""){
+				this.$parent.sendLog(this.currentProductName+" is sold to "+this.highestBidder);
+			}else{
+				this.$parent.sendLog("Item skipped (No bids)");
+			}
 		},
 		setMinimumBid(){
-			let log = "Minimum bid set to "+this.bidMinimum;
+			let log = "Minimum bid set to "+this.bidMinimum.value;
 			this.$parent.sendLog(log);
 		},
 		moveToNextItem(){
@@ -207,33 +221,33 @@ export default {
 	},
 	watch: {
 		status() {
-			console.log(this.status)
-			if(this.status == "current item not open"){
-				this.endAuction.open = true;
-				this.startAuction.open = false;
-				this.closeItem.open = false;
-				this.minimumBidSetter.open = false;
-				this.moveNext.open = false;
-				this.openItem.open = true;
-			}
+			this.startAuction.open = (this.status == "not live");
 
-			this.endAuction.style.red = this.endAuction.open;
-			this.endAuction.style.grey = !this.endAuction.open;
+			this.endAuction.open = (this.status != "not live");
 
-			this.startAuction.style.green = this.startAuction.open;
-			this.startAuction.style.grey = !this.startAuction.open;
+			this.closeItem.open = (this.status == "open bidding");
 
-			this.closeItem.style.red = this.closeItem.open;
-			this.closeItem.style.grey = !this.closeItem.open;
+			this.minimumBidSetter.open = (this.status == "hold bidding");
 
-			this.minimumBidSetter.style.green = this.minimumBidSetter.open;
-			this.minimumBidSetter.style.grey = !this.minimumBidSetter.open;
+			this.bidMinimum.open = (this.status == "hold bidding");
 
-			this.moveNext.style.green = this.moveNext.open;
-			this.moveNext.style.grey = !this.moveNext.open;
+			this.bidMinimum.value = (this.status == "hold bidding")?this.minimumBid:0;
 
-			this.openItem.style.green = this.openItem.open;
-			this.openItem.style.grey = !this.openItem.open;
+			this.moveNext.open = (this.status == "item closed");
+
+			this.openItem.open = (this.status == "item hold");
+
+			this.endAuction.style = (this.endAuction.open)?"red":"grey";
+
+			this.startAuction.style = (this.startAuction.open)?"green":"grey";
+
+			this.closeItem.style = (this.closeItem.open)?"red":"grey";
+
+			this.minimumBidSetter.style = (this.minimumBidSetter.open)?"green":"grey";
+
+			this.moveNext.style = (this.moveNext.open)?"yellow":"grey";
+
+			this.openItem.style = (this.openItem.open)?"green":"grey";
 		},
 	}
 }

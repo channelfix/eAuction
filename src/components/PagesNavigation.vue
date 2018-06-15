@@ -18,39 +18,49 @@
 			   		</v-toolbar-side-icon>
 				    <v-toolbar-title>{{currentRoute}}</v-toolbar-title>
 				    <v-spacer></v-spacer>
-		 			<v-toolbar-items class="hidden-sm-and-down">
-	 				  <p> 
-	 				  	Credits: {{credits}} 
-	 				  </p>
-				      <v-dialog v-model="dialog" persistent max-width="500px">
-				        <v-btn slot="activator" flat>Add more credits?</v-btn>
-				        <v-form class="form">
-				        	<v-card>
-					          	<v-card-title>
-					            	<span class="headline">Purchase Credits</span>
-					          	</v-card-title>				          
-					          	<v-card-text>				          	
-					            	<v-container grid-list-md>
-					              	<v-layout wrap>
-					                	<v-flex xs12 sm12 md12>
-						                  	<v-text-field 
-						                  		label="Input amount here"
-						                  		type="number"
-						                  		v-model="add_credits"
-						                  		id="creditID"
-						                  	></v-text-field>
-					                	</v-flex>
-					              	</v-layout>
-					            </v-container>
-					          	</v-card-text>
-					          	<v-card-actions>
-						            <v-spacer></v-spacer>
-						            <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
-						            <v-btn color="blue darken-1" flat @click="addCredits">Save</v-btn>
-					          	</v-card-actions>
-					        </v-card>
-			          	</v-form>				        
-				      </v-dialog>
+		 			<v-toolbar-items>
+	 				  <v-layout
+	 				  	align-center
+	 				  	justify-center
+	 				  >
+	 				  	  <v-flex md4>
+	 				  	  	<span> 
+		 				  		Credits: {{credits}} 
+		 				  	</span>
+		 				  </v-flex>
+		 				  <v-flex md8 fill-height>
+		 				  	<v-btn block slot="activator" flat @click="()=>dialog=true">Add more credits?</v-btn>
+		 			  	  	<v-dialog v-model="dialog" max-width="500px">				        
+						        <v-form class="form">
+						        	<v-card>
+							          	<v-card-title>
+							            	<span class="headline">Purchase Credits</span>
+							          	</v-card-title>				          
+							          	<v-card-text>				          	
+							            	<v-container grid-list-md>
+							              	<v-layout wrap>
+							                	<v-flex xs12 sm12 md12>
+								                  	<v-text-field 
+								                  		label="Input amount here"
+								                  		type="number"
+								                  		v-model="add_credits"
+								                  		id="creditID"
+								                  	></v-text-field>
+							                	</v-flex>
+							              	</v-layout>
+							            </v-container>
+							          	</v-card-text>
+							          	<v-card-actions>
+								            <v-spacer></v-spacer>
+								            <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
+								            <v-btn color="blue darken-1" flat @click="addCredits">Save</v-btn>
+							          	</v-card-actions>
+							        </v-card>
+					          	</v-form>				        
+			      			</v-dialog>
+		 			  	  </v-flex>
+		 			  </v-layout>
+				      
 				      <v-btn 
 				      	flat
 						v-if="$store.getters.isAuctioneer"
@@ -60,17 +70,6 @@
 				    </v-toolbar-items>
 			 	</v-toolbar>
 		 	</v-container>
-		 	<!-- <v-dialog v-model="warningModal" persistent max-width="290">
-		      <v-card>
-		        <v-card-title class="headline">Auction Seesion Warning</v-card-title>
-		        <v-card-text>You are leaving your auction session. All your progress will be lost.</v-card-text>
-		        <v-card-actions>
-		          <v-spacer></v-spacer>
-		          <v-btn color="primary" flat @click.native="warningModal = false">Leave</v-btn>
-		          <v-btn color="primary" flat @click.native="warningModal = false">Return</v-btn>
-		        </v-card-actions>
-		      </v-card>
-		    </v-dialog> -->
 		 	<router-view>
 		 	</router-view>		
 		 </v-container>
@@ -231,34 +230,24 @@ export default {
 				name: 'Create-Live'
 			})
 		},
-		addCredits() {
-			// this.$store.commit("addCredits", 500)
+
+		displaySnackBar(text){
+			this.alertbar.text = text;
+			this.alertbar.snackbar = true;
+		},
+		addCredits(){
 			let request = new Request();
 			let formdata = new FormData();
+			
 			this.dialog = !this.dialog;
-			this.alertbar.text = "Successfully added " + this.add_credits + " credits!";
-			this.alertbar.snackbar = true;
-			// formdata.set('amount', this.$store.getters.getCredits)
+			this.displaySnackBar("Successfully added " + this.add_credits + " credits!");
+			
 			formdata.set('amount', this.add_credits)
 			request.post("/profile/update_credits/", formdata,
 			 (response)=>{
 				this.$store.commit('addCredits', response.data.total_credit.credit_amount__sum)
 			});
 		},
-	},
-	watch: {
-		'$route' (to,from) {
-			/*if(from.name == "Auction")
-				this.warningModal = true;
-			*/
-			this.currentRoute = this.$route.name;
-			if(this.currentRoute == "Auction"
-			){
-				this.toolbarIcon = "arrow_back";
-			}else{
-				this.toolbarIcon = "menu";
-			}
-		}
 	},
 	mounted() {
 		this.currentRoute = this.$route.name;

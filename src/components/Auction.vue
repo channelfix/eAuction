@@ -8,18 +8,21 @@
 	  		<v-flex md7> <!-- left -->
 	  		  	<v-layout column>
 		  		  	<div class="box livestream" id="livestream">		  		 
-					    <div class="screen" id="publisher"></div>
-					    <div class="screen" id="subscriber"></div>
+					    <div class="screen" id="screenView"></div>
 		  		  	</div>
 		  		  	<Auctioneer 
 		  		  		v-if="$store.getters.getUsername == $route.params.auctioneer"
-						:currentProductName="products[0].name"
+						:currentProductName="products[currentProductIdx].name"
 						:status="status"
+	  		  			:minimumBid="minimumBid"
+	  		  			:highestBidder="highestBidder"
 	  		  		>
 		  		  	</Auctioneer>
 		  		  	<Bidder 
 		  		  		v-else
-	  		  			:currentProductName="products[0].name"
+	  		  			:minimumBid="minimumBid"
+	  		  			:currentProductName="products[
+	  		  			currentProductIdx].name"
 	  		  			:status="status"
 	  		  		>
 	  		  		</Bidder>
@@ -45,7 +48,7 @@
 									align-center
 									justify-center
 								>
-									<span class="headline">{{ products[0].name }}</span>
+									<span class="headline">{{ products[currentProductIdx].name }}</span>
 								</v-layout>
 							</v-flex>
 							<v-flex 
@@ -65,7 +68,7 @@
 									class="amber darken-1"
 									pa-3
 								>
-									<span class="headline">Minimum Bid: &#8369 {{products[0].minimum_price}}</span>
+									<span class="headline">Minimum Bid: &#8369 {{minimumBid}}</span>
 		  						</v-layout>
 			  				</v-flex>
   						</v-layout>
@@ -96,8 +99,11 @@
 							>
 								<v-list two-line>
 									<template v-for="log of logs">
-										<v-list-tile dark>
-											<v-list-tile-content>{{log.message}}</v-list-tile-content>
+										<v-list-tile dark :style="log.style">
+											<v-list-tile-content>
+												<span class="headline">{{log.message}}</span>
+												<span class="caption">{{log.time}}</span>
+											</v-list-tile-content>
 										</v-list-tile>
 										<v-divider></v-divider>
 									</template>
@@ -116,7 +122,7 @@ import Request from '../assets/js/Request.js'
 import Auctioneer from './Auctioneer'
 import Bidder from './Bidder'
 
-let logThread;
+let logThread = null;
 let request = new Request();
 let session = null;
 
@@ -126,12 +132,15 @@ export default {
 	data(){
 		return{
 			standingBid: 0,
+			minimumBid: 0,
+			hasStarted: false,
 			highestBidder: '',
 			products: [{
 				name: '',
 				minimum_price: '',
 			}],
-			status: "notlive", 
+			currentProductIdx: 0,
+			status: "not live", // not live, item hold, open bidding, hold bidding, no bid, item closed
 			logs: [],
 		}
 	},
@@ -143,6 +152,7 @@ export default {
 			(response)=>{
 				this.products = response.data.product_list;	
 				this.standingBid = this.products[0].minimum_price;
+				this.minimumBid = this.products[0].minimum_price;
 			}
 		)
 
@@ -162,27 +172,29 @@ export default {
 					formdata.set('auction_id', auction_id);
 					formdata.set('log_id', latestId);
 
-
 					request.post('/livestream/show_logs/', formdata, 
 						(response)=>{
-							let latestLogs = response.data.logs;
-
-							for(let i = 0; i < latestLogs.length; i++){
-								this.logs.splice(0, 0, latestLogs[i]); //insert before
-							}
+							console.log(response.data.logs);
+							this.handleLogs(response.data.logs);
 						}
 					);
 				}
 			},
-			1000
-		)
+			1000);
+	},
+	beforeDestroy(){
+		clearInterval(logThread);
 	},
 	methods: {
-		startLiveStream(){
-			this.status = "current item not open";
+		startLiveStream(){			
 			let role = "bidder";
 			if(this.$store.getters.getUsername == this.$route.params.auctioneer){
 				role = "auctioneer";
+			}
+
+			if(role == "auctioneer"){
+				this.sendLog("Auction session has started");
+				this.status = "item hold";
 			}
 
 			let formdata = new FormData();
@@ -205,7 +217,7 @@ export default {
 
 						session.connect(token, function(error){
 							if(role == "auctioneer"){
-								publisher = OT.initPublisher('publisher', 
+								publisher = OT.initPublisher('screenView', 
 									{
 										insertMode: 'append', 
 										width: "100%", 
@@ -216,11 +228,11 @@ export default {
 							}
 						});
 
-						session.on("streamCreated", function(event) { // Check if the stream has created in a certain session.
+						session.on("streamCreated", (event) => { // Check if the stream has created in a certain session.
 							// Accept the exposed video who is connected to the same session.
 
 							if(role == "bidder"){
-								session.subscribe(event.stream, 'subscriber', 
+								session.subscribe(event.stream, 'screenView', 
 									{
 										insertMode:'append', 
 										width:'100%', 
@@ -228,20 +240,30 @@ export default {
 									}); 				
 							}		
 						});
+					if (role == "bidder"){
+						session.on("connectionDestroyed", ()=>{
+							let style = {
+								backgroundColor: 'red',
+							}
 
-
-						session.on("sessionDisconnected", (event)=>{
-							clearInterval(logThread)
+							this.logs.splice(0, 0, Object.assign(
+								{
+									message: "Auction session has ended"
+								}, {style}));
+							clearInterval(logThread);
 						})
+					}
 				}
 			})
 		},
 		endAuction(){
 			// put end livestream here
+			clearInterval(logThread);
+
 			if(session != null){
 				session.disconnect();
 			}
-		
+			
 			let formdata = new FormData();
 			formdata.set('auction_id', this.$route.params.id);
 
@@ -266,6 +288,76 @@ export default {
 
 			request.post('/livestream/store_logs/', formdata, ()=>{});
 		},
+		handleLogs(latestLogs){
+			for(let i = 0; i < latestLogs.length; i++){
+				let style = {
+					backgroundColor: "black",
+				};
+				
+				let msg = latestLogs[i].message;
+
+				if(msg.match("^(.*)\\sis\\sclosed\\sfor\\sauction$")){
+					
+					this.status = "item closed";
+					style.backgroundColor = "red";
+
+				}else if(msg.match("^Minimum\\sbid\\sset\\sto\\s(.*)$")){
+					
+					this.minimumBid = parseInt(msg.substring(msg.indexOf("to")+3, msg.length));
+					this.status = "open bidding";
+					style.backgroundColor = "orange";
+				
+				}else if(msg.match("Moved\\sto\\snext\\sitem")){
+					if(this.products.length > this.currentProductIdx+1){
+						this.currentProductIdx++;		
+						this.highestBidder = "";
+						this.minimumBid = this.products[this.currentProductIdx].minimum_price;
+						this.standingBid = this.minimumBid;
+						this.status = "item hold";
+					}else{
+						this.status = "sold out";
+						latestLogs[i].message = "No more items to auction";
+					}
+					
+					style.backgroundColor = "brown";
+				}else if(msg.match("Auction\\sfor\\s(.*)\\sis\\sopen")){
+				
+					this.status = "open bidding"
+					style.backgroundColor = "green";
+				
+				}else if(msg.match("Auction\\ssession\\shas\\sstarted")){
+					console.log("Has started: "+this.hasStarted);
+					
+					if(this.hasStarted){
+						latestLogs[i].message = "Auctioneer rejoined session";
+					
+					}else{
+						this.hasStarted = true;
+						this.status = "item hold"	
+					}
+					
+					
+					style.backgroundColor = "orange";
+				
+				}else if(msg.match("^(.*)\\sbid\\s(.*)\\sfor\\s(.*)$")){
+				
+					this.highestBidder = msg.substring(0, msg.indexOf("bid")-1);
+					this.standingBid = parseInt(msg.substring(msg.indexOf(" bid ")+5, msg.indexOf(" for ")));
+					this.minimumBid = this.standingBid;
+					this.status = "hold bidding"
+					style.backgroundColor = "green";
+				
+				}else if(msg.match("Auction\\ssession\\shas\\sended")){
+					
+					style.backgroundColor = "red";
+				
+				}else if(msg == "Item skipped (No bids)" || msg.match("(.*)\\sis\\ssold\\sto\\s(.*)")){
+					style.backgroundColor = "green";
+				}
+
+				this.logs.splice(0, 0, Object.assign(latestLogs[i], {style})); //insert before
+			}
+		}
 	},
 }
 </script>
