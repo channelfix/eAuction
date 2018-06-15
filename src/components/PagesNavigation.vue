@@ -34,12 +34,18 @@
 					              	<v-layout wrap>
 					                	<v-flex xs12 sm12 md12>
 						                  	<v-text-field 
+						                  		autofocus
 						                  		label="Input amount here"
 						                  		type="number"
 						                  		v-model="add_credits"
 						                  		id="creditID"
 						                  	></v-text-field>
 					                	</v-flex>
+					                	<p class="headline">
+					                		Total payment:
+					                		<v-icon>add_shopping_cart</v-icon>
+					                		{{totalCost}}
+					                	</p>
 					              	</v-layout>
 					            </v-container>
 					          	</v-card-text>
@@ -142,7 +148,7 @@ export default {
 			toolbarIcon: "menu",
 			username: "",
 			current_credits: "",
-			add_credits: 0,
+			add_credits: "",
 			pages: [
 				{
 					title: "Home",
@@ -173,7 +179,10 @@ export default {
 	computed: { 
 		credits() {
 			return this.$store.getters.getCredits
-		} 
+		},
+		totalCost(){
+			return this.add_credits * 2
+		}
 	},
 	methods: {
 		route(path){
@@ -210,13 +219,11 @@ export default {
 			})
 		},
 		addCredits(){
-			// this.$store.commit("addCredits", 500)
 			let request = new Request();
 			let formdata = new FormData();
 			this.dialog = !this.dialog;
 			this.alertbar.text = "Successfully added " + this.add_credits + " credits!";
 			this.alertbar.snackbar = true;
-			// formdata.set('amount', this.$store.getters.getCredits)
 			formdata.set('amount', this.add_credits)
 			request.post("/profile/update_credits/", formdata,
 			 (response)=>{
@@ -226,9 +233,6 @@ export default {
 	},
 	watch: {
 		'$route' (to,from) {
-			/*if(from.name == "Auction")
-				this.warningModal = true;
-			*/
 			this.currentRoute = this.$route.name;
 			if(this.currentRoute == "Auction"
 			){
