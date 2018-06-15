@@ -36,7 +36,7 @@
 				>
 					<v-card-media 
 						:src="livestream.thumbnail" 
-						height="300px"
+						height="250px"
 					>
 						<v-layout 
 							row 
