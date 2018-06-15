@@ -23,11 +23,14 @@
 		<p>Products</p>
 		<div>
 			<div>
-				<select v-model="selectedProduct">
-					<option v-for="product in products">
-						{{product.products__name}}
-					</option>
-				</select>
+				 <v-select
+		          :items="items"
+		          v-model="selectedProduct"
+		          label="Select"
+		          class="input-group--focused"
+		          item-value="text"
+		        ></v-select>
+				
 
 				<v-text-field
 				  label="Price"
@@ -67,6 +70,11 @@ export default {
 				minimumPrice: ''
 			},
 			selectedProduct: ''
+		}
+	},
+	computed: {
+		items() {
+			return this.products.map(obj => obj.products__name)
 		}
 	},
 	methods: {
@@ -138,7 +146,6 @@ export default {
 		request.get('/profile/retrieve_product/',
 		(response) => {
 			this.products = response.data.products
-			console.log(this.products)
 		})
 	}
 }

@@ -37,7 +37,7 @@ class BrowseView(View):
                 'last_name': obj.user.last_name,
                 'first_name': obj.user.first_name,
                 'description': obj.biography,
-                'contact_number': obj.contact_number,
+                'contact_number': obj.contact_number if hasattr(obj,'contact_number') else '',
                 'isAuctioneer': obj.isAuctioneer,
                 'tags': tags,
             })
