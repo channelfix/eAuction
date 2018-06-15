@@ -82,7 +82,6 @@
 
 					
 				</v-flex>
-
 		</v-layout>
 	</v-container>
 </template>
@@ -135,7 +134,7 @@
 					else
 						this.subscribers--;
 				})
-			}
+			},
 		},
 
 		computed: {

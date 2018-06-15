@@ -62,7 +62,7 @@
 				</v-card>
 			</v-flex>
  		</v-layout>
- 		<v-btn class="amber darken-1" fixed bottom right large>Create Auction</v-btn>
+ 		<v-btn v-if="$store.getters.isAuctioneer" @click="createLive()" class="amber darken-1" fixed bottom right large>Create Auction</v-btn>
  	</v-container>
 </template>
 

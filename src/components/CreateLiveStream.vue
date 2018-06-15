@@ -23,11 +23,11 @@
 		<p>Products</p>
 		<div>
 			<div>
-				<v-text-field
-				  label="Name"
-				  solo
-				  v-model="product.name"
-				></v-text-field>
+				<select v-model="selectedProduct">
+					<option v-for="product in products">
+						{{product.products__name}}
+					</option>
+				</select>
 				<v-text-field
 				  label="Price"
 				  solo
@@ -62,10 +62,10 @@ export default {
 			products: [],
 			productNames: [],
 			productPrices: [],
-			product: {
-				name: '',
+			product: {				
 				minimumPrice: ''
 			},
+			selectedProduct: ''
 		}
 	},
 	methods: {
@@ -73,36 +73,43 @@ export default {
 			let request = new Request();
 			let formdata = new FormData();
 
-			formdata.set('title', this.title);
-			formdata.set('description', this.description);
-			formdata.set('product_name', this.productNames);
-			formdata.set('product_minimum_price', this.productPrices);
+			// Check if all fields are filled
+			if((this.title && this.description) != "" && (this.productNames.length && this.productPrices.length) != 0)
+			{
+				formdata.set('title', this.title);
+				formdata.set('description', this.description);
+				formdata.set('product_name', this.productNames);
+				formdata.set('product_minimum_price', this.productPrices);
 
-			if(this.hasChangePic)
-				formdata.append('imageFile', this.imageFile, this.imageFile.name)
+				if(this.hasChangePic)
+					formdata.append('imageFile', this.imageFile, this.imageFile.name)
 
-			request.post('/livestream/create_livestream/', formdata,
-			(response) => {
-				let session = response.data
-				let id = session.auction_id
-				let auctioneer = session.auctioneer_username
+				request.post('/livestream/create_livestream/', formdata,
+				(response) => {
+					let session = response.data
+					let id = session.auction_id
+					let auctioneer = session.auctioneer_username
 
-				alert(session.message)
+					alert(session.message)
 
-				this.$router.push({
-					name: 'Auction',
-					params: {
-						id,
-						auctioneer,
-					}
+					this.$router.push({
+						name: 'Auction',
+						params: {
+							id,
+							auctioneer,
+						}
+					})
 				})
-			})
+			}
 		},
 
 		addProduct() {
-			this.productNames.push(this.product.name);
-			this.productPrices.push(this.product.minimumPrice);
-			alert('successfully add '+this.product.name);
+			if((this.selectedProduct && this.product.minimumPrice) != "")
+			{
+				this.productNames.push(this.selectedProduct);
+				this.productPrices.push(this.product.minimumPrice);
+				alert('successfully add '+this.selectedProduct);
+			}			
 		},
 		isValidImageFormat: function(selectedFile) {
 				if(selectedFile.type === 'image/jpg' || selectedFile.type === 'image/png' || selectedFile.type === 'image/jpeg')
@@ -123,6 +130,14 @@ export default {
 					alert('Cannot import this file. Use only this following format (.jpg, .jpeg, or .png).');
 			}
 		},
+	},
+	mounted() {
+		let request = new Request();
+
+		request.get('/profile/retrieve_product/',
+		(response) => {
+			this.products = response.data.products
+		})
 	}
 }
 

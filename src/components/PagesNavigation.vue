@@ -29,33 +29,38 @@
 		 				  	</v-btn>
 		 				  </v-flex>
 	 			  	  	<v-dialog v-model="dialog" max-width="500px">				        
-					        <v-form class="form">
-					        	<v-card>
-						          	<v-card-title>
-						            	<span class="headline">Purchase Credits</span>
-						          	</v-card-title>				          
-						          	<v-card-text>				          	
-						            	<v-container grid-list-md>
-						              	<v-layout wrap>
-						                	<v-flex xs12 sm12 md12>
-							                  	<v-text-field 
-							                  		label="Input amount here"
-							                  		type="number"
-							                  		v-model="add_credits"
-							                  		id="creditID"
-							                  	></v-text-field>
-						                	</v-flex>
-						              	</v-layout>
-						            </v-container>
-						          	</v-card-text>
-						          	<v-card-actions>
-							            <v-spacer></v-spacer>
-							            <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
-							            <v-btn color="blue darken-1" flat @click="addCredits">Save</v-btn>
-						          	</v-card-actions>
-						        </v-card>
-				          	</v-form>				        
-		      			</v-dialog>
+						        <v-form class="form">
+						        	<v-card>
+							          	<v-card-title>
+							            	<span class="headline">Purchase Credits</span>
+							          	</v-card-title>				          
+							          	<v-card-text>				          	
+							            	<v-container grid-list-md>
+							              	<v-layout wrap>
+							                	<v-flex xs12 sm12 md12>
+								                  	<v-text-field 
+								                  		label="Input amount here"
+								                  		type="number"
+								                  		v-model="add_credits"
+								                  		id="creditID"
+								                  		autofocus
+								                  	></v-text-field>
+								                  	<p class="headline">
+								                  		Total Cost: {{ totalCost }}
+								                  	</p>
+							                	</v-flex>
+							              	</v-layout>
+							          		</v-container>
+							          	</v-card-text>
+							          	<v-card-actions>
+								            <v-spacer></v-spacer>
+								            <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
+								            <v-btn color="blue darken-1" flat @click="addCredits">Save</v-btn>
+							          	</v-card-actions>
+							        </v-card>
+					          	</v-form>				        
+			      			</v-dialog>
+
 		 			  </v-layout>
 				    </v-toolbar-items>
 			 	</v-toolbar>
@@ -132,7 +137,7 @@ export default {
 			toolbarIcon: "menu",
 			username: "",
 			current_credits: "",
-			add_credits: 0,
+			add_credits: "",
 			pages: [
 				{
 					title: "Home",
@@ -169,7 +174,10 @@ export default {
 	computed: { 
 		credits() {
 			return this.$store.getters.getCredits
-		} 
+		},
+		totalCost(){
+			return this.add_credits * 2
+		}
 	},
 	methods: {
 		browse() {
@@ -216,7 +224,6 @@ export default {
 			
 			this.dialog = !this.dialog;
 			this.displaySnackBar("Successfully added " + this.add_credits + " credits!");
-			
 			formdata.set('amount', this.add_credits)
 			request.post("/profile/update_credits/", formdata,
 			 (response)=>{
