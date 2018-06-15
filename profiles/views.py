@@ -15,7 +15,6 @@ class ProfileView(View):
 
         hasSubscribed = Subscribed.objects.filter(auctioneer=user,
                                                   bidder=request.user).exists()
-        phone_number = user.profile.phone_number
         context = {
             'username': user.username,
             'email': user.email,
@@ -26,11 +25,9 @@ class ProfileView(View):
             'tags': user_tags,
             'isAuctioneer': user_profile.isAuctioneer,
             'subscribers': user_profile.countSubscribers,
-            'hasSubscribed': hasSubscribed            
+            'hasSubscribed': hasSubscribed,
+            'contact_number': user_profile.phone_number
         }
-
-        if phone_number != '':
-            context['contact_number'] = '+'+str(phone_number.country_code)+str(phone_number.national_number)
 
         return JsonResponse(context)
 
@@ -43,10 +40,8 @@ class EditProfile(View):
         first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
         email = request.POST.get('email', '')
-        biography = request.POST.get('biography', '')        
+        biography = request.POST.get('biography', '')
         contact_number = request.POST.get('contact_number', '')
-        print(contact_number)
-
 
         user.first_name = first_name
         user.last_name = last_name
@@ -102,15 +97,14 @@ class TagListView(View):
 class ProductCreatedView(View):
     def post(self, request):
         user = request.user
-        product_name = request.POST.get('name', '')        
-        product_tag = request.POST.get('tag','')
+        product_name = request.POST.get('name', '')
+        product_tag = request.POST.get('tag', '')
 
         user_profile = user.profile
 
         # Set a new tag, if it does not exist on this profile.
         tag, created = user_profile.tags_set.get_or_create(name=product_tag)
         tag.products.create(name=product_name)
-
 
         return HttpResponse('Product created')
 
@@ -119,11 +113,21 @@ class RetrieveProductView(View):
     def get(self, request):
         # product name, tag and date sold
         user_profile = request.user.profile
-        product_list = list(user_profile.tags_set.all().values('products__name',
-                                                               'name','products__date_sold')
-                                                       .order_by('name'))
+        product_list = list(user_profile.tags_set.all()
+                                                 .values('products__name',
+                                                         'name',
+                                                         'products__date_sold')
+                                                 .order_by('name'))
 
-        return JsonResponse({'products': product_list})        
+        return JsonResponse({'products': product_list})
+
+
+class ProductRecordsView(View):
+    def get(self, request):
+        user_profile = request.user.profile
+        product_records = user_profile.products.all().values('records')
+
+        return JsonResponse({'product_records': product_records})
 
 
 class Subscribe(View):
@@ -151,8 +155,9 @@ class UpdateCredits(View):
     def post(self, request):
         current_user = request.user
         amount = request.POST.get('amount', '')
-        credit = Credit.objects.create(credit_amount=amount,
-                                       profile=current_user.profile)
+        Credit.objects.create(credit_amount=amount,
+                              profile=current_user.profile)
+
         total_credit = Credit.objects.filter(
             profile=current_user.profile
         ).aggregate(Sum('credit_amount'))
