@@ -2,23 +2,21 @@
 	<div>
 		<label>Create Product</label>
 
-		<p>
-			<label>Name</label>
-			<input 
-				type="text" 
-				id="productNameField" 
-				v-model="product.name"
-			>
-		</p>
-		
-		<p>
-			<label>Tags: </label>
-			<select v-model="selectedTag">				
-				<option v-for="tag in tagList">
-					{{tag.name}}
-				</option>				
-			</select>
-		</p>
+		<v-text-field
+			label="Name"
+			v-model="product.name"
+		>
+		</v-text-field>
+
+		<label>Tags: </label>
+		<v-flex xs6>
+	        <v-select
+	          :items="tagList"
+	          v-model="selectedTag"
+	          label="Select"
+	          single-line
+	        ></v-select>
+     	 </v-flex>
 
 		<button @click="createProduct">[Create Product]</button><br>
 
@@ -54,7 +52,13 @@ import Request from '../assets/js/Request.js';
 				product: {
 					name: '',					
 				},
-				tagList: [],
+				tagList: [
+					{text: "Collectibles"},
+					{text: "Antiques"},
+					{text: "Novel"},
+					{text: "Vehicles"},
+					{text: "Jewelry"}
+				],
 				selectedTag: '',
 				products: []
 			}
@@ -66,8 +70,8 @@ import Request from '../assets/js/Request.js';
 
 				// Check if all fields are filled.
 				if((this.selectedTag && this.product.name) != "")
-				{
-					formdata.set('tag', this.selectedTag)
+				{					
+					formdata.set('tag', this.selectedTag.text)
 					formdata.set('name', this.product.name)
 
 					request.post('/profile/create_product/', formdata,
@@ -79,13 +83,6 @@ import Request from '../assets/js/Request.js';
 		},
 		mounted() {
 			let request = new Request();
-
-			// used to retrieve the tags in combo box
-			request.get('/profile/tag_list/', 
-			(response) => {				
-				this.tagList = response.data.tags
-			})
-
 			// used to retrieve the product details (name, tag name, and date sold)
 			request.get('/profile/retrieve_product/',
 			(response) => {				

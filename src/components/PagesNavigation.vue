@@ -45,7 +45,11 @@
 								                  		type="number"
 								                  		v-model="add_credits"
 								                  		id="creditID"
+								                  		autofocus
 								                  	></v-text-field>
+								                  	<p class="headline">
+								                  		Total Cost: {{ totalCost }}
+								                  	</p>
 							                	</v-flex>
 							              	</v-layout>
 							            </v-container>
@@ -60,7 +64,6 @@
 			      			</v-dialog>
 		 			  	  </v-flex>
 		 			  </v-layout>
-				      
 				      <v-btn 
 				      	flat
 						v-if="$store.getters.isAuctioneer"
@@ -142,7 +145,7 @@ export default {
 			toolbarIcon: "menu",
 			username: "",
 			current_credits: "",
-			add_credits: 0,
+			add_credits: "",
 			pages: [
 				{
 					title: "Home",
@@ -179,7 +182,10 @@ export default {
 	computed: { 
 		credits() {
 			return this.$store.getters.getCredits
-		} 
+		},
+		totalCost(){
+			return this.add_credits * 2
+		}
 	},
 	methods: {
 		browse() {
@@ -232,7 +238,6 @@ export default {
 			
 			this.dialog = !this.dialog;
 			this.displaySnackBar("Successfully added " + this.add_credits + " credits!");
-			
 			formdata.set('amount', this.add_credits)
 			request.post("/profile/update_credits/", formdata,
 			 (response)=>{
