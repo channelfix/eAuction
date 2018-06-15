@@ -53,6 +53,8 @@
 
 						<span class = 'body-2'>Phone number:</span>
 						<p v-text="contactNumber" />
+
+						<button @click="showProduct">Products bought</button>
 					</div>
 				</v-layout>
 			</div>
@@ -106,6 +108,9 @@
 					else
 						this.subscribers--;
 				})
+			},
+			showProduct() {
+				
 			}
 		},
 
