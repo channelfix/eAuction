@@ -100,7 +100,10 @@
 								<v-list two-line>
 									<template v-for="log of logs">
 										<v-list-tile dark :style="log.style">
-											<v-list-tile-content>{{log.message}}</v-list-tile-content>
+											<v-list-tile-content>
+												<span class="headline">{{log.message}}</span>
+												<span class="caption">{{log.time}}</span>
+											</v-list-tile-content>
 										</v-list-tile>
 										<v-divider></v-divider>
 									</template>
