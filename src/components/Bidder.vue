@@ -64,12 +64,19 @@ export default {
 					v=> {
 						if(this.status == "open bidding"){
 							let ret;
-							if(v >= this.minimumBid){
+							let credits = this.$store.getters.getCredits;
+							
+							if(v >= this.minimumBid && v <= credits){
 								this.bidButton.open = true;
 								ret = true;
 							}else {
 								this.bidButton.open = false;
-								ret =  "Must be higher than minimum bid";
+
+								if(v > this.$store.getters.getCredits){
+									ret =  "Insufficient credits";
+								}else{
+									ret = "Must be higher than minimum bid";
+								}
 							}
 
 							this.bidButton.style = (this.bidButton.open)?'green':'grey'
