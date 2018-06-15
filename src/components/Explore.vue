@@ -75,7 +75,7 @@
         browseQuery: "",
         browseFilter: "",
         results: [],
-        tags: ["Collectibles", "Antiques", "Novel", "Vehicles", "Jewelry"],
+        tags: ["COLLECTIBLES", "ANTIQUES", "NOVEL", "VEHICLES", "JEWELRY"],
         keyTimeout: null,
         active: '',
       }

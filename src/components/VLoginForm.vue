@@ -19,7 +19,7 @@
           :type="visible ? 'text': 'password' "
 		></v-text-field>
 		<v-btn 
-			:loading="submitLoading" 
+			:loading="!submitLoading" 
 			@click="login"
 		>Submit</v-btn>
 	</v-form>
