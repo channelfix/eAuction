@@ -43,6 +43,39 @@
 						</button>	
 					</v-layout>
 	  			</v-flex>
+	  			<v-flex
+  					md8
+  				>
+  					<v-layout
+  						align-center
+  						pa-3
+  					>
+  						<v-text-field
+							:disabled="!bidMinimum.open"
+							label="Bid Increase"
+							type="number"
+							v-model="bidMinimum.value"
+							:rules="bidMinimum.rules"
+						>		
+					</v-text-field>
+					</v-layout>
+  				</v-flex>
+	  			<v-flex 
+					md4
+				>
+					<v-layout 
+						align-center
+						pa-3
+					>
+						<button 
+							:disabled="!minimumBidSetter.open"
+							:class="minimumBidSetter.style"
+							@click="setMinimumBid"
+						>
+							Set minimum bid
+						</button>
+					</v-layout>
+  				</v-flex>
 	  			<v-flex 
 					md4
 				>
@@ -60,34 +93,7 @@
 					</v-layout>
   				</v-flex>
   				<v-flex 
-					md5
-				>
-					<v-layout 
-						align-center
-						justify-center
-						pa-3
-					>
-						<v-text-field
-							:disabled="!bidMinimum.open"
-							label="Bid Increase"
-							type="number"
-							v-model="bidMinimum.value"
-							:rules="bidMinimum.rules"
-						>
-							
-						</v-text-field>
-						<button 
-							:disabled="!minimumBidSetter.open"
-							class="halfsize"
-							:class="minimumBidSetter.style"
-							@click="setMinimumBid"
-						>
-							Set minimum bid
-						</button>
-					</v-layout>
-  				</v-flex>
-  				<v-flex 
-					md3
+					md4
 				>
 					<v-layout 
 						align-center
@@ -104,7 +110,7 @@
 					</v-layout>
   				</v-flex>
   				<v-flex 
-					md3
+					md4
 				>
 					<v-layout 
 						align-center
@@ -263,7 +269,4 @@ export default {
 		width: 100%;
 	}
 
-	.halfsize {
-		width: 50%;
-	}
 </style>
