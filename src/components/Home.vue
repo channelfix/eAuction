@@ -8,7 +8,6 @@
 			justify-center
 			align-center
 			column
-			wrap
 			v-if="livestreams.length == 0"
 		> <!-- if no content -->
 			<img 
@@ -17,7 +16,7 @@
 				src="https://images.vexels.com/media/users/3/134743/isolated/preview/97ae591756f3dc69db88c09fd097319a-sad-face-emoji-emoticon-by-vexels.png"/>
   			<span class="display-2">No subscriptions</span>
   			<span class="headline">
-  				Looks pretty lonely here, <router-link :to="{name: 'Explore'}" style="color: blue">make some friends</router-link> 
+  				Looks pretty lonely here, <router-link :to="{name: 'Explore'}" style="color: yellow">make some friends</router-link> 
   			</span>
 		</v-layout>
  		<v-layout 
