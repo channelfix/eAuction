@@ -95,7 +95,7 @@ import Request from '../assets/js/Request.js';
 	}
 </script>
 
-<style type="text/css">
-	
+<style>
+
 </style>
 
