@@ -3,6 +3,7 @@
 		fluid
 		pa-5	
 	>
+		<v-btn class="amber darken-1" fixed bottom right large>Create Auction</v-btn>
 		<v-layout
 			fill-height
 			justify-center
@@ -85,7 +86,12 @@ export default {
 					auctioneer,
 				}
 			})
-		}
+		},
+		createLive() {
+			this.$router.push({
+				name: 'Create-Live'
+			})
+		},
 	},
 	mounted: function() {
 		let request = new Request();

@@ -23,50 +23,40 @@
 	 				  	align-center
 	 				  	justify-center
 	 				  >
-	 				  	  <v-flex md4>
-	 				  	  	<span> 
-		 				  		Credits: {{credits}} 
-		 				  	</span>
+	 				  	  <v-flex md12 fill-height pa-2>
+	 				  	  	<v-btn @click="()=>dialog=true" flat block> 
+		 				  		<span class="title">Credits: {{credits}} </span>
+		 				  	</v-btn>
 		 				  </v-flex>
-		 				  <v-flex md8 fill-height>
-		 				  	<v-btn block slot="activator" flat @click="()=>dialog=true">Add more credits?</v-btn>
-		 			  	  	<v-dialog v-model="dialog" max-width="500px">				        
-						        <v-form class="form">
-						        	<v-card>
-							          	<v-card-title>
-							            	<span class="headline">Purchase Credits</span>
-							          	</v-card-title>				          
-							          	<v-card-text>				          	
-							            	<v-container grid-list-md>
-							              	<v-layout wrap>
-							                	<v-flex xs12 sm12 md12>
-								                  	<v-text-field 
-								                  		label="Input amount here"
-								                  		type="number"
-								                  		v-model="add_credits"
-								                  		id="creditID"
-								                  	></v-text-field>
-							                	</v-flex>
-							              	</v-layout>
-							            </v-container>
-							          	</v-card-text>
-							          	<v-card-actions>
-								            <v-spacer></v-spacer>
-								            <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
-								            <v-btn color="blue darken-1" flat @click="addCredits">Save</v-btn>
-							          	</v-card-actions>
-							        </v-card>
-					          	</v-form>				        
-			      			</v-dialog>
-		 			  	  </v-flex>
+	 			  	  	<v-dialog v-model="dialog" max-width="500px">				        
+					        <v-form class="form">
+					        	<v-card>
+						          	<v-card-title>
+						            	<span class="headline">Purchase Credits</span>
+						          	</v-card-title>				          
+						          	<v-card-text>				          	
+						            	<v-container grid-list-md>
+						              	<v-layout wrap>
+						                	<v-flex xs12 sm12 md12>
+							                  	<v-text-field 
+							                  		label="Input amount here"
+							                  		type="number"
+							                  		v-model="add_credits"
+							                  		id="creditID"
+							                  	></v-text-field>
+						                	</v-flex>
+						              	</v-layout>
+						            </v-container>
+						          	</v-card-text>
+						          	<v-card-actions>
+							            <v-spacer></v-spacer>
+							            <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
+							            <v-btn color="blue darken-1" flat @click="addCredits">Save</v-btn>
+						          	</v-card-actions>
+						        </v-card>
+				          	</v-form>				        
+		      			</v-dialog>
 		 			  </v-layout>
-				      
-				      <v-btn 
-				      	flat
-						v-if="$store.getters.isAuctioneer"
-						@click="createLive"
-			      	  >Create Livestream
-			          </v-btn>
 				    </v-toolbar-items>
 			 	</v-toolbar>
 		 	</v-container>
@@ -216,12 +206,6 @@ export default {
 				this.$router.go(0);	
 			});			
 		},
-		createLive() {
-			this.$router.push({
-				name: 'Create-Live'
-			})
-		},
-
 		displaySnackBar(text){
 			this.alertbar.text = text;
 			this.alertbar.snackbar = true;
