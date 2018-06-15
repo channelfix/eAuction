@@ -77,7 +77,7 @@
 			temporary 
 			absolute 
 			v-model="showNav"
-			width="400"
+			width="320"
 		>
 	    	<v-list
 				three-line
@@ -159,7 +159,7 @@ export default {
 					},
 				},{
 					title: "Explore",
-					icon: "search",
+					icon: "public",
 					path: {
 						name: 'Explore',
 					}
