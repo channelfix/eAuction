@@ -1,23 +1,26 @@
 <template>
  	<v-container
 		fluid
-		pa-5
-		>
+		pa-5	
+	>
 		<v-layout
+			fill-height
 			justify-center
-			row
-			wrap
+			align-center
+			column
 			v-if="livestreams.length == 0"
 		> <!-- if no content -->
-			<v-icon
-				large
-	 	   >
-	    		subscriptions
-			</v-icon>
-	  		<span class="headline">No subscriptions</span>
+			<img 
+				elevation-0
+				class="sadFace"
+				src="https://images.vexels.com/media/users/3/134743/isolated/preview/97ae591756f3dc69db88c09fd097319a-sad-face-emoji-emoticon-by-vexels.png"/>
+  			<span class="display-2">No subscriptions</span>
+  			<span class="headline">
+  				Looks pretty lonely here, <router-link :to="{name: 'Explore'}" style="color: yellow">make some friends</router-link> 
+  			</span>
 		</v-layout>
  		<v-layout 
- 			v-if="livestreams.length != 0"
+ 			v-else
 	 		row
 	 		wrap
 			>
@@ -33,7 +36,7 @@
 				>
 					<v-card-media 
 						:src="livestream.thumbnail" 
-						height="300px"
+						height="250px"
 					>
 						<v-layout 
 							row 
@@ -97,4 +100,8 @@ export default {
 </script>
 
 <style scoped>
+	.sadFace{
+		height: 250px;
+		width: 250px;
+	}
 </style> 

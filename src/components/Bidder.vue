@@ -4,28 +4,42 @@
   	>
   		<v-layout 
   			fill-height
-		row
-		wrap
-			>
+			row
+			wrap
+		>
   			<v-flex 
-			md6
+			md12
 				>
-			<v-layout
-				align-center
-				pa-3
-			>
-				<v-text-field
-				  label="Input bid"
-				  v-model="bid"
-				></v-text-field>
-				<button
-					:class="bidButton.style"
-					:disabled="!bidButton.open"
-					@click="placeBid"
+				<v-layout
+					align-center
+					pa-3
 				>
-					Bid
-				</button>	
-			</v-layout>
+					<v-flex
+						md8
+						pa-2
+					>
+						<v-text-field
+						  label="Input bid"
+						  v-model="bid.value"
+						  type="number"
+						  :disabled="!bid.open"
+						  :rules="bid.rules"
+						></v-text-field>
+					</v-flex>
+					<v-flex
+						md4
+						pa-2
+					>
+						<button
+							block
+							:class="bidButton.style"
+							:disabled="!bidButton.open"
+							@click="placeBid"
+						>
+							Bid
+						</button>
+					</v-flex>	
+				</v-layout>
   			</v-flex>
   		</v-layout> 
   	</v-flex>
@@ -40,16 +54,45 @@ export default {
 	name: "Bidder",
 	props: {
 		currentProductName: String,
+		status: String,
+		minimumBid: Number,
 	},
 	data(){
 		return {
-			bid: 0,
+			bid: {
+				value: 0,
+				open: false,
+				rules: [
+					v=> {
+						if(this.status == "open bidding"){
+							let ret;
+							let credits = this.$store.getters.getCredits;
+
+							if(v >= this.minimumBid && v <= credits){
+								this.bidButton.open = true;
+								ret = true;
+							}else {
+								this.bidButton.open = false;
+
+								if(v > this.$store.getters.getCredits){
+									ret =  "Insufficient credits";
+								}else{
+									ret = "Must be higher than minimum bid";
+								}
+							}
+
+							this.bidButton.style = (this.bidButton.open)?'green':'grey'
+
+							return ret;
+						}else{
+							return "Can not bid yet";
+						}
+					}
+				],
+			},
 			bidButton: {
-				style: {
-					green: true,
-					grey: false,
-				},
-				open: true,
+				style: 'grey',
+				open: false,
 			}
 		}
 	},
@@ -59,10 +102,27 @@ export default {
 	methods: {
 		placeBid(){
 			let currentUser = this.$store.getters.getUsername;
-			let log = currentUser+" bid "+this.bid+" for "+this.currentProductName;
+			let log = currentUser+" bid "+this.bid.value+" for "+this.currentProductName;
+
+			let formdata = new FormData();
+			this.$parent.$parent.displaySnackBar("Bid successfully subtracted "+this.bid.value+ " from credits");
+			// formdata.set('amount', this.$store.getters.getCredits)
+			formdata.set('amount', -this.bid.value);
+			request.post("/profile/update_credits/", formdata,
+			 (response)=>{
+				this.$store.commit('addCredits', response.data.total_credit.credit_amount__sum)
+			});
 
 			this.$parent.sendLog(log);
 		}
+	},
+	watch:{
+		status(){
+			this.bidButton.open = (this.status == "open bidding");
+			this.bid.open = (this.status == "open bidding");
+			this.bid.value = (this.status == "open bidding")?this.minimumBid:0;
+			this.bidButton.style = (this.bidButton.open)?"green":"grey";
+		},
 	}
 }
 </script>
