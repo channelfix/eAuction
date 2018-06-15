@@ -54,6 +54,7 @@
 					(response) => {
 						if(response instanceof Error){
 							this.alert = true
+							this.submitLoading = false;
 						}else {
 
 							this.$store.commit('authenticated', true)	
