@@ -200,7 +200,7 @@ export default {
 		closeCurrentItem(){
 			let log = this.currentProductName+" is closed for auction";
 			this.$parent.sendLog(log);
-			if(this.highestBidder == ""){
+			if(this.highestBidder != ""){
 				this.$parent.sendLog(this.currentProductName+" is sold to "+this.highestBidder);
 			}else{
 				this.$parent.sendLog("Item skipped (No bids)");
