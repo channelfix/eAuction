@@ -28,13 +28,7 @@
 			<ul>
 				<label>Name      Tags         Date Sold</label>
 				<li v-for="product in products">
-					{{product.products__name}} {{product.name}} 
-					<div v-if="product.products__date_sold === null">
-						unsold
-					</div>
-					<div v-else>
-						{{product.products__date_sold}}
-					</div>
+					{{product.products__name}} {{product.name}} 					
 				</li>
 			</ul>
 		</div>
