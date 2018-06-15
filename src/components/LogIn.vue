@@ -4,19 +4,25 @@
 			row wrap 
 			fill-height
 		>
-		  	<v-flex lg7>
+		  	<v-flex 
+		  		pa-3
+		  		lg7
+		  	>
 				<v-layout 
 					align-center 
 					justify-center
-					 fill-height
+					fill-height
 				 >
-					<div>
+					<v-layout
+						column
+					>
+						<img 
+							class="img"
+							src="https://image.flaticon.com/icons/png/512/186/186337.png"
+						/>
 						<p class="text-lg-left display-4">eAuction</p>
-						<p class="text-lg-left headline">eAasdsadsadaion eAuction eAuction</p>
-						<p class="text-lg-left headline">eAuction eAuction eAuction eAuction eAuction eAuction</p>
-						<p class="text-lg-left headline">eAuction eAuction eAuction eAuction eAuction eAuction eAuction</p>
-						<p class="text-lg-left headline">eAuction eAuction eAuction eAuction eAuction eAuction eAuction eAuction</p>
-		  			</div>
+						<p class="text-lg-left headline">A web platform that brings traditional auctioning to a modern online system, coupled with tools that’s necessary for the auctioning process</p>
+		  			</v-layout>
 		  		</v-layout>
 		  	</v-flex>
 		  	<v-flex 
@@ -100,12 +106,18 @@
 	}
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 	button {
 		padding: 0;
 		margin: 0;
 		height: 5em;
 	}
+
+	.img {
+		height: 250px;
+		width: 250px;
+	}
+
 
 </style>
