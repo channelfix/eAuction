@@ -208,14 +208,17 @@ export default {
 				name: 'Create-Live'
 			})
 		},
+		displaySnackBar(text){
+			this.alertbar.text = text;
+			this.alertbar.snackbar = true;
+		},
 		addCredits(){
-			// this.$store.commit("addCredits", 500)
 			let request = new Request();
 			let formdata = new FormData();
+			
 			this.dialog = !this.dialog;
-			this.alertbar.text = "Successfully added " + this.add_credits + " credits!";
-			this.alertbar.snackbar = true;
-			// formdata.set('amount', this.$store.getters.getCredits)
+			this.displaySnackBar("Successfully added " + this.add_credits + " credits!");
+			
 			formdata.set('amount', this.add_credits)
 			request.post("/profile/update_credits/", formdata,
 			 (response)=>{

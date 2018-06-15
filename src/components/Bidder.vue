@@ -65,7 +65,7 @@ export default {
 						if(this.status == "open bidding"){
 							let ret;
 							let credits = this.$store.getters.getCredits;
-							
+
 							if(v >= this.minimumBid && v <= credits){
 								this.bidButton.open = true;
 								ret = true;
@@ -101,6 +101,15 @@ export default {
 		placeBid(){
 			let currentUser = this.$store.getters.getUsername;
 			let log = currentUser+" bid "+this.bid.value+" for "+this.currentProductName;
+
+			let formdata = new FormData();
+			this.$parent.$parent.displaySnackBar("Bid successfully subtracted "+this.bid.value+ " from credits");
+			// formdata.set('amount', this.$store.getters.getCredits)
+			formdata.set('amount', -this.bid.value);
+			request.post("/profile/update_credits/", formdata,
+			 (response)=>{
+				this.$store.commit('addCredits', response.data.total_credit.credit_amount__sum)
+			});
 
 			this.$parent.sendLog(log);
 		}
