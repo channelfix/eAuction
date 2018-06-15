@@ -7,8 +7,10 @@
 		  name="name"
 		  label="Username"
 		  v-model="user.name"
+		  @keyup.enter="login"
 		></v-text-field>
 		<v-text-field
+		  @keyup.enter="login"
 		  name="name"
 		  label="Password"
 		  v-model="user.password"
@@ -16,7 +18,10 @@
           :append-icon-cb="() => (visible = !visible)"
           :type="visible ? 'text': 'password' "
 		></v-text-field>
-		<v-btn @click="login">Submit</v-btn>
+		<v-btn 
+			:loading="submitLoading" 
+			@click="login"
+		>Submit</v-btn>
 	</v-form>
 </template>
 
@@ -32,11 +37,14 @@
 					name: "",
 					password:"",
 				},
+				submitLoading: false,
 				visible: false,
 			}
 		},
 		methods: {
 			login: function(){
+				this.submitLoading = true;
+		
 				let request = new Request();
 				let formData = new FormData();
 
@@ -47,6 +55,7 @@
 						if(response instanceof Error){
 							this.alert = true
 						}else {
+
 							this.$store.commit('authenticated', true)	
 							this.$store.commit('setUsername', this.user.name)
 							this.$store.commit('asAuctioneer', response.data.isAuctioneer)				
@@ -59,7 +68,8 @@
 							});
 						}
 					}
-				);	
+				);
+				this.loading = false;	
 			}
 		}
 	}

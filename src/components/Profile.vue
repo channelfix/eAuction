@@ -159,10 +159,6 @@
 		float: left;
 	}
 
-	html{
-		overflow: hidden;
-	}
-
 	img{
 		box-shadow: 0px 2px 10px #000000;
 	}

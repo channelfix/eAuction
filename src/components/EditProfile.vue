@@ -1,87 +1,120 @@
 <template>
-	<form>
-		<input type="file" id="fileSelector" v-on:change="updateImageDisplay" />
-		
-		<div id="profile"/>
-			<img :src="profilePic" width="200" height="200" />
-		</div>
+	<v-container fluid class = "editProfilePage">
+		<v-layout row justify-center mt-5 wrap>
+			
+				<v-flex xs3>
+					<form>
+						<div id="profile"/>
+							<img :src="profilePic" width="400" height="400" />
+						</div>
+						<input type="file" id="fileSelector" v-on:change="updateImageDisplay" />
+						<div v-if="isAuctioneer">
+							<p class="biograpyProperty mt-2 pt-2 ">
+								<p class="title mb-0">Biography</p>
+								<v-text-field
+									style="width: 80% !important; margin-top: -10px !important;"
+									id = "biographyField"
+									rows="3"
+									multi-line
+									v-model="biography"
+									hint="Describe yourself"
+								></v-text-field>
+							</p>
+							<p class="tagsProperty">
+								<v-select
+									style="width: 80% !important;"
+									:items="items"
+									v-model="tag"
+									label="Select Tag"
+									single-line
+								></v-select>	
+								<v-btn @click.prevent="addTag">Add Tag</v-btn>
+								<v-btn @click.prevent="removeTag">Remove Tag</v-btn>
+							</p>
+						</div>
+					</form>
+				</v-flex>
+				
+				<v-flex xs3>
+					<form>
+						<p class="mb-2 title">Login and Security</p>
+						<v-divider class="mb-1"></v-divider>
+						<p class='lastNameProperty my-0'>
+							<v-text-field 
+								type="text" 
+								id="lastNameField" 
+								v-model="lastName"
+								label="Last name"
+							></v-text-field>
+						</p>
 
-		<p>
-			<label>Old Password:</label>
-			<input type="password" id="oldPasswordField" v-model="oldPassword">
-		</p>
+						<p class='firstNameProperty my-0'>
+							<v-text-field 
+								type="text" 
+								id="firstNameField" 
+								v-model="firstName"
+								label="First name"
+							></v-text-field>
+						</p>
 
-		<p>
-			<label>New Password:</label>
-			<input type="password" id="newPasswordField" v-model="newPassword">
-		</p>
+						<p class="emailProperty my-0">
+							<v-text-field 
+								type="text" 
+								id="emailField" 
+								v-model="email"
+								label="Email"
+							></v-text-field>
+						</p>
 
-		<p>
-			<label>Confirm Password:</label>
-			<input type="password" id="confirmedPasswordField" v-model="confirmPassword">
-			<label v-if="hasMatchPassword">matched password</label>
-			<label v-else="hasMatchPassword">password does not match.</label>
-		</p>
-		<v-btn
-			@click="changePassword"
-		>Change Password</v-btn>
+						<p class="contactNumberProperty my-0">
+							<v-text-field
+								type="text" 
+								id="contactNumberField" 
+								v-model="contactNumber"
+								label="Contact Number"
+							></v-text-field>
+						</p>
+						<v-btn id="changeButton" v-on:click="changeProfile">Save</v-btn>
+						<p class="mb-2 mt-3 title">Change Password</p>
+						<v-divider class="mb-1"></v-divider>
+						<p class = "my-0">
+							<v-text-field 
+								type="password" 
+								id="oldPasswordField" 
+								v-model="oldPassword"
+								label="Enter Old Password"
+							></v-text-field>
+						</p>
 
-		<p class='lastNameProperty'>
-			<label>Last Name:</label>
-			<input type="text" id="lastNameField" v-model="lastName">
+						<p class = "my-0">
+							<v-text-field
+								type="password" 
+								id="newPasswordField" 
+								v-model="newPassword"
+								label="Enter New Password"
+							></v-text-field>
+						</p>
 
-			<label v-if="lastName != ''">filled</label>
-			<label v-else>this field is empty</label>
-		</p>
-
-		<p class='firstNameProperty'>
-			<label>First Name:</label>
-			<input type="text" id="firstNameField" v-model="firstName">
-
-			<label v-if="firstName != ''">filled</label>
-			<label v-else>this field is empty</label>
-		</p>
-
-
-		<p class="emailProperty">
-			<label>Email:</label>
-			<input type="text" id="emailField" v-model="email">
-
-			<label v-if="email != ''">filled</label>
-			<label v-else>this field is empty</label>
-		</p>
-
-		<div v-if="isAuctioneer">
-			<p class="biograpyProperty">
-				<label>Biography:</label><br>
-				<textarea
-					id = "biographyField"
-					rows="3"
-					cols="80"
-					placeholder="Description here."
-					v-model="biography"
-				>.				
-				</textarea>
-			</p>
-		</div>
-
-		<p class="contactNumberProperty">
-			<label>Contact #:</label></br>
-			<input type="text" id="contactNumberField" v-model="contactNumber">
-		</p>
-
-		<div v-if="isAuctioneer">
-			<p class="tagsProperty">
-				<label>Tags:</label>
-				<input type="text" v-model="tag" placeholder="Tags here" size="10" v-on:keyup.enter="addTag">	
-				<button @click.prevent="addTag">+</button>
-				<button @click.prevent="removeTag">-</button>
-			</p>
-		</div>
-
-		<input type="button" id="changeButton" value="Change" v-on:click="changeProfile">
-
-	</form>
+						<p class = "my-0">
+							<v-text-field 
+								type="password" 
+								id="confirmedPasswordField" 
+								v-model="confirmPassword"
+								label="Confirm Password"
+							></v-text-field>
+							<label v-if="hasMatchPassword">Passwords match!</label>
+							<label v-else="hasMatchPassword">Passwords do not match</label>
+						</p>
+						<v-btn
+							@click="changePassword"
+							:disabled="!hasMatchPassword"
+						>Change Password</v-btn>
+					</form>					
+				</v-flex>
+				
+		</v-layout>
+	</v-container>
+	
 </template>
 
 <style>
@@ -114,12 +147,19 @@
 				hasChangePic: false,
 				matchedPassword: false,
 				isAuctioneer: false,
-				contactNumber: ''
+				contactNumber: '',
+				items: [
+					{text: 'Collectibles'},
+					{text: 'Antiques'}, 
+					{text: 'Novel'},
+					{text: 'Vehicles'},
+					{text: 'Jewelry'},
+				]
 			}
 		},
 		computed: {
 			hasMatchPassword() {
-				if(this.newPassword === this.confirmPassword){
+				if(this.newPassword === this.confirmPassword && (this.newPassword != "" && this.confirmPassword != "")){
 					this.matchedPassword = true
 					return true;
 				}
@@ -196,20 +236,20 @@
 				}
 			},
 			findTag: function(element) {
-				return element.name === this.tag.toLowerCase()
+				return element.name === this.tag.text
 			},
 			addTag: function() {
-				if (this.tag != ''){
+				if (this.tag.text != ''){
 					let newTags = this.tags.map(item=>item)
 					if(newTags.find(this.findTag))
 						alert('You already have this tag.')
 					else{					
-						let tag = this.tag.toLowerCase()	
+						let tag = this.tag.text	
 						newTags.push(tag);
 						this.subTag.push(tag);
 						this.tags = newTags
-						alert(this.tag+' added')
-						this.tag = ''						
+						alert(this.tag.text+' added')
+						this.tag.text = ''						
 					}
 				}			
 				else
@@ -220,7 +260,7 @@
 				let formdata = new FormData();
 
 				formdata.set('username', this.username);
-				formdata.set('tag', this.tag.toLowerCase());
+				formdata.set('tag', this.tag);
 
 				request.post('/profile/remove_tag/', formdata,
 				(response) => { 
@@ -237,7 +277,6 @@
 				request.post('/profile/request_profile_details/', formdata,
 					(response) => {
 						this.userProfile = response.data;
-
 						this.profilePic = '/'+this.userProfile.avatar;
 						this.lastName = this.userProfile.last_name;
 						this.firstName = this.userProfile.first_name;
@@ -257,5 +296,8 @@
 </script>
 
 <style>
+	.editProfilePage < .btn{
+		margin-left: 0px !important;
+	}
 
 </style>
