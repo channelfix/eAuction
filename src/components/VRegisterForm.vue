@@ -62,7 +62,7 @@
 		  min="8"
 		  id="cps"
 		></v-text-field>
-		<v-btn :disabled="!valid" @click="register">Submit</v-btn>
+		<v-btn :disabled="valid" @click="register">Submit</v-btn>
 		<v-btn @click="clear()">clear</v-btn>
 	</v-form>
 </template>
