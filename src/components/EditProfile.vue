@@ -160,8 +160,8 @@
 						formdata.append('imageFile', this.imageFile, this.imageFile.name)
 
 					// Check for valid phone number format
-					let contactNumber = this.contactNumber					
-					if((contactNumber.charAt(0) == '+' && contactNumber.length == 13) || contactNumber.length == 0)
+					let contactNumber = this.contactNumber
+					if((contactNumber.match(/[0-9]+/).length != 0) || contactNumber.length == 0)
 					{
 						formdata.set('contact_number', contactNumber);
 
