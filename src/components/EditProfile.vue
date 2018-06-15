@@ -73,7 +73,7 @@
 		</div>
 
 		<p class="contactNumberProperty">
-			<label>Contact #:</label></br>
+			<label>Phone number:</label></br>
 			<input type="text" id="contactNumberField" v-model="contactNumber">
 		</p>
 
@@ -154,23 +154,29 @@
 					formdata.set('last_name', this.lastName);
 					formdata.set('first_name', this.firstName);
 					formdata.set('email', this.email);
-					formdata.set('biography', this.biography);		
-					formdata.set('contact_number', this.contactNumber);
-					
+					formdata.set('biography', this.biography);
+
 					if(this.hasChangePic)
 						formdata.append('imageFile', this.imageFile, this.imageFile.name)
 
-					request.post('/profile/edit_profile_details/', formdata,
-					(response) => {
-						alert(response.data)
-						this.requestProfileDetails()
-						this.$router.push({
-							name: "Profile",
-							params: {
-								username: this.username
-							}
+					// Check for valid phone number format
+					let contactNumber = this.contactNumber					
+					if((contactNumber.charAt(0) == '+' && contactNumber.length == 13) || contactNumber.length == 0)
+					{
+						formdata.set('contact_number', contactNumber);
+
+						request.post('/profile/edit_profile_details/', formdata,
+						(response) => {
+							alert(response.data)
+							this.requestProfileDetails()
+							this.$router.push({
+								name: "Profile",
+								params: {
+									username: this.username
+								}
+							})
 						})
-					})
+					}		
 				}
 			},
 			changePassword: function(){
