@@ -29,15 +29,6 @@
 					</option>
 				</select>
 
-				<v-flex xs6>
-			        <v-select
-			          :items="products[0].products__name"
-			          v-model="selectedProduct"
-			          label="Select"
-			          single-line
-			        ></v-select>
-	     	 	</v-flex>
-
 				<v-text-field
 				  label="Price"
 				  solo
