@@ -3,7 +3,6 @@
 		fluid
 		pa-5	
 	>
-		<v-btn class="amber darken-1" fixed bottom right large>Create Auction</v-btn>
 		<v-layout
 			fill-height
 			justify-center
@@ -63,6 +62,7 @@
 				</v-card>
 			</v-flex>
  		</v-layout>
+ 		<v-btn class="amber darken-1" fixed bottom right large>Create Auction</v-btn>
  	</v-container>
 </template>
 
