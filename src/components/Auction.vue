@@ -122,7 +122,6 @@ import Bidder from './Bidder'
 let logThread = null;
 let request = new Request();
 let session = null;
-let hasStarted = false;
 
 export default {
 	name: "Auction",
@@ -131,6 +130,7 @@ export default {
 		return{
 			standingBid: 0,
 			minimumBid: 0,
+			hasStarted: false,
 			highestBidder: '',
 			products: [{
 				name: '',
@@ -238,15 +238,17 @@ export default {
 							}		
 						});
 
-						if(role == "bidder"){
-							session.on("streamDestroyed", ()=>{
-								this.logs.splice(0, 0, Object.assign(
-									{
-										message: "Auction session has ended"
-									}, {style}));
-								clearInterval(logThread);
-							})
+					session.on("connectionDestroyed", ()=>{
+						let style = {
+							backgroundColor: 'red',
 						}
+
+						this.logs.splice(0, 0, Object.assign(
+							{
+								message: "Auction session has ended"
+							}, {style}));
+						clearInterval(logThread);
+					})
 				}
 			})
 		},
@@ -302,27 +304,35 @@ export default {
 					style.backgroundColor = "orange";
 				
 				}else if(msg.match("Moved\\sto\\snext\\sitem")){
-				
-					this.currentProductIdx++;
-					this.minimumBid = this.products[this.currentProductIdx].minimum_price;
-					this.standingBid = this.minimumBid;
-					this.status = "item hold";
+					if(this.products.length > this.currentProductIdx+1){
+						this.currentProductIdx++;		
+						this.highestBidder = "";
+						this.minimumBid = this.products[this.currentProductIdx].minimum_price;
+						this.standingBid = this.minimumBid;
+						this.status = "item hold";
+					}else{
+						this.status = "sold out";
+						latestLogs[i].message = "No more items to auction";
+					}
+					
 					style.backgroundColor = "brown";
-				
 				}else if(msg.match("Auction\\sfor\\s(.*)\\sis\\sopen")){
 				
 					this.status = "open bidding"
 					style.backgroundColor = "green";
 				
 				}else if(msg.match("Auction\\ssession\\shas\\sstarted")){
-					console.log("Has started: "+hasStarted);
+					console.log("Has started: "+this.hasStarted);
 					
-					if(hasStarted){
+					if(this.hasStarted){
 						latestLogs[i].message = "Auctioneer rejoined session";
+					
+					}else{
+						this.hasStarted = true;
+						this.status = "item hold"	
 					}
 					
-					hasStarted = true;
-					this.status = "item hold"
+					
 					style.backgroundColor = "orange";
 				
 				}else if(msg.match("^(.*)\\sbid\\s(.*)\\sfor\\s(.*)$")){
