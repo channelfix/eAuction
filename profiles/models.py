@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from livestream.models import Session
 from django.db.models import Sum
-from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Profile(models.Model):
@@ -21,7 +20,7 @@ class Profile(models.Model):
     isAuctioneer = models.BooleanField(default=False)
     biography = models.CharField(max_length=100, blank=True)
     avatar = models.ImageField()
-    phone_number = PhoneNumberField()
+    phone_number = models.CharField(max_length=13, blank=True)
 
     @property
     def countSubscribers(self):
@@ -47,7 +46,6 @@ class Tags(models.Model):
 
     profile = models.ManyToManyField(Profile)
 
-
     # tag name with a maximum of 50 characters.
     name = models.CharField(max_length=50)
 
@@ -55,7 +53,6 @@ class Tags(models.Model):
         """ Return tag name """
 
         return self.name
-
 
 
 class Credit(models.Model):
@@ -71,6 +68,11 @@ class Credit(models.Model):
 
 
 class Product(models.Model):
+    product = models.ForeignKey(Profile,
+                                related_name='products',
+                                on_delete=models.CASCADE,
+                                null=True)
+
     session = models.ForeignKey(Session,
                                 related_name='auction_products',
                                 on_delete=models.SET_NULL,
@@ -85,6 +87,7 @@ class Product(models.Model):
     date_sold = models.DateTimeField(null=True)
     winning_bid = models.PositiveIntegerField(default=0)
     minimum_price = models.PositiveIntegerField(default=0)
+    records = models.CharField(max_length=150, blank=True)
 
     def __str__(self):
         return self.name
