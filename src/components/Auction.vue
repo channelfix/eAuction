@@ -240,18 +240,19 @@ export default {
 									}); 				
 							}		
 						});
+					if (role == "bidder"){
+						session.on("connectionDestroyed", ()=>{
+							let style = {
+								backgroundColor: 'red',
+							}
 
-					session.on("connectionDestroyed", ()=>{
-						let style = {
-							backgroundColor: 'red',
-						}
-
-						this.logs.splice(0, 0, Object.assign(
-							{
-								message: "Auction session has ended"
-							}, {style}));
-						clearInterval(logThread);
-					})
+							this.logs.splice(0, 0, Object.assign(
+								{
+									message: "Auction session has ended"
+								}, {style}));
+							clearInterval(logThread);
+						})
+					}
 				}
 			})
 		},
