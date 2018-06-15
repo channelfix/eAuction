@@ -35,7 +35,7 @@
 						</div>
 						
 						<span class = 'body-2'>Email:</span>
-						<p v-text="email"></p>
+						<a :href="'https:'+email">{{email}}</a>
 
 						<div v-if="isAuctioneer == true">
 							<!-- Tags -->
@@ -51,7 +51,7 @@
 							<p v-text="biography"></p>
 						</div>
 
-						<span class = 'body-2'>Contact number:</span>
+						<span class = 'body-2'>Phone number:</span>
 						<p v-text="contactNumber" />
 					</div>
 				</v-layout>
