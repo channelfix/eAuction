@@ -102,21 +102,6 @@
 	    		</v-list-tile>
 
 	    		<v-list-tile
-	    			@click="browse()"
-	    		>
-	    			<v-list-tile-action>
-	    				<v-icon>
-	    					search
-	    				</v-icon>
-	    			</v-list-tile-action >
-	    			<v-list-tile-content>
-	    			  <v-list-tile-title>
-	    			  	<p class="subheading">Browse</p>
-	    			  </v-list-tile-title>
-	    			</v-list-tile-content>
-	    		</v-list-tile>
-
-	    		<v-list-tile
 	    			@click="signOut"
 	    		>
 	    			<v-list-tile-action>
@@ -172,6 +157,12 @@ export default {
 					path: {
 						name: 'Profile',
 					},
+				},{
+					title: "Explore",
+					icon: "search",
+					path: {
+						name: 'Explore',
+					}
 				},
 			],
 			alertbar: {
@@ -252,6 +243,13 @@ export default {
 	mounted() {
 		this.currentRoute = this.$route.name;
 		this.username = this.$store.getters.getUsername;
+	},
+	watch: {
+		$route(){
+			let route = this.$route.name;
+			route = route.replace("-", " ");
+			this.currentRoute = route;
+		}
 	}
 }
 </script>
