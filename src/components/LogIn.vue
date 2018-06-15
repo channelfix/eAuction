@@ -20,8 +20,8 @@
 							class="img"
 							src="https://image.flaticon.com/icons/png/512/186/186337.png"
 						/>
-						<p class="text-lg-left display-4">eAuction</p>
-						<p class="text-lg-left headline">A web platform that brings traditional auctioning to a modern online system, coupled with tools that’s necessary for the auctioning process</p>
+						<p class="text-lg-left display-4 titleText">eAuction</p>
+						<p elevation-20 class="text-lg-left headline titleText"><i>A web platform that brings traditional auctioning to a modern online system, coupled with tools that’s necessary for the auctioning process</i></p>
 		  			</v-layout>
 		  		</v-layout>
 		  	</v-flex>
@@ -107,6 +107,7 @@
 </script>
 
 <style scoped>
+	@import url('https://fonts.googleapis.com/css?family=Raleway:300i,600');
 
 	button {
 		padding: 0;
@@ -119,5 +120,9 @@
 		width: 250px;
 	}
 
+	.titleText {
+		padding: 10px;
+		font-family: 'Raleway', sans-serif;
+	}
 
 </style>
