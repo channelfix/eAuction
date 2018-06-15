@@ -350,9 +350,6 @@ export default {
 				}else if(msg.match("Auction\\ssession\\shas\\sended")){
 					
 					style.backgroundColor = "red";
-					this.logs.splice(0, 0, Object.assign(latestLogs[i], {style}));
-					clearInterval(logThread);
-					return;
 				
 				}else if(msg == "Item skipped (No bids)" || msg.match("(.*)\\sis\\ssold\\sto\\s(.*)")){
 					style.backgroundColor = "green";
