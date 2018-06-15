@@ -1,68 +1,70 @@
 <template>
 	<v-container fluid id="profile">
-		<v-layout justify-center align-start mt-5 row>
+		<v-layout pa-5 row>
+				<v-flex md4>
+					<v-layout column>
+						<v-flex id='profile' v-if="hasProfilePic">
+							<img class="profPic" :src="profilePic"/>
+						</v-flex>
 
-				<v-flex offset-x5 xs3>
-					<div id='profile' v-if="hasProfilePic">
-						<v-avatar
-							tile 					
-							size = 400>
+						<v-layout row pa-2 v-if="isAuctioneer">
+							<span class="title">Subscribers: </span>
+							<v-spacer></v-spacer>
+							<span class="title">{{subscribers}}</span>
+						</v-layout>
 
-							<img :src="profilePic"/>
-						</v-avatar>
-					</div>
-
-					<v-btn
-						v-if="$route.params.username == $store.getters.getUsername"
-						@click="moveToEdit"
-					>
-						Edit Profile
-					</v-btn>
-					<v-btn
-						v-if="
-							$route.params.username != $store.getters.getUsername && isAuctioneer
-						"
-						@click="subscribe"
-
-						v-text="subscriptionStatus"
-					>
-					</v-btn>
+						<v-btn
+							v-if="$route.params.username == $store.getters.getUsername"
+							@click="moveToEdit"
+							block
+						>
+							Edit Profile
+						</v-btn>
+						
+						<v-btn
+							v-if="
+								$route.params.username != $store.getters.getUsername && isAuctioneer
+							"
+							@click="subscribe"
+							v-text="subscriptionStatus"
+						>
+						</v-btn>
+					</v-layout>
+					
 				</v-flex>
 
 				<!-- Profile content -->
-				<v-flex xs4>
-					<v-layout row>
-						<v-flex xs12>
-							<span class = "">Name surname</span>
-							<p 
-								v-text="name" 
-								class="title" 
-								style="margin-top: -5px !important;"
-							></p>
-						</v-flex>					
-					</v-layout>
-
-					<v-layout row>
-						<v-flex xs4>
-							<span class = "">Email address</span>
-							<p v-text="email" class="title" style="margin-top: -5px;"></p>     
-						</v-flex>
-						<v-flex xs3>
-							<span class = "">Contact number</span>
-							<p 
-								v-text="contactNumber" 
-								class="title" 
-								style="margin-top: -5px !important;"
-							></p>
-						</v-flex>	
-						<v-flex xs3>
-							<div style="text-align: center;">
-				                <span class = "body-2">Subscribers</span>
-				                <div class="title">
-				                    <p style="display:inline;"> {{subscribers}} </p>
-				                </div>
-				            </div>
-						</v-flex>															
+				<v-flex md8 pa-3>
+					<v-layout column>
+						<v-layout row align-center>
+							<v-flex pa-2>
+							<span class = "title">Name: </span>
+							<v-text-field solo light disabled v-model="name"></v-text-field>	
+							</v-flex>
+						</v-layout>
+						<v-layout row align-center>
+							<v-flex pa-2>
+							<span class = "title">Email: </span>
+							<v-text-field solo light disabled v-model="email"></v-text-field>	
+							</v-flex>
+						</v-layout>
+						<v-layout row align-center>
+							<v-flex pa-2>
+							<span class = "title">Contact Number: </span>
+							<v-text-field solo light disabled v-model="contactNumber"></v-text-field>	
+							</v-flex>
+						</v-layout>
+						<v-layout 
+							column 
+							v-if="isAuctioneer == true"
+							pa-2
+						>
+							<span class="title">
+								Biography
+							</span>
+							<v-text-field light disabled solo v-model="biography" multi-line>
+							></v-text-field>							
+						</v-layout>						
 					</v-layout>
 
 					<v-layout row v-if="isAuctioneer == true">
@@ -78,29 +80,8 @@
 			            </v-chip>
 					</v-layout>
 
-					<v-layout 
-						row 
-						v-if="isAuctioneer == true"
-						mt-3
-					>
-						<v-flex xs12>
-							Biography
-							<div style="
-								height: 195px; 
-								overflow-y: auto;">
-								<p 
-									class="subheading"
-									v-text="biography"
-								></p>
-							</div>							
-						</v-flex>
-					</v-layout>
-
+					
 				</v-flex>
-
-				<button @click="showProduct">Products bought</button>
-			
-
 		</v-layout>
 	</v-container>
 </template>
@@ -154,9 +135,6 @@
 						this.subscribers--;
 				})
 			},
-			showProduct() {
-				
-			}
 		},
 
 		computed: {
@@ -199,7 +177,7 @@
 
 </script>
 
-<style>
+<style scoped>
 	ul {
 		list-style-type: none;
 		margin: 0;
@@ -212,8 +190,9 @@
 		float: left;
 	}
 
-	img{
-		box-shadow: 0px 2px 10px #000000;
+	.profPic{
+		height: 100%;
+		width: 100%;
 	}
 
 	#profile < p{

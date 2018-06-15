@@ -138,6 +138,8 @@
 				firstName: '',
 				email: '',
 				biography: '',
+				tags: [],
+				subTag: [],
 				tag: '',
 				oldPassword: '',
 				newPassword: '',				
@@ -292,6 +294,7 @@
 						this.email = this.userProfile.email;
 						this.biography = this.userProfile.biography;
 						this.isAuctioneer = this.userProfile.isAuctioneer;
+						this.tags = this.userProfile.tags;
 					}
 				);
 			}	

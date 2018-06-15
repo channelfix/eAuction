@@ -23,14 +23,12 @@
 	 				  	align-center
 	 				  	justify-center
 	 				  >
-	 				  	  <v-flex md4>
-	 				  	  	<span> 
-		 				  		Credits: {{credits}} 
-		 				  	</span>
+	 				  	  <v-flex md12 fill-height ma-2>
+	 				  	  	<v-btn class="yellow darken-2" @click="()=>dialog=true" block> 
+		 				  		<span class="subheading">Credits: {{credits}} </span>
+		 				  	</v-btn>
 		 				  </v-flex>
-		 				  <v-flex md8 fill-height>
-		 				  	<v-btn block slot="activator" flat @click="()=>dialog=true">Add more credits?</v-btn>
-		 			  	  	<v-dialog v-model="dialog" max-width="500px">				        
+	 			  	  	<v-dialog v-model="dialog" max-width="500px">				        
 						        <v-form class="form">
 						        	<v-card>
 							          	<v-card-title>
@@ -52,7 +50,7 @@
 								                  	</p>
 							                	</v-flex>
 							              	</v-layout>
-							            </v-container>
+							          		</v-container>
 							          	</v-card-text>
 							          	<v-card-actions>
 								            <v-spacer></v-spacer>
@@ -62,14 +60,8 @@
 							        </v-card>
 					          	</v-form>				        
 			      			</v-dialog>
-		 			  	  </v-flex>
+
 		 			  </v-layout>
-				      <v-btn 
-				      	flat
-						v-if="$store.getters.isAuctioneer"
-						@click="createLive"
-			      	  >Create Livestream
-			          </v-btn>
 				    </v-toolbar-items>
 			 	</v-toolbar>
 		 	</v-container>
@@ -222,12 +214,6 @@ export default {
 				this.$router.go(0);	
 			});			
 		},
-		createLive() {
-			this.$router.push({
-				name: 'Create-Live'
-			})
-		},
-
 		displaySnackBar(text){
 			this.alertbar.text = text;
 			this.alertbar.snackbar = true;
