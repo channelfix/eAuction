@@ -4,9 +4,9 @@
   	>
   		<v-layout 
   			fill-height
-		row
-		wrap
-			>
+			row
+			wrap
+		>
   			<v-flex 
 			md12
 				>
@@ -16,6 +16,7 @@
 				>
 					<v-flex
 						md8
+						pa-2
 					>
 						<v-text-field
 						  label="Input bid"
@@ -27,6 +28,7 @@
 					</v-flex>
 					<v-flex
 						md4
+						pa-2
 					>
 						<button
 							block
